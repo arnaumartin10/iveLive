@@ -7,7 +7,6 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
     "scheme": "ivelive",
-    "newArchEnabled": true,
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.ivelive.app"
@@ -36,8 +35,7 @@
           "photosPermission": "IveLive uses your photos to add artist images."
         }
       ],
-      "expo-secure-store",
-      "expo-haptics"
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true
