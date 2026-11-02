@@ -47,7 +47,6 @@ Deno.serve(async (request: Request) => {
     console.log(
       JSON.stringify({
         event: 'spotify_search_success',
-        query: input.q.trim(),
         resultCount: artists.length,
       }),
     );
@@ -93,16 +92,22 @@ Deno.serve(async (request: Request) => {
         {
           code: 'SPOTIFY_ERROR',
           status: error.status,
-          message: error.responseBody || error.message,
+          message: 'Spotify search could not be completed. Try again later.',
         },
         error.status,
       );
     }
-    console.error('[spotify-search]', error);
+    console.error(
+      JSON.stringify({
+        event: 'spotify_search_failed',
+        errorType: error instanceof Error ? error.name : 'UnknownError',
+      }),
+    );
     return jsonResponse(
       {
         code: 'SPOTIFY_SEARCH_FAILED',
-        error: error instanceof Error ? error.message : 'Could not search Spotify',
+        error:
+          error instanceof Error ? error.message : 'Could not search Spotify',
       },
       502,
     );

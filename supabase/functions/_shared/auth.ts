@@ -28,7 +28,7 @@ export async function authenticateRequest(
     !supabaseUrl && 'SUPABASE_URL',
     !serviceRoleKey && 'SUPABASE_SERVICE_ROLE_KEY',
   ].filter((value): value is string => !!value);
-  if (missing.length) {
+  if (!supabaseUrl || !serviceRoleKey) {
     return {
       response: jsonResponse(
         { error: 'Server auth is not configured', missing },

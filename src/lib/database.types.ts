@@ -39,6 +39,35 @@ export type Database = {
   };
   public: {
     Tables: {
+      alpha_invite_codes: {
+        Row: {
+          code_hash: string;
+          created_at: string;
+          redeemed_at: string | null;
+          redeemed_by: string | null;
+        };
+        Insert: {
+          code_hash: string;
+          created_at?: string;
+          redeemed_at?: string | null;
+          redeemed_by?: string | null;
+        };
+        Update: {
+          code_hash?: string;
+          created_at?: string;
+          redeemed_at?: string | null;
+          redeemed_by?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'alpha_invite_codes_redeemed_by_fkey';
+            columns: ['redeemed_by'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       cloud_layouts: {
         Row: {
           layout_version: number;
@@ -1393,6 +1422,11 @@ export type Database = {
       immutable_unaccent: { Args: { value: string }; Returns: string };
       is_log_owner: { Args: { log_id: string }; Returns: boolean };
       is_username_available: { Args: { p_username: string }; Returns: boolean };
+      has_alpha_invite: { Args: Record<PropertyKey, never>; Returns: boolean };
+      redeem_alpha_invite: {
+        Args: { p_code_hash: string };
+        Returns: boolean;
+      };
       top_rated_artists: {
         Args: {
           p_limit?: number;

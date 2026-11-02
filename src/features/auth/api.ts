@@ -1,5 +1,34 @@
+import * as Crypto from 'expo-crypto';
 import { supabase } from '@lib/supabase';
 import type { Profile } from '../concerts/types';
+
+export async function redeemAlphaInvite(code: string): Promise<void> {
+  const normalizedCode = code.trim();
+  if (!normalizedCode) throw new Error('Enter your invite code to continue.');
+
+  const codeHash = await Crypto.digestStringAsync(
+    Crypto.CryptoDigestAlgorithm.SHA256,
+    normalizedCode,
+  );
+  const { error } = await supabase.rpc('redeem_alpha_invite', {
+    p_code_hash: codeHash,
+  });
+  if (!error) return;
+
+  if (error.message.includes('INVALID_OR_USED_INVITE_CODE')) {
+    throw new Error('That invite code has already been used or is not valid.');
+  }
+  if (error.message.includes('ALPHA_INVITE_REQUIRED')) {
+    throw new Error('We could not redeem that invite. Please try again.');
+  }
+  throw new Error(error.message);
+}
+
+export async function hasAlphaInvite(): Promise<boolean> {
+  const { data, error } = await supabase.rpc('has_alpha_invite');
+  if (error) throw new Error(error.message);
+  return data;
+}
 
 export async function fetchProfile(userId: string): Promise<Profile> {
   const { data, error } = await supabase
@@ -15,7 +44,9 @@ export async function fetchProfile(userId: string): Promise<Profile> {
   }
 
   // Self-healing: if the auth trigger didn't run or row is missing, create it
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   const rawMeta = user?.user_metadata ?? {};
   const displayName =
     (rawMeta.display_name as string | undefined) ??

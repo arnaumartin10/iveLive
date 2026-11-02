@@ -12,8 +12,13 @@ Expo and React Native app for keeping a personal history of live music.
 
 ```sh
 npm install
-cp .env.example .env
 ```
+
+Create a local `.env.local` with the URL and anon key for a **development**
+Supabase project. Do not copy production credentials into a development build.
+The checked-in `.env.example` is documentation only; the app no longer loads it
+as a fallback. Missing environment values fail Expo config instead of producing
+a blank, misconfigured build.
 
 ## Profile navigation and Timeline
 
@@ -24,13 +29,16 @@ logs under the same row-level security rules. Existing `/archive`, `/timeline`,
 and `/friends` links remain supported and redirect to the corresponding Profile
 section.
 
-The repository's `.env.example` already contains the current Supabase URL and anon key. Expo loads those values as a local fallback; standard `.env` and EAS environment values take precedence. Update the example only when switching projects. The app validates both variables at startup and reports missing or malformed values directly.
-
 ### Configure authentication providers
 
 - Enable Email and Google in **Supabase Dashboard → Authentication → Providers**. Configure Google client credentials there and set its authorized callback to `https://<project-ref>.supabase.co/auth/v1/callback`.
 - Enable Apple in Supabase and configure the Apple Services ID/key. The native app uses the `expo-apple-authentication` capability on iOS.
-- Add `ivelive://callback`, the production web site URL (`https://<your-domain>/`), and the local web URLs from `supabase/config.toml` to the Supabase Auth redirect allowlist. Keep Google's authorized redirect URI set to `https://<project-ref>.supabase.co/auth/v1/callback`. OAuth client secrets belong in Supabase, never in `EXPO_PUBLIC_` variables.
+- Add `ivelive://callback`, `ivelive-preview://callback`,
+  `ivelive-development://callback`, the production web site URL
+  (`https://<your-domain>/`), and the local web URLs from `supabase/config.toml`
+  to the Supabase Auth redirect allowlist. Keep Google's authorized redirect
+  URI set to `https://<project-ref>.supabase.co/auth/v1/callback`. OAuth client
+  secrets belong in Supabase, never in `EXPO_PUBLIC_` variables.
 - Supabase Edge Functions require a valid Supabase session JWT. The configured functions include `delete-account`, `spotify-search`, `spotify-upsert-artist`, and `enrich-artist`.
 
 ### Supabase Edge Functions
@@ -310,14 +318,26 @@ The SQL tests cover private-log visibility, half-star rating constraints, and we
 
 The current schema migration includes `venue_type` and `artist_source`, artist metadata and genre classification, concert date/rating constraints, follows/likes/comments, the artist/genre/venue summary RPCs and `get_feed`, RLS on all seven public tables, and the `avatars` and `artist-images` storage buckets.
 
+The alpha invite test is `supabase/tests/alpha_invites.test.sql`; it runs only
+with the local Supabase test stack and verifies the default invite gate,
+content-write denial, and one-use redemption.
+
 ## EAS builds
 
 Configure the Supabase variables in the matching EAS environment, then run:
 
 ```sh
-npx eas-cli build --profile development
-npx eas-cli build --profile preview
-npx eas-cli build --profile production
+npx eas-cli@latest build --profile development
+npx eas-cli@latest build --profile preview
+npx eas-cli@latest build --profile production
 ```
 
 Maestro end-to-end flows belong in `maestro/`.
+
+See [docs/ENVIRONMENTS.md](./docs/ENVIRONMENTS.md),
+[docs/DISTRIBUTION.md](./docs/DISTRIBUTION.md),
+[docs/WEB.md](./docs/WEB.md), [docs/TESTERS.md](./docs/TESTERS.md),
+[docs/STATUS.md](./docs/STATUS.md), [docs/RELEASE.md](./docs/RELEASE.md),
+[docs/PERF.md](./docs/PERF.md), and [docs/SECURITY.md](./docs/SECURITY.md)
+for alpha setup and remaining release checks. No remote migrations, builds, or
+deployments are performed by this repository's local validation commands.

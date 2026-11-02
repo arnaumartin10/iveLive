@@ -17,7 +17,7 @@ if (!result.success) {
 
   throw new Error(
     `[IveLive] Invalid environment configuration:\n${details}\n` +
-      'Set both Supabase values in .env or .env.example, then restart Expo.',
+      'Set both public Supabase values in the selected EAS environment or your local .env.local, then restart Expo.',
   );
 }
 

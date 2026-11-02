@@ -37,6 +37,7 @@ yarn-error.*
 .env.*
 !.env.example
 !.env.local.example
+.alpha-invites.txt
 
 # typescript
 *.tsbuildinfo

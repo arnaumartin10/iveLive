@@ -17,12 +17,8 @@ export class SpotifyRateLimitedError extends Error {
 }
 
 export class SpotifyApiError extends Error {
-  constructor(
-    readonly status: number,
-    readonly statusText: string,
-    readonly responseBody: string,
-  ) {
-    super(`Spotify API error (${status} ${statusText}): ${responseBody}`);
+  constructor(readonly status: number) {
+    super(`Spotify API request failed with status ${status}`);
   }
 }
 
@@ -59,15 +55,14 @@ async function getAccessToken(forceRefresh = false): Promise<string> {
   );
 
   if (!response.ok) {
-    const errorBody = (await response.text().catch(() => '')).slice(0, 250);
+    await response.text();
     console.error(
       JSON.stringify({
         event: 'spotify_token_error',
         status: response.status,
-        body: errorBody,
       }),
     );
-    throw new SpotifyApiError(response.status, response.statusText, errorBody);
+    throw new SpotifyApiError(response.status);
   }
 
   const payload = (await response.json()) as SpotifyTokenResponse;
@@ -108,7 +103,7 @@ export async function spotifyGet(path: string): Promise<unknown> {
     console.log(
       JSON.stringify({
         event: 'spotify_request',
-        path,
+        path: new URL(path, 'https://api.spotify.com').pathname,
         status: response.status,
         ok: response.ok,
       }),
@@ -130,16 +125,15 @@ export async function spotifyGet(path: string): Promise<unknown> {
     }
 
     if (!response.ok) {
-      const errorBody = (await response.text().catch(() => '')).slice(0, 250);
+      await response.text();
       console.error(
         JSON.stringify({
           event: 'spotify_request_error',
-          path,
+          path: new URL(path, 'https://api.spotify.com').pathname,
           status: response.status,
-          body: errorBody,
         }),
       );
-      throw new SpotifyApiError(response.status, response.statusText, errorBody);
+      throw new SpotifyApiError(response.status);
     }
     return response.json();
   }

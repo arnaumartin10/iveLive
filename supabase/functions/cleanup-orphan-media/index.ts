@@ -2,6 +2,7 @@ import {
   createClient,
   type SupabaseClient,
 } from 'https://esm.sh/@supabase/supabase-js@2.57.0';
+import { authenticateRequest } from '../_shared/auth.ts';
 
 const BUCKET = 'log-media';
 const ORPHAN_AGE_MS = 24 * 60 * 60 * 1000;
@@ -21,18 +22,19 @@ Deno.serve(async (request: Request) => {
     return Response.json({ error: 'Method not allowed' }, { status: 405 });
   }
 
-  const url = Deno.env.get('SUPABASE_URL');
-  const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
-  if (!url || !serviceRoleKey) {
-    return Response.json({ error: 'Server auth is not configured' }, { status: 500 });
-  }
-  if (request.headers.get('Authorization') !== `Bearer ${serviceRoleKey}`) {
+  const auth = await authenticateRequest(request, true);
+  if ('response' in auth) return auth.response;
+  if (!auth.context.isTrustedServer) {
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const admin = createClient(url, serviceRoleKey, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
+  const admin = createClient(
+    auth.context.supabaseUrl,
+    auth.context.serviceRoleKey,
+    {
+      auth: { persistSession: false, autoRefreshToken: false },
+    },
+  );
 
   try {
     const cutoff = Date.now() - ORPHAN_AGE_MS;
@@ -40,29 +42,28 @@ Deno.serve(async (request: Request) => {
     let removed = 0;
     for (const prefix of prefixes) {
       const candidates = await listOldFiles(admin, prefix, cutoff);
-      for (let offset = 0; offset < candidates.length; offset += LOOKUP_BATCH_SIZE) {
+      for (
+        let offset = 0;
+        offset < candidates.length;
+        offset += LOOKUP_BATCH_SIZE
+      ) {
         const batch = candidates.slice(offset, offset + LOOKUP_BATCH_SIZE);
-        const { data, error } = await admin
-          .from('log_media')
-          .select('storage_path,thumb_path,poster_path')
-          .or(
-            batch
-              .flatMap((path) => [
-                `storage_path.eq.${path}`,
-                `thumb_path.eq.${path}`,
-                `poster_path.eq.${path}`,
-              ])
-              .join(','),
-          );
-        if (error) throw error;
-
-        const referenced = new Set(
-          (data ?? []).flatMap((row) =>
-            [row.storage_path, row.thumb_path, row.poster_path].filter(
-              (path): path is string => path !== null,
-            ),
-          ),
+        const columns = ['storage_path', 'thumb_path', 'poster_path'] as const;
+        const references = await Promise.all(
+          columns.map(async (column) => {
+            const { data, error } = await admin
+              .from('log_media')
+              .select('storage_path,thumb_path,poster_path')
+              .in(column, batch);
+            if (error) throw error;
+            return (data ?? []).flatMap((row) =>
+              [row.storage_path, row.thumb_path, row.poster_path].filter(
+                (path): path is string => typeof path === 'string',
+              ),
+            );
+          }),
         );
+        const referenced = new Set(references.flat());
         const orphanPaths = batch.filter((path) => !referenced.has(path));
         if (!orphanPaths.length) continue;
         const { error: removeError } = await admin.storage
@@ -75,9 +76,14 @@ Deno.serve(async (request: Request) => {
 
     return Response.json({ removed });
   } catch (error) {
-    console.error('[cleanup-orphan-media]', error);
+    console.error(
+      JSON.stringify({
+        event: 'orphan_media_cleanup_failed',
+        errorType: error instanceof Error ? error.name : 'UnknownError',
+      }),
+    );
     return Response.json(
-      { error: error instanceof Error ? error.message : 'Cleanup failed' },
+      { error: 'Orphan media cleanup failed.' },
       { status: 500 },
     );
   }

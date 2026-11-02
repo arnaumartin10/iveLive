@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
+import Constants from 'expo-constants';
 import { Image } from 'expo-image';
+import { useQuery } from '@tanstack/react-query';
 import * as ImageManipulator from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
 import { router } from 'expo-router';
@@ -24,6 +26,8 @@ import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { Text } from '../../components/ui/Text';
 import { Sticker } from '../../components/paper';
+import { AlphaInviteGate } from '../../features/auth/AlphaInviteGate';
+import { hasAlphaInvite } from '../../features/auth/api';
 import {
   useMe,
   useUpdateProfile,
@@ -38,8 +42,14 @@ const usernamePattern = /^[a-z0-9_.]{3,20}$/;
 
 export default function OnboardingScreen() {
   const { colors } = useTheme();
+  const alphaInviteOnly = Constants.expoConfig?.extra?.alphaInviteOnly === true;
   const user = useAuthStore((state) => state.user);
   const profileQuery = useMe();
+  const alphaInviteQuery = useQuery({
+    queryKey: ['alpha-invite-status', user?.id],
+    queryFn: hasAlphaInvite,
+    enabled: alphaInviteOnly && Boolean(user?.id),
+  });
   const updateProfile = useUpdateProfile(user?.id ?? '');
   const [step, setStep] = useState(1);
   const [username, setUsername] = useState(() => {
@@ -162,6 +172,24 @@ export default function OnboardingScreen() {
         : usernameQuery.data === false
           ? 'That username is already taken.'
           : '';
+
+  if (
+    alphaInviteOnly &&
+    (alphaInviteQuery.isLoading ||
+      alphaInviteQuery.isError ||
+      alphaInviteQuery.data !== true)
+  ) {
+    return (
+      <AlphaInviteGate
+        hasStatusError={alphaInviteQuery.isError}
+        isLoading={alphaInviteQuery.isLoading}
+        onRedeemed={async () => {
+          await alphaInviteQuery.refetch();
+        }}
+        onRetry={() => void alphaInviteQuery.refetch()}
+      />
+    );
+  }
 
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.bg }]}>

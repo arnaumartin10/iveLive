@@ -1,4 +1,5 @@
 import * as AppleAuthentication from 'expo-apple-authentication';
+import Constants from 'expo-constants';
 import * as Crypto from 'expo-crypto';
 import { makeRedirectUri } from 'expo-auth-session';
 import * as Linking from 'expo-linking';
@@ -9,8 +10,13 @@ import { supabase } from '../../lib/supabase';
 
 WebBrowser.maybeCompleteAuthSession();
 
+const configuredScheme = Constants.expoConfig?.scheme;
+const appScheme = Array.isArray(configuredScheme)
+  ? (configuredScheme[0] ?? 'ivelive')
+  : (configuredScheme ?? 'ivelive');
+
 export const AUTH_REDIRECT_URI = makeRedirectUri({
-  scheme: 'ivelive',
+  scheme: appScheme,
   path: 'callback',
 });
 

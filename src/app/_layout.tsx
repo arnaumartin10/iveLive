@@ -14,7 +14,8 @@ import {
   DMMono_500Medium,
 } from '@expo-google-fonts/dm-mono';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import { QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider, useQuery } from '@tanstack/react-query';
+import Constants from 'expo-constants';
 import { router, Stack, SplashScreen, useSegments } from 'expo-router';
 import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
@@ -29,6 +30,7 @@ import { useAuthStore } from '../features/auth/store';
 import { ArtistCardProvider } from '../features/artists/ArtistCardProvider';
 import { useAuthListener } from '../features/auth/useAuthListener';
 import { useMe } from '../features/auth/hooks';
+import { hasAlphaInvite } from '../features/auth/api';
 import { queryClient } from '../lib/queryClient';
 import { ThemeProvider, useTheme } from '../theme/ThemeProvider';
 
@@ -40,16 +42,37 @@ function AppContent({ fontsReady }: { fontsReady: boolean }) {
   const user = useAuthStore((state) => state.user);
   const authLoading = useAuthStore((state) => state.isLoading);
   const segments = useSegments();
+  const alphaInviteOnly = Constants.expoConfig?.extra?.alphaInviteOnly === true;
+  const alphaInviteQuery = useQuery({
+    queryKey: ['alpha-invite-status', user?.id],
+    queryFn: hasAlphaInvite,
+    enabled: alphaInviteOnly && Boolean(user?.id),
+  });
   const profileQuery = useMe();
   const firstSegment = segments[0];
   const secondSegment = segments[1];
 
   useEffect(() => {
-    if (!fontsReady || authLoading || (user && profileQuery.isLoading)) return;
+    if (
+      !fontsReady ||
+      authLoading ||
+      (user &&
+        (profileQuery.isLoading ||
+          (alphaInviteOnly && alphaInviteQuery.isLoading)))
+    ) {
+      return;
+    }
     void SplashScreen.hideAsync().catch((error: unknown) => {
       console.error('[splash] Could not hide the native splash screen.', error);
     });
-  }, [authLoading, fontsReady, profileQuery.isLoading, user]);
+  }, [
+    alphaInviteOnly,
+    alphaInviteQuery.isLoading,
+    authLoading,
+    fontsReady,
+    profileQuery.isLoading,
+    user,
+  ]);
 
   useEffect(() => {
     if (authLoading) return;
@@ -64,7 +87,21 @@ function AppContent({ fontsReady }: { fontsReady: boolean }) {
       return;
     }
 
-    if (profileQuery.isLoading || profileQuery.error) return;
+    if (
+      profileQuery.isLoading ||
+      profileQuery.error ||
+      (alphaInviteOnly &&
+        (alphaInviteQuery.isLoading || alphaInviteQuery.isError))
+    ) {
+      return;
+    }
+
+    if (alphaInviteOnly && alphaInviteQuery.data !== true) {
+      if (firstSegment !== '(auth)' || secondSegment !== 'onboarding') {
+        router.replace('/(auth)/onboarding');
+      }
+      return;
+    }
 
     const needsOnboarding =
       !profileQuery.data || profileQuery.data.username.startsWith('user_');
@@ -79,6 +116,10 @@ function AppContent({ fontsReady }: { fontsReady: boolean }) {
     if (firstSegment === '(auth)') router.replace('/(tabs)');
   }, [
     authLoading,
+    alphaInviteOnly,
+    alphaInviteQuery.data,
+    alphaInviteQuery.isError,
+    alphaInviteQuery.isLoading,
     firstSegment,
     profileQuery.data,
     profileQuery.error,
@@ -90,26 +131,33 @@ function AppContent({ fontsReady }: { fontsReady: boolean }) {
   return (
     <>
       <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
-      {authLoading || (user && profileQuery.isLoading) ? (
+      {authLoading ||
+      (user &&
+        (profileQuery.isLoading ||
+          (alphaInviteOnly && alphaInviteQuery.isLoading))) ? (
         <View style={[styles.loading, { backgroundColor: colors.bg }]}>
           <ActivityIndicator color={colors.accent} />
           <Text variant="caption" color="secondary">
             Getting things ready
           </Text>
         </View>
-      ) : profileQuery.error ? (
+      ) : profileQuery.error ||
+        (alphaInviteOnly && alphaInviteQuery.isError) ? (
         <View style={[styles.loading, { backgroundColor: colors.bg }]}>
-          <Text variant="title">Could not load your profile</Text>
+          <Text variant="title">
+            {profileQuery.error
+              ? 'Could not load your profile'
+              : 'Could not check your invite'}
+          </Text>
           <Text variant="caption" color="secondary" center>
-            {profileQuery.error instanceof Error
-              ? profileQuery.error.message
-              : 'Check your connection and restart IveLive.'}
+            Check your connection and try again.
           </Text>
           <View style={{ flexDirection: 'row', gap: 12, marginTop: 16 }}>
             <Button
               label="Try Again"
               onPress={() => {
-                void profileQuery.refetch();
+                if (profileQuery.error) void profileQuery.refetch();
+                if (alphaInviteQuery.isError) void alphaInviteQuery.refetch();
               }}
             />
             <Button

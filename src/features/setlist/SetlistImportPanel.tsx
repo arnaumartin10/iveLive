@@ -499,7 +499,10 @@ export function SetlistImportPanel({
             accessibilityRole="button"
             accessibilityLabel="Close setlist importer"
             onPress={() => setVisible(false)}
-            style={styles.modalBackdrop}
+            style={[
+              styles.modalBackdrop,
+              { backgroundColor: `${colors.ink}A6` },
+            ]}
           />
           <View
             style={[
@@ -843,7 +846,7 @@ const styles = StyleSheet.create({
   },
   modalBackdrop: {
     ...StyleSheet.absoluteFill,
-    backgroundColor: 'rgba(0,0,0,0.65)',
+    backgroundColor: 'transparent',
   },
   modalCard: {
     maxHeight: '90%',

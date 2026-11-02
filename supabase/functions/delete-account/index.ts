@@ -1,4 +1,7 @@
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.0';
+import {
+  createClient,
+  type SupabaseClient,
+} from 'https://esm.sh/@supabase/supabase-js@2.57.0';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -9,6 +12,7 @@ const corsHeaders = {
 const STORAGE_PAGE_SIZE = 1000;
 
 type StorageEntry = { id: string | null; name: string };
+type AdminClient = SupabaseClient<any, 'public', 'public', any, any>;
 
 Deno.serve(async (request: Request) => {
   if (request.method === 'OPTIONS') {
@@ -39,8 +43,13 @@ Deno.serve(async (request: Request) => {
     if (userError || !userResult.user)
       return json({ error: 'Unauthorized' }, 401);
 
-    const { confirmation } = await request.json();
-    if (confirmation !== 'DELETE') {
+    const body: unknown = await request.json().catch(() => null);
+    if (
+      !body ||
+      typeof body !== 'object' ||
+      !('confirmation' in body) ||
+      body.confirmation !== 'DELETE'
+    ) {
       return json({ error: 'Confirmation is required' }, 400);
     }
 
@@ -70,11 +79,16 @@ Deno.serve(async (request: Request) => {
 
     return json({ deleted: true });
   } catch (error) {
-    console.error('[delete-account]', error);
+    console.error(
+      JSON.stringify({
+        event: 'account_deletion_failed',
+        errorType: error instanceof Error ? error.name : 'UnknownError',
+      }),
+    );
     return json(
       {
         error:
-          error instanceof Error ? error.message : 'Account deletion failed',
+          'Account deletion could not be completed. Please contact support.',
       },
       500,
     );
@@ -82,7 +96,7 @@ Deno.serve(async (request: Request) => {
 });
 
 async function listFiles(
-  admin: ReturnType<typeof createClient>,
+  admin: AdminClient,
   bucket: string,
   prefix: string,
 ): Promise<string[]> {
@@ -112,7 +126,7 @@ async function listFiles(
 }
 
 async function removeFiles(
-  admin: ReturnType<typeof createClient>,
+  admin: AdminClient,
   bucket: string,
   paths: string[],
 ): Promise<void> {
