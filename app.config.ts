@@ -10,7 +10,10 @@ function pluginName(plugin: NonNullable<ExpoConfig['plugins']>[number]) {
 }
 
 function getAppEnvironment(): AppEnvironment {
-  const value = process.env.APP_ENV ?? process.env.EAS_BUILD_PROFILE;
+  const value =
+    process.env.APP_ENV ||
+    process.env.EAS_BUILD_PROFILE ||
+    process.env.VERCEL_ENV;
   if (!value && process.env.VERCEL === '1') {
     throw new Error('Set APP_ENV to preview or production in Vercel settings.');
   }
