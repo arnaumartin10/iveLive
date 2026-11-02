@@ -4,6 +4,7 @@ import { makeRedirectUri } from 'expo-auth-session';
 import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
 import type { EmailOtpType } from '@supabase/supabase-js';
+import { Platform } from 'react-native';
 import { supabase } from '../../lib/supabase';
 
 WebBrowser.maybeCompleteAuthSession();
@@ -13,13 +14,28 @@ export const AUTH_REDIRECT_URI = makeRedirectUri({
   path: 'callback',
 });
 
+export function getAuthRedirectUri(
+  platform: typeof Platform.OS = Platform.OS,
+  webOrigin?: string,
+) {
+  if (platform === 'web') {
+    const origin =
+      webOrigin ??
+      (typeof window !== 'undefined' ? window.location.origin : undefined);
+    if (!origin) throw new Error('The web sign-in origin is unavailable.');
+    return new URL('/callback', origin).toString();
+  }
+
+  return AUTH_REDIRECT_URI;
+}
+
 const handledRedirects = new Set<string>();
 
 export async function sendEmailOtp(email: string) {
   const { error } = await supabase.auth.signInWithOtp({
     email,
     options: {
-      emailRedirectTo: AUTH_REDIRECT_URI,
+      emailRedirectTo: getAuthRedirectUri(),
       shouldCreateUser: true,
     },
   });
@@ -39,11 +55,12 @@ export async function verifyEmailOtp(email: string, token: string) {
 }
 
 export async function signInWithGoogle() {
+  const redirectTo = getAuthRedirectUri();
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: AUTH_REDIRECT_URI,
-      skipBrowserRedirect: true,
+      redirectTo,
+      skipBrowserRedirect: Platform.OS !== 'web',
     },
   });
 
@@ -51,10 +68,9 @@ export async function signInWithGoogle() {
   if (!data.url)
     throw new Error('Supabase did not return a Google sign-in URL.');
 
-  const result = await WebBrowser.openAuthSessionAsync(
-    data.url,
-    AUTH_REDIRECT_URI,
-  );
+  if (Platform.OS === 'web') return;
+
+  const result = await WebBrowser.openAuthSessionAsync(data.url, redirectTo);
 
   if (result.type === 'success' && result.url) {
     await completeAuthRedirect(result.url);

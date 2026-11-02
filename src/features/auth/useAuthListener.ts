@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import * as Linking from 'expo-linking';
+import { Platform } from 'react-native';
 import { supabase } from '@lib/supabase';
 import { useAuthStore } from './store';
 import { completeAuthRedirect } from './oauth';
@@ -35,7 +36,11 @@ export function useAuthListener() {
       }
     }
 
-    void Linking.getInitialURL().then(handleUrl);
+    if (Platform.OS === 'web' && typeof window !== 'undefined') {
+      void handleUrl(window.location.href);
+    } else {
+      void Linking.getInitialURL().then(handleUrl);
+    }
     const linkSubscription = Linking.addEventListener('url', ({ url }) => {
       void handleUrl(url);
     });
