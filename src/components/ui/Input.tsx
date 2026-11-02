@@ -1,112 +1,121 @@
-import React, { forwardRef } from 'react';
+/**
+ * PAPER & INK — Input
+ *
+ * Ruled-line form field with an underlined mono label.
+ * Evokes an official form or ledger entry.
+ */
+import React from 'react';
 import {
-  StyleSheet,
   TextInput,
-  TextInputProps,
   View,
-  ViewStyle,
+  StyleSheet,
+  type TextInputProps,
+  type StyleProp,
+  type ViewStyle,
 } from 'react-native';
-import { palette, radius, spacing, fontFamily, fontSize } from '@theme/tokens';
+import { useTheme } from '../../theme/ThemeProvider';
+import { fontFamily, fontSize, spacing } from '../../theme/tokens';
 import { Text } from './Text';
 
 export interface InputProps extends TextInputProps {
   label?: string;
   error?: string;
-  helperText?: string;
-  containerStyle?: ViewStyle;
+  containerStyle?: StyleProp<ViewStyle>;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
 }
 
-export const Input = forwardRef<TextInput, InputProps>(function Input(
-  {
-    label,
-    error,
-    helperText,
-    containerStyle,
-    leftIcon,
-    rightIcon,
-    style,
-    placeholderTextColor = palette.muted,
-    ...props
-  },
-  ref,
-) {
-  const hasError = Boolean(error);
+export function Input({
+  label,
+  error,
+  containerStyle,
+  leftIcon,
+  rightIcon,
+  style,
+  ...props
+}: InputProps) {
+  const { colors } = useTheme();
 
   return (
     <View style={[styles.container, containerStyle]}>
       {label && (
-        <Text variant="label" color={hasError ? 'crimson' : 'secondary'} style={styles.label}>
-          {label}
-        </Text>
+        <View style={[styles.labelWrap, { borderBottomColor: colors.ink }]}>
+          <Text
+            variant="label"
+            style={[styles.labelText, { color: colors.ink }]}
+          >
+            {label}
+          </Text>
+        </View>
       )}
-
       <View
         style={[
-          styles.inputWrapper,
-          hasError && styles.errorBorder,
+          styles.field,
+          {
+            backgroundColor: colors.surface,
+            borderBottomColor: error ? colors.danger : colors.ink,
+          },
         ]}
       >
         {leftIcon && <View style={styles.iconLeft}>{leftIcon}</View>}
         <TextInput
-          ref={ref}
-          style={[styles.input, style]}
-          placeholderTextColor={placeholderTextColor}
-          accessibilityLabel={label ?? props.placeholder}
-          aria-invalid={hasError}
+          placeholderTextColor={colors.inkMuted}
+          style={[
+            styles.input,
+            {
+              color: colors.ink,
+              fontFamily: fontFamily.regular,
+            },
+            style,
+          ]}
           {...props}
         />
         {rightIcon && <View style={styles.iconRight}>{rightIcon}</View>}
       </View>
-
-      {hasError ? (
-        <Text variant="caption" color="crimson" style={styles.helperText}>
+      {error && (
+        <Text variant="caption" style={[styles.error, { color: colors.danger }]}>
           {error}
         </Text>
-      ) : helperText ? (
-        <Text variant="caption" color="muted" style={styles.helperText}>
-          {helperText}
-        </Text>
-      ) : null}
+      )}
     </View>
   );
-});
+}
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: spacing[4],
+    marginVertical: spacing.sm,
   },
-  label: {
-    marginBottom: spacing[2],
+  labelWrap: {
+    alignSelf: 'flex-start',
+    borderBottomWidth: 1.5,
+    marginBottom: 4,
+    paddingBottom: 2,
   },
-  inputWrapper: {
+  labelText: {
+    letterSpacing: 1.5,
+    fontWeight: '700',
+    fontSize: 11,
+  },
+  field: {
+    borderBottomWidth: 2,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: palette.surface2,
-    borderWidth: 1,
-    borderColor: palette.border,
-    borderRadius: radius.lg,
-    minHeight: 48, // Accessibility: minimum 44pt touch target
-    paddingHorizontal: spacing[3],
+    minHeight: 44,
+    paddingHorizontal: 4,
   },
   input: {
     flex: 1,
-    color: palette.textPrimary,
-    fontFamily: fontFamily.regular,
     fontSize: fontSize.base,
-    paddingVertical: spacing[3],
-  },
-  errorBorder: {
-    borderColor: palette.crimson,
+    paddingVertical: 8,
   },
   iconLeft: {
-    marginRight: spacing[2],
+    marginRight: 8,
   },
   iconRight: {
-    marginLeft: spacing[2],
+    marginLeft: 8,
   },
-  helperText: {
-    marginTop: spacing[1],
+  error: {
+    marginTop: 4,
+    fontSize: 12,
   },
 });

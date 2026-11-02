@@ -1,0 +1,1891 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Welcome poster brand renders and matches the welcome layout on iPhone SE 1`] = `
+<RNCSafeAreaView
+  edges={
+    {
+      "bottom": "additive",
+      "left": "additive",
+      "right": "additive",
+      "top": "additive",
+    }
+  }
+  style={
+    [
+      {
+        "flex": 1,
+      },
+      {
+        "backgroundColor": "#EFD6AC",
+      },
+    ]
+  }
+>
+  <View
+    pointerEvents="none"
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
+    }
+  >
+    <View
+      pointerEvents="none"
+      style={
+        [
+          {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          },
+          undefined,
+        ]
+      }
+    />
+  </View>
+  <View
+    pointerEvents="none"
+    style={
+      [
+        {
+          "borderWidth": 1,
+          "bottom": 0,
+          "left": 0,
+          "pointerEvents": "none",
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "borderColor": "#432534",
+          "marginHorizontal": 14,
+          "marginVertical": 8,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        [
+          {
+            "height": 1,
+            "position": "absolute",
+            "width": 18,
+          },
+          {
+            "left": "50%",
+            "top": -1,
+          },
+          {
+            "backgroundColor": "#432534",
+          },
+        ]
+      }
+    />
+    <View
+      style={
+        [
+          {
+            "height": 1,
+            "position": "absolute",
+            "width": 18,
+          },
+          {
+            "bottom": -1,
+            "left": "50%",
+          },
+          {
+            "backgroundColor": "#432534",
+          },
+        ]
+      }
+    />
+  </View>
+  <RCTScrollView
+    bounces={false}
+    contentContainerStyle={
+      [
+        {
+          "flexGrow": 1,
+          "justifyContent": "space-between",
+          "paddingBottom": 16,
+          "paddingTop": 10,
+        },
+        {
+          "minHeight": 1314,
+          "paddingHorizontal": 28,
+        },
+      ]
+    }
+    keyboardShouldPersistTaps="handled"
+    showsVerticalScrollIndicator={false}
+  >
+    <View>
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "justifyContent": "space-between",
+            "minHeight": 34,
+          }
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "alignItems": "center",
+                "justifyContent": "center",
+              },
+              {
+                "height": 27,
+                "width": 114.75,
+              },
+            ]
+          }
+        >
+          <ViewManagerAdapter_ExpoImage
+            accessibilityLabel="IveLive"
+            containerViewRef={"[React.ref]"}
+            contentFit="contain"
+            contentPosition={
+              {
+                "left": "50%",
+                "top": "50%",
+              }
+            }
+            height="100%"
+            nativeViewRef={"[React.ref]"}
+            onError={[Function]}
+            onLoad={[Function]}
+            onLoadStart={[Function]}
+            onProgress={[Function]}
+            placeholder={[]}
+            sfEffect={null}
+            source={
+              [
+                {
+                  "testUri": "../../../src/assets/brand/wordmark.png",
+                },
+              ]
+            }
+            style={
+              {
+                "height": "100%",
+                "tintColor": "#432534",
+                "width": "100%",
+              }
+            }
+            symbolSize={null}
+            symbolWeight={null}
+            tintColor={4282590516}
+            transition={null}
+            width="100%"
+          />
+        </View>
+        <Text
+          style={
+            [
+              {
+                "includeFontPadding": false,
+              },
+              {
+                "color": "#432534",
+                "fontFamily": "DMMono_400Regular",
+                "fontSize": 13,
+                "letterSpacing": 0.3,
+                "lineHeight": 20,
+                "textAlign": undefined,
+                "textTransform": undefined,
+              },
+              {
+                "color": "#614755",
+              },
+            ]
+          }
+        >
+          LIVE MUSIC ARCHIVE
+        </Text>
+      </View>
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "gap": 8,
+            "paddingVertical": 8,
+          }
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "alignItems": "center",
+                "justifyContent": "center",
+              },
+              {
+                "opacity": 1,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
+              },
+            ]
+          }
+        >
+          <View
+            accessibilityLabel="Change mascot colorway. THIS WEEK: ROCK"
+            accessibilityRole="button"
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "alignItems": "center",
+                "justifyContent": "center",
+              }
+            }
+          >
+            <View
+              accessible={false}
+              style={
+                [
+                  {
+                    "alignItems": "center",
+                    "borderRadius": 999,
+                    "borderWidth": 2,
+                    "justifyContent": "center",
+                    "overflow": "hidden",
+                  },
+                  {
+                    "elevation": 2,
+                    "shadowColor": "#432534",
+                    "shadowOffset": {
+                      "height": 2,
+                      "width": 2,
+                    },
+                    "shadowOpacity": 0.85,
+                    "shadowRadius": 0,
+                  },
+                  {
+                    "backgroundColor": "#EFD6AC",
+                    "borderColor": "#432534",
+                    "height": 534,
+                    "width": 534,
+                  },
+                  undefined,
+                  {
+                    "transform": [
+                      {
+                        "rotate": "-3deg",
+                      },
+                      {
+                        "translateY": -0,
+                      },
+                    ],
+                  },
+                ]
+              }
+            />
+          </View>
+        </View>
+        <Text
+          accessibilityLiveRegion="none"
+          style={
+            [
+              {
+                "includeFontPadding": false,
+              },
+              {
+                "color": "#432534",
+                "fontFamily": "DMMono_400Regular",
+                "fontSize": 13,
+                "letterSpacing": 0.3,
+                "lineHeight": 20,
+                "textAlign": undefined,
+                "textTransform": undefined,
+              },
+              {
+                "color": "#963a23",
+                "letterSpacing": 1.1,
+                "paddingTop": 1,
+              },
+            ]
+          }
+        >
+          THIS WEEK: ROCK
+        </Text>
+        <Text
+          style={
+            [
+              {
+                "includeFontPadding": false,
+              },
+              {
+                "color": "#432534",
+                "fontFamily": "YoungSerif_400Regular",
+                "fontSize": 48,
+                "letterSpacing": -0.5,
+                "lineHeight": 52,
+                "textAlign": "center",
+                "textTransform": undefined,
+              },
+              [
+                {
+                  "fontSize": 28,
+                  "lineHeight": 34,
+                  "maxWidth": 340,
+                },
+                {
+                  "color": "#432534",
+                },
+              ],
+            ]
+          }
+        >
+          Every show you’ve ever been to.
+        </Text>
+        <View
+          style={
+            [
+              {
+                "alignItems": "center",
+                "borderStyle": "dashed",
+                "borderWidth": 1,
+                "flexDirection": "row",
+                "gap": 12,
+                "marginTop": 2,
+                "paddingHorizontal": 10,
+                "paddingVertical": 5,
+              },
+              {
+                "borderColor": "#432534",
+              },
+            ]
+          }
+        >
+          <Text
+            style={
+              [
+                {
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#432534",
+                  "fontFamily": "DMMono_400Regular",
+                  "fontSize": 13,
+                  "letterSpacing": 0.3,
+                  "lineHeight": 20,
+                  "textAlign": undefined,
+                  "textTransform": undefined,
+                },
+                {
+                  "color": "#432534",
+                },
+              ]
+            }
+          >
+            ADMIT ONE · EST. 2026
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#432534",
+                  "fontFamily": "DMMono_400Regular",
+                  "fontSize": 13,
+                  "letterSpacing": 0.3,
+                  "lineHeight": 20,
+                  "textAlign": undefined,
+                  "textTransform": undefined,
+                },
+                {
+                  "color": "#614755",
+                },
+              ]
+            }
+          >
+            ✦
+          </Text>
+        </View>
+      </View>
+      <View
+        style={
+          [
+            {
+              "borderRadius": 0,
+              "borderWidth": 1.5,
+              "gap": 10,
+              "padding": 14,
+            },
+            {
+              "backgroundColor": "#EFD6AC",
+              "borderColor": "#432534",
+            },
+          ]
+        }
+      >
+        <Text
+          style={
+            [
+              {
+                "includeFontPadding": false,
+              },
+              {
+                "color": "#432534",
+                "fontFamily": "DMMono_500Medium",
+                "fontSize": 11,
+                "letterSpacing": 1.5,
+                "lineHeight": 16,
+                "textAlign": undefined,
+                "textTransform": "uppercase",
+              },
+              [
+                {
+                  "letterSpacing": 1.1,
+                  "textAlign": "center",
+                },
+                {
+                  "color": "#432534",
+                },
+              ],
+            ]
+          }
+        >
+          KEEP EVERY NIGHT
+        </Text>
+        <TextInput
+          accessibilityLabel="Email address"
+          autoCapitalize="none"
+          autoComplete="email"
+          autoCorrect={false}
+          keyboardType="email-address"
+          onChangeText={[Function]}
+          placeholder="Your email address"
+          placeholderTextColor="#614755"
+          style={
+            [
+              {
+                "borderBottomWidth": 1.5,
+                "borderRadius": 0,
+                "fontFamily": "SchibstedGrotesk_400Regular",
+                "fontSize": 15,
+                "minHeight": 48,
+                "paddingHorizontal": 12,
+              },
+              {
+                "backgroundColor": "#EFD6AC",
+                "borderColor": "#432534",
+                "color": "#432534",
+              },
+            ]
+          }
+          value=""
+        />
+        <View
+          accessibilityLabel="Continue with email"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "busy": false,
+              "checked": undefined,
+              "disabled": false,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            [
+              {
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                  {
+                    "rotate": "0deg",
+                  },
+                ],
+              },
+              {
+                "alignItems": "center",
+                "justifyContent": "center",
+                "minHeight": 44,
+                "overflow": "visible",
+              },
+              {
+                "minHeight": 48,
+                "paddingHorizontal": 20,
+                "paddingVertical": 12,
+              },
+              {
+                "backgroundColor": "#C44900",
+                "borderColor": "#C44900",
+                "borderRadius": 2,
+                "borderWidth": 2,
+              },
+              {
+                "elevation": 4,
+                "shadowColor": "#432534",
+                "shadowOffset": {
+                  "height": 4,
+                  "width": 4,
+                },
+                "shadowOpacity": 0.85,
+                "shadowRadius": 0,
+              },
+              false,
+              undefined,
+            ]
+          }
+        >
+          <View
+            style={
+              {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "gap": 8,
+              }
+            }
+          >
+            <Text
+              style={
+                [
+                  {
+                    "includeFontPadding": false,
+                  },
+                  {
+                    "fontSize": 16,
+                    "includeFontPadding": false,
+                  },
+                  {
+                    "color": "#EFD6AC",
+                    "fontFamily": "SchibstedGrotesk_700Bold",
+                    "letterSpacing": 0.5,
+                    "textDecorationLine": "none",
+                  },
+                ]
+              }
+            >
+              Continue with email
+            </Text>
+          </View>
+        </View>
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "gap": 12,
+            }
+          }
+        >
+          <View
+            style={
+              [
+                {
+                  "flex": 1,
+                  "height": 0.5,
+                },
+                {
+                  "backgroundColor": "#583e4c",
+                },
+              ]
+            }
+          />
+          <Text
+            style={
+              [
+                {
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#614755",
+                  "fontFamily": "DMMono_500Medium",
+                  "fontSize": 11,
+                  "letterSpacing": 2,
+                  "lineHeight": 14,
+                  "textAlign": undefined,
+                  "textTransform": "uppercase",
+                },
+                undefined,
+              ]
+            }
+          >
+            OR
+          </Text>
+          <View
+            style={
+              [
+                {
+                  "flex": 1,
+                  "height": 0.5,
+                },
+                {
+                  "backgroundColor": "#583e4c",
+                },
+              ]
+            }
+          />
+        </View>
+        <View
+          accessibilityLabel="Continue with Google"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "busy": false,
+              "checked": undefined,
+              "disabled": false,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            [
+              {
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                  {
+                    "rotate": "0deg",
+                  },
+                ],
+              },
+              {
+                "alignItems": "center",
+                "justifyContent": "center",
+                "minHeight": 44,
+                "overflow": "visible",
+              },
+              {
+                "minHeight": 48,
+                "paddingHorizontal": 20,
+                "paddingVertical": 12,
+              },
+              {
+                "backgroundColor": "#EFD6AC",
+                "borderColor": "#432534",
+                "borderRadius": 2,
+                "borderWidth": 2,
+              },
+              {
+                "elevation": 2,
+                "shadowColor": "#432534",
+                "shadowOffset": {
+                  "height": 2,
+                  "width": 2,
+                },
+                "shadowOpacity": 0.85,
+                "shadowRadius": 0,
+              },
+              false,
+              undefined,
+            ]
+          }
+        >
+          <View
+            style={
+              {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "gap": 8,
+              }
+            }
+          >
+            <Text
+              style={
+                [
+                  {
+                    "includeFontPadding": false,
+                  },
+                  {
+                    "fontSize": 16,
+                    "includeFontPadding": false,
+                  },
+                  {
+                    "color": "#432534",
+                    "fontFamily": "SchibstedGrotesk_700Bold",
+                    "letterSpacing": 0,
+                    "textDecorationLine": "none",
+                  },
+                ]
+              }
+            >
+              Continue with Google
+            </Text>
+          </View>
+        </View>
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "gap": 12,
+              "justifyContent": "center",
+              "paddingTop": 2,
+            }
+          }
+        >
+          <View
+            accessibilityRole="link"
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+          >
+            <Text
+              style={
+                [
+                  {
+                    "includeFontPadding": false,
+                  },
+                  {
+                    "color": "#432534",
+                    "fontFamily": "SchibstedGrotesk_500Medium",
+                    "fontSize": 13,
+                    "letterSpacing": undefined,
+                    "lineHeight": 18,
+                    "textAlign": undefined,
+                    "textTransform": undefined,
+                  },
+                  {
+                    "color": "#963a23",
+                  },
+                ]
+              }
+            >
+              Terms
+            </Text>
+          </View>
+          <Text
+            style={
+              [
+                {
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#432534",
+                  "fontFamily": "DMMono_400Regular",
+                  "fontSize": 13,
+                  "letterSpacing": 0.3,
+                  "lineHeight": 20,
+                  "textAlign": undefined,
+                  "textTransform": undefined,
+                },
+                {
+                  "color": "#614755",
+                },
+              ]
+            }
+          >
+            ·
+          </Text>
+          <View
+            accessibilityRole="link"
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+          >
+            <Text
+              style={
+                [
+                  {
+                    "includeFontPadding": false,
+                  },
+                  {
+                    "color": "#432534",
+                    "fontFamily": "SchibstedGrotesk_500Medium",
+                    "fontSize": 13,
+                    "letterSpacing": undefined,
+                    "lineHeight": 18,
+                    "textAlign": undefined,
+                    "textTransform": undefined,
+                  },
+                  {
+                    "color": "#963a23",
+                  },
+                ]
+              }
+            >
+              Privacy
+            </Text>
+          </View>
+        </View>
+      </View>
+    </View>
+  </RCTScrollView>
+</RNCSafeAreaView>
+`;
+
+exports[`Welcome poster brand renders and matches the welcome layout on large phone 1`] = `
+<RNCSafeAreaView
+  edges={
+    {
+      "bottom": "additive",
+      "left": "additive",
+      "right": "additive",
+      "top": "additive",
+    }
+  }
+  style={
+    [
+      {
+        "flex": 1,
+      },
+      {
+        "backgroundColor": "#EFD6AC",
+      },
+    ]
+  }
+>
+  <View
+    pointerEvents="none"
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
+    }
+  >
+    <View
+      pointerEvents="none"
+      style={
+        [
+          {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          },
+          undefined,
+        ]
+      }
+    />
+  </View>
+  <View
+    pointerEvents="none"
+    style={
+      [
+        {
+          "borderWidth": 1,
+          "bottom": 0,
+          "left": 0,
+          "pointerEvents": "none",
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "borderColor": "#432534",
+          "marginHorizontal": 14,
+          "marginVertical": 8,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        [
+          {
+            "height": 1,
+            "position": "absolute",
+            "width": 18,
+          },
+          {
+            "left": "50%",
+            "top": -1,
+          },
+          {
+            "backgroundColor": "#432534",
+          },
+        ]
+      }
+    />
+    <View
+      style={
+        [
+          {
+            "height": 1,
+            "position": "absolute",
+            "width": 18,
+          },
+          {
+            "bottom": -1,
+            "left": "50%",
+          },
+          {
+            "backgroundColor": "#432534",
+          },
+        ]
+      }
+    />
+  </View>
+  <RCTScrollView
+    bounces={false}
+    contentContainerStyle={
+      [
+        {
+          "flexGrow": 1,
+          "justifyContent": "space-between",
+          "paddingBottom": 16,
+          "paddingTop": 10,
+        },
+        {
+          "minHeight": 1314,
+          "paddingHorizontal": 28,
+        },
+      ]
+    }
+    keyboardShouldPersistTaps="handled"
+    showsVerticalScrollIndicator={false}
+  >
+    <View>
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "justifyContent": "space-between",
+            "minHeight": 34,
+          }
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "alignItems": "center",
+                "justifyContent": "center",
+              },
+              {
+                "height": 27,
+                "width": 114.75,
+              },
+            ]
+          }
+        >
+          <ViewManagerAdapter_ExpoImage
+            accessibilityLabel="IveLive"
+            containerViewRef={"[React.ref]"}
+            contentFit="contain"
+            contentPosition={
+              {
+                "left": "50%",
+                "top": "50%",
+              }
+            }
+            height="100%"
+            nativeViewRef={"[React.ref]"}
+            onError={[Function]}
+            onLoad={[Function]}
+            onLoadStart={[Function]}
+            onProgress={[Function]}
+            placeholder={[]}
+            sfEffect={null}
+            source={
+              [
+                {
+                  "testUri": "../../../src/assets/brand/wordmark.png",
+                },
+              ]
+            }
+            style={
+              {
+                "height": "100%",
+                "tintColor": "#432534",
+                "width": "100%",
+              }
+            }
+            symbolSize={null}
+            symbolWeight={null}
+            tintColor={4282590516}
+            transition={null}
+            width="100%"
+          />
+        </View>
+        <Text
+          style={
+            [
+              {
+                "includeFontPadding": false,
+              },
+              {
+                "color": "#432534",
+                "fontFamily": "DMMono_400Regular",
+                "fontSize": 13,
+                "letterSpacing": 0.3,
+                "lineHeight": 20,
+                "textAlign": undefined,
+                "textTransform": undefined,
+              },
+              {
+                "color": "#614755",
+              },
+            ]
+          }
+        >
+          LIVE MUSIC ARCHIVE
+        </Text>
+      </View>
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "gap": 8,
+            "paddingVertical": 8,
+          }
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "alignItems": "center",
+                "justifyContent": "center",
+              },
+              {
+                "opacity": 1,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
+              },
+            ]
+          }
+        >
+          <View
+            accessibilityLabel="Change mascot colorway. THIS WEEK: ROCK"
+            accessibilityRole="button"
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "alignItems": "center",
+                "justifyContent": "center",
+              }
+            }
+          >
+            <View
+              accessible={false}
+              style={
+                [
+                  {
+                    "alignItems": "center",
+                    "borderRadius": 999,
+                    "borderWidth": 2,
+                    "justifyContent": "center",
+                    "overflow": "hidden",
+                  },
+                  {
+                    "elevation": 2,
+                    "shadowColor": "#432534",
+                    "shadowOffset": {
+                      "height": 2,
+                      "width": 2,
+                    },
+                    "shadowOpacity": 0.85,
+                    "shadowRadius": 0,
+                  },
+                  {
+                    "backgroundColor": "#EFD6AC",
+                    "borderColor": "#432534",
+                    "height": 534,
+                    "width": 534,
+                  },
+                  undefined,
+                  {
+                    "transform": [
+                      {
+                        "rotate": "-3deg",
+                      },
+                      {
+                        "translateY": -0,
+                      },
+                    ],
+                  },
+                ]
+              }
+            />
+          </View>
+        </View>
+        <Text
+          accessibilityLiveRegion="none"
+          style={
+            [
+              {
+                "includeFontPadding": false,
+              },
+              {
+                "color": "#432534",
+                "fontFamily": "DMMono_400Regular",
+                "fontSize": 13,
+                "letterSpacing": 0.3,
+                "lineHeight": 20,
+                "textAlign": undefined,
+                "textTransform": undefined,
+              },
+              {
+                "color": "#963a23",
+                "letterSpacing": 1.1,
+                "paddingTop": 1,
+              },
+            ]
+          }
+        >
+          THIS WEEK: ROCK
+        </Text>
+        <Text
+          style={
+            [
+              {
+                "includeFontPadding": false,
+              },
+              {
+                "color": "#432534",
+                "fontFamily": "YoungSerif_400Regular",
+                "fontSize": 48,
+                "letterSpacing": -0.5,
+                "lineHeight": 52,
+                "textAlign": "center",
+                "textTransform": undefined,
+              },
+              [
+                {
+                  "fontSize": 28,
+                  "lineHeight": 34,
+                  "maxWidth": 340,
+                },
+                {
+                  "color": "#432534",
+                },
+              ],
+            ]
+          }
+        >
+          Every show you’ve ever been to.
+        </Text>
+        <View
+          style={
+            [
+              {
+                "alignItems": "center",
+                "borderStyle": "dashed",
+                "borderWidth": 1,
+                "flexDirection": "row",
+                "gap": 12,
+                "marginTop": 2,
+                "paddingHorizontal": 10,
+                "paddingVertical": 5,
+              },
+              {
+                "borderColor": "#432534",
+              },
+            ]
+          }
+        >
+          <Text
+            style={
+              [
+                {
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#432534",
+                  "fontFamily": "DMMono_400Regular",
+                  "fontSize": 13,
+                  "letterSpacing": 0.3,
+                  "lineHeight": 20,
+                  "textAlign": undefined,
+                  "textTransform": undefined,
+                },
+                {
+                  "color": "#432534",
+                },
+              ]
+            }
+          >
+            ADMIT ONE · EST. 2026
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#432534",
+                  "fontFamily": "DMMono_400Regular",
+                  "fontSize": 13,
+                  "letterSpacing": 0.3,
+                  "lineHeight": 20,
+                  "textAlign": undefined,
+                  "textTransform": undefined,
+                },
+                {
+                  "color": "#614755",
+                },
+              ]
+            }
+          >
+            ✦
+          </Text>
+        </View>
+      </View>
+      <View
+        style={
+          [
+            {
+              "borderRadius": 0,
+              "borderWidth": 1.5,
+              "gap": 10,
+              "padding": 14,
+            },
+            {
+              "backgroundColor": "#EFD6AC",
+              "borderColor": "#432534",
+            },
+          ]
+        }
+      >
+        <Text
+          style={
+            [
+              {
+                "includeFontPadding": false,
+              },
+              {
+                "color": "#432534",
+                "fontFamily": "DMMono_500Medium",
+                "fontSize": 11,
+                "letterSpacing": 1.5,
+                "lineHeight": 16,
+                "textAlign": undefined,
+                "textTransform": "uppercase",
+              },
+              [
+                {
+                  "letterSpacing": 1.1,
+                  "textAlign": "center",
+                },
+                {
+                  "color": "#432534",
+                },
+              ],
+            ]
+          }
+        >
+          KEEP EVERY NIGHT
+        </Text>
+        <TextInput
+          accessibilityLabel="Email address"
+          autoCapitalize="none"
+          autoComplete="email"
+          autoCorrect={false}
+          keyboardType="email-address"
+          onChangeText={[Function]}
+          placeholder="Your email address"
+          placeholderTextColor="#614755"
+          style={
+            [
+              {
+                "borderBottomWidth": 1.5,
+                "borderRadius": 0,
+                "fontFamily": "SchibstedGrotesk_400Regular",
+                "fontSize": 15,
+                "minHeight": 48,
+                "paddingHorizontal": 12,
+              },
+              {
+                "backgroundColor": "#EFD6AC",
+                "borderColor": "#432534",
+                "color": "#432534",
+              },
+            ]
+          }
+          value=""
+        />
+        <View
+          accessibilityLabel="Continue with email"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "busy": false,
+              "checked": undefined,
+              "disabled": false,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            [
+              {
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                  {
+                    "rotate": "0deg",
+                  },
+                ],
+              },
+              {
+                "alignItems": "center",
+                "justifyContent": "center",
+                "minHeight": 44,
+                "overflow": "visible",
+              },
+              {
+                "minHeight": 48,
+                "paddingHorizontal": 20,
+                "paddingVertical": 12,
+              },
+              {
+                "backgroundColor": "#C44900",
+                "borderColor": "#C44900",
+                "borderRadius": 2,
+                "borderWidth": 2,
+              },
+              {
+                "elevation": 4,
+                "shadowColor": "#432534",
+                "shadowOffset": {
+                  "height": 4,
+                  "width": 4,
+                },
+                "shadowOpacity": 0.85,
+                "shadowRadius": 0,
+              },
+              false,
+              undefined,
+            ]
+          }
+        >
+          <View
+            style={
+              {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "gap": 8,
+              }
+            }
+          >
+            <Text
+              style={
+                [
+                  {
+                    "includeFontPadding": false,
+                  },
+                  {
+                    "fontSize": 16,
+                    "includeFontPadding": false,
+                  },
+                  {
+                    "color": "#EFD6AC",
+                    "fontFamily": "SchibstedGrotesk_700Bold",
+                    "letterSpacing": 0.5,
+                    "textDecorationLine": "none",
+                  },
+                ]
+              }
+            >
+              Continue with email
+            </Text>
+          </View>
+        </View>
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "gap": 12,
+            }
+          }
+        >
+          <View
+            style={
+              [
+                {
+                  "flex": 1,
+                  "height": 0.5,
+                },
+                {
+                  "backgroundColor": "#583e4c",
+                },
+              ]
+            }
+          />
+          <Text
+            style={
+              [
+                {
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#614755",
+                  "fontFamily": "DMMono_500Medium",
+                  "fontSize": 11,
+                  "letterSpacing": 2,
+                  "lineHeight": 14,
+                  "textAlign": undefined,
+                  "textTransform": "uppercase",
+                },
+                undefined,
+              ]
+            }
+          >
+            OR
+          </Text>
+          <View
+            style={
+              [
+                {
+                  "flex": 1,
+                  "height": 0.5,
+                },
+                {
+                  "backgroundColor": "#583e4c",
+                },
+              ]
+            }
+          />
+        </View>
+        <View
+          accessibilityLabel="Continue with Google"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "busy": false,
+              "checked": undefined,
+              "disabled": false,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            [
+              {
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                  {
+                    "rotate": "0deg",
+                  },
+                ],
+              },
+              {
+                "alignItems": "center",
+                "justifyContent": "center",
+                "minHeight": 44,
+                "overflow": "visible",
+              },
+              {
+                "minHeight": 48,
+                "paddingHorizontal": 20,
+                "paddingVertical": 12,
+              },
+              {
+                "backgroundColor": "#EFD6AC",
+                "borderColor": "#432534",
+                "borderRadius": 2,
+                "borderWidth": 2,
+              },
+              {
+                "elevation": 2,
+                "shadowColor": "#432534",
+                "shadowOffset": {
+                  "height": 2,
+                  "width": 2,
+                },
+                "shadowOpacity": 0.85,
+                "shadowRadius": 0,
+              },
+              false,
+              undefined,
+            ]
+          }
+        >
+          <View
+            style={
+              {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "gap": 8,
+              }
+            }
+          >
+            <Text
+              style={
+                [
+                  {
+                    "includeFontPadding": false,
+                  },
+                  {
+                    "fontSize": 16,
+                    "includeFontPadding": false,
+                  },
+                  {
+                    "color": "#432534",
+                    "fontFamily": "SchibstedGrotesk_700Bold",
+                    "letterSpacing": 0,
+                    "textDecorationLine": "none",
+                  },
+                ]
+              }
+            >
+              Continue with Google
+            </Text>
+          </View>
+        </View>
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "gap": 12,
+              "justifyContent": "center",
+              "paddingTop": 2,
+            }
+          }
+        >
+          <View
+            accessibilityRole="link"
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+          >
+            <Text
+              style={
+                [
+                  {
+                    "includeFontPadding": false,
+                  },
+                  {
+                    "color": "#432534",
+                    "fontFamily": "SchibstedGrotesk_500Medium",
+                    "fontSize": 13,
+                    "letterSpacing": undefined,
+                    "lineHeight": 18,
+                    "textAlign": undefined,
+                    "textTransform": undefined,
+                  },
+                  {
+                    "color": "#963a23",
+                  },
+                ]
+              }
+            >
+              Terms
+            </Text>
+          </View>
+          <Text
+            style={
+              [
+                {
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#432534",
+                  "fontFamily": "DMMono_400Regular",
+                  "fontSize": 13,
+                  "letterSpacing": 0.3,
+                  "lineHeight": 20,
+                  "textAlign": undefined,
+                  "textTransform": undefined,
+                },
+                {
+                  "color": "#614755",
+                },
+              ]
+            }
+          >
+            ·
+          </Text>
+          <View
+            accessibilityRole="link"
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+          >
+            <Text
+              style={
+                [
+                  {
+                    "includeFontPadding": false,
+                  },
+                  {
+                    "color": "#432534",
+                    "fontFamily": "SchibstedGrotesk_500Medium",
+                    "fontSize": 13,
+                    "letterSpacing": undefined,
+                    "lineHeight": 18,
+                    "textAlign": undefined,
+                    "textTransform": undefined,
+                  },
+                  {
+                    "color": "#963a23",
+                  },
+                ]
+              }
+            >
+              Privacy
+            </Text>
+          </View>
+        </View>
+      </View>
+    </View>
+  </RCTScrollView>
+</RNCSafeAreaView>
+`;

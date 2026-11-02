@@ -1,72 +1,175 @@
 import { create } from 'zustand';
-import type { SpotifyArtistSearchResult } from '../spotify/types';
+import type { ArtistRow } from '../artists/types';
+import type { VenueType } from '../venues/venueTypes';
+import type { ConcertWithRelations } from '../concerts/types';
 
-export type LogWizardStep = 'artist' | 'details' | 'memories' | 'success';
+// ─── Types ────────────────────────────────────────────────────────────────────
 
-export interface LogWizardState {
-  currentStep: LogWizardStep;
-  selectedArtist: SpotifyArtistSearchResult | null;
+export type WizardStep = 1 | 2 | 3 | 4 | 5 | 6;
+
+export interface LogDraftState {
+  /** Step 1 */
+  artist: ArtistRow | null;
+  /** Step 2 */
+  eventDate: Date;
+  /** Step 3 */
+  venueType: VenueType | null;
+  /** Step 4 */
   venueName: string;
-  venueCity: string;
-  venueCountry: string;
-  concertDate: string; // YYYY-MM-DD
-  notes: string;
+  /** Step 5 */
   rating: number | null;
-  setlist: string[];
-
-  // Actions
-  setStep: (step: LogWizardStep) => void;
-  selectArtist: (artist: SpotifyArtistSearchResult) => void;
-  setVenueDetails: (details: { name: string; city: string; country: string }) => void;
-  setConcertDate: (date: string) => void;
-  setMemories: (memories: { notes: string; rating: number | null; setlist?: string[] }) => void;
-  resetWizard: () => void;
+  review: string;
+  /** Navigator */
+  step: WizardStep;
+  /** Edit mode */
+  isEditing: boolean;
+  editingConcertId: string | null;
 }
 
-const getTodayString = () => new Date().toISOString().split('T')[0] ?? '2026-10-14';
+export interface LogDraftActions {
+  reset: () => void;
+  setArtist: (artist: ArtistRow | null) => void;
+  setEventDate: (date: Date) => void;
+  setVenueType: (venueType: VenueType | null) => void;
+  setVenueName: (venueName: string) => void;
+  setRating: (rating: number | null) => void;
+  setReview: (review: string) => void;
+  setStep: (step: WizardStep) => void;
+  goNext: () => void;
+  goBack: () => void;
+  startEdit: (concert: ConcertWithRelations) => void;
+  isStepValid: (step: WizardStep) => boolean;
+  /** True when any meaningful field has been filled (used for discard guard) */
+  hasProgress: () => boolean;
+}
 
-const initialState = {
-  currentStep: 'artist' as LogWizardStep,
-  selectedArtist: null,
-  venueName: '',
-  venueCity: '',
-  venueCountry: '',
-  concertDate: getTodayString(),
-  notes: '',
-  rating: null,
-  setlist: [],
-};
+export type LogDraftStore = LogDraftState & LogDraftActions;
 
-export const useLogWizardStore = create<LogWizardState>((set) => ({
-  ...initialState,
+// ─── Initial state ────────────────────────────────────────────────────────────
 
-  setStep: (step) => set({ currentStep: step }),
+function initialState(): LogDraftState {
+  return {
+    artist: null,
+    eventDate: new Date(),
+    venueType: null,
+    venueName: '',
+    rating: null,
+    review: '',
+    step: 1,
+    isEditing: false,
+    editingConcertId: null,
+  };
+}
 
-  selectArtist: (artist) =>
+// ─── Store ────────────────────────────────────────────────────────────────────
+
+export const useLogDraft = create<LogDraftStore>((set, get) => ({
+  ...initialState(),
+
+  reset() {
+    set(initialState());
+  },
+
+  setArtist(artist) {
+    set({ artist });
+  },
+
+  setEventDate(eventDate) {
+    set({ eventDate });
+  },
+
+  setVenueType(venueType) {
+    set({ venueType });
+  },
+
+  setVenueName(venueName) {
+    set({ venueName });
+  },
+
+  setRating(rating) {
+    set({ rating });
+  },
+
+  setReview(review) {
+    set({ review });
+  },
+
+  setStep(step) {
+    set({ step });
+  },
+
+  goNext() {
+    const { step } = get();
+    if (step < 6) set({ step: (step + 1) as WizardStep });
+  },
+
+  goBack() {
+    const { step, isEditing } = get();
+    // Artist is locked in edit mode; cannot go below step 2
+    if (isEditing && step <= 2) return;
+    if (step > 1) set({ step: (step - 1) as WizardStep });
+  },
+
+  startEdit(concert) {
+    let dateObj = new Date();
+    try {
+      dateObj = new Date(`${concert.event_date}T12:00:00`);
+    } catch {
+      // fallback
+    }
+
     set({
-      selectedArtist: artist,
-      currentStep: 'details',
-    }),
+      artist: concert.artist,
+      eventDate: dateObj,
+      venueType: concert.venue_type,
+      venueName: concert.venue_name || '',
+      rating: concert.rating,
+      review: concert.review || '',
+      step: 2,
+      isEditing: true,
+      editingConcertId: concert.id,
+    });
+  },
 
-  setVenueDetails: ({ name, city, country }) =>
-    set({
-      venueName: name,
-      venueCity: city,
-      venueCountry: country,
-    }),
+  isStepValid(step) {
+    const state = get();
+    switch (step) {
+      case 1:
+        return state.artist !== null;
+      case 2:
+        return state.eventDate <= new Date();
+      case 3:
+        return state.venueType !== null;
+      case 4:
+        return state.venueType !== null;
+      case 5: {
+        const rating = state.rating;
+        return (
+          state.artist !== null &&
+          state.eventDate <= new Date() &&
+          state.venueType !== null &&
+          rating !== null &&
+          rating >= 0.5 &&
+          rating <= 5 &&
+          Number.isInteger(rating * 2)
+        );
+      }
+      case 6:
+        return true;
+      default:
+        return false;
+    }
+  },
 
-  setConcertDate: (date) => set({ concertDate: date }),
-
-  setMemories: ({ notes, rating, setlist }) =>
-    set({
-      notes,
-      rating,
-      setlist: setlist ?? [],
-    }),
-
-  resetWizard: () =>
-    set({
-      ...initialState,
-      concertDate: getTodayString(),
-    }),
+  hasProgress() {
+    const { artist, venueType, venueName, review, rating, step } = get();
+    return (
+      artist !== null ||
+      venueType !== null ||
+      venueName.trim().length > 0 ||
+      review.trim().length > 0 ||
+      rating !== null ||
+      step > 1
+    );
+  },
 }));

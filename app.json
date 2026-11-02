@@ -4,25 +4,19 @@
     "slug": "ivelive",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
     "scheme": "ivelive",
+    "newArchEnabled": true,
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.ivelive.app"
+      "bundleIdentifier": "com.ivelive.app",
+      "usesAppleSignIn": true
     },
     "android": {
-      "adaptiveIcon": {
-        "backgroundColor": "#031927",
-        "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png",
-        "monochromeImage": "./assets/android-icon-monochrome.png"
-      },
       "package": "com.ivelive.app",
       "predictiveBackGestureEnabled": false
     },
     "web": {
-      "favicon": "./assets/favicon.png",
       "bundler": "metro"
     },
     "plugins": [
@@ -35,7 +29,22 @@
           "photosPermission": "IveLive uses your photos to add artist images."
         }
       ],
-      "expo-secure-store"
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "IveLive uses your photo library to add keepsakes to concert logs.",
+          "cameraPermission": "IveLive uses your camera to take a keepsake for a concert log.",
+          "microphonePermission": false
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "IveLive uses your location to find nearby tour dates. Location stays private."
+        }
+      ],
+      "expo-secure-store",
+      "expo-apple-authentication"
     ],
     "experiments": {
       "typedRoutes": true

@@ -1,54 +1,55 @@
-import React from 'react';
+/**
+ * PAPER & INK — Text component
+ *
+ * Uses Young Serif for display/headline, Schibsted Grotesk for UI text,
+ * DM Mono for data, dates, counters, and labels.
+ *
+ * Variants map directly to typeScale entries.
+ */
 import {
-  Text as RNText,
-  TextProps as RNTextProps,
   StyleSheet,
+  Text as RNText,
+  type TextProps as RNTextProps,
 } from 'react-native';
-import { palette, fontFamily, fontSize } from '@theme/tokens';
+import { fontFamily, typeScale } from '../../theme/tokens';
+import { useTheme } from '../../theme/ThemeProvider';
+import type { SemanticColors } from '../../theme/tokens';
 
 type Variant =
   | 'display'
   | 'headline'
   | 'title'
   | 'subtitle'
-  | 'base'
   | 'body'
   | 'caption'
   | 'label'
-  | 'overline';
+  | 'overline'
+  | 'mono';
 
-type Weight = 'regular' | 'medium' | 'semibold' | 'bold' | 'black';
-type Color = 'primary' | 'secondary' | 'muted' | 'crimson' | 'amber' | 'steel' | 'inverse';
+type Weight = keyof typeof fontFamily;
 
-interface TextProps extends RNTextProps {
+type Color =
+  | 'primary'
+  | 'secondary'
+  | 'muted'
+  | 'inverse'
+  | 'accent'
+  | 'accentInk'
+  | 'positive'
+  | 'danger'
+  | 'warning'
+  // Legacy compat
+  | 'crimson'
+  | 'amber'
+  | 'steel'
+  | keyof SemanticColors;
+
+export interface TextProps extends RNTextProps {
   variant?: Variant;
   weight?: Weight;
   color?: Color;
   center?: boolean;
 }
-
-const colorMap: Record<Color, string> = {
-  primary: palette.textPrimary,
-  secondary: palette.textSecondary,
-  muted: palette.muted,
-  crimson: palette.crimson,
-  amber: palette.amber,
-  steel: palette.steel,
-  inverse: palette.navy,
-};
-
-const variantStyles: Record<Variant, { fontSize: number; fontFamily: string; lineHeight: number }> =
-  {
-    display: { fontSize: fontSize['4xl'], fontFamily: fontFamily.black, lineHeight: fontSize['4xl'] * 1.1 },
-    headline: { fontSize: fontSize['2xl'], fontFamily: fontFamily.bold, lineHeight: fontSize['2xl'] * 1.2 },
-    title: { fontSize: fontSize.xl, fontFamily: fontFamily.bold, lineHeight: fontSize.xl * 1.25 },
-    subtitle: { fontSize: fontSize.lg, fontFamily: fontFamily.semibold, lineHeight: fontSize.lg * 1.35 },
-    base: { fontSize: fontSize.base, fontFamily: fontFamily.regular, lineHeight: fontSize.base * 1.5 },
-    body: { fontSize: fontSize.base, fontFamily: fontFamily.regular, lineHeight: fontSize.base * 1.5 },
-    caption: { fontSize: fontSize.sm, fontFamily: fontFamily.regular, lineHeight: fontSize.sm * 1.45 },
-    label: { fontSize: fontSize.sm, fontFamily: fontFamily.medium, lineHeight: fontSize.sm * 1.3 },
-    overline: { fontSize: fontSize.xs, fontFamily: fontFamily.semibold, lineHeight: fontSize.xs * 1.4 },
-  };
 
 export function Text({
   variant = 'body',
@@ -58,21 +59,59 @@ export function Text({
   style,
   ...props
 }: TextProps) {
-  const vStyle = variantStyles[variant];
-  const fontFamilyOverride = weight ? fontFamily[weight] : vStyle.fontFamily;
+  const { colors } = useTheme();
+  const preset = typeScale[variant] ?? typeScale.body;
+
+  const colorMap: Record<string, string> = {
+    // Fall through to any direct color token
+    ...colors,
+    // Semantic roles
+    primary:    colors.ink,
+    secondary:  colors.inkMuted,
+    muted:      colors.inkMuted,
+    inverse:    colors.accentInk,
+    accent:     colors.accentText,
+    positive:   colors.positiveText,
+    warning:    colors.warningText,
+    danger:     colors.dangerText,
+    // Legacy compat
+    crimson:    colors.accentText,
+    amber:      colors.accentText,
+    steel:      colors.inkMuted,
+  };
+
+  const resolvedColor = colorMap[color] ?? colors.ink;
+  const flattenedStyle = StyleSheet.flatten(style);
+  const inlineTextColor = flattenedStyle?.color;
+  const safeInlineColor =
+    inlineTextColor === colors.accent
+      ? colors.accentText
+      : inlineTextColor === colors.positive
+        ? colors.positiveText
+        : inlineTextColor === colors.warning
+          ? colors.warningText
+          : inlineTextColor === colors.danger
+            ? colors.dangerText
+            : null;
+  const resolvedStyle =
+    safeInlineColor && flattenedStyle
+      ? { ...flattenedStyle, color: safeInlineColor }
+      : style;
 
   return (
     <RNText
       style={[
         styles.base,
         {
-          fontSize: vStyle.fontSize,
-          fontFamily: fontFamilyOverride,
-          lineHeight: vStyle.lineHeight,
-          color: colorMap[color],
-          textAlign: center ? 'center' : undefined,
+          color:      resolvedColor,
+          fontFamily: weight ? fontFamily[weight] : preset.fontFamily,
+          fontSize:   preset.fontSize,
+          lineHeight: preset.lineHeight,
+          letterSpacing: 'letterSpacing' in preset ? (preset as any).letterSpacing : undefined,
+          textTransform: center ? undefined : ('textTransform' in preset ? (preset as any).textTransform : undefined),
+          textAlign:  center ? 'center' : undefined,
         },
-        style,
+        resolvedStyle,
       ]}
       {...props}
     />
@@ -80,7 +119,5 @@ export function Text({
 }
 
 const styles = StyleSheet.create({
-  base: {
-    includeFontPadding: false,
-  },
+  base: { includeFontPadding: false },
 });

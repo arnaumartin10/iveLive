@@ -9,17 +9,18 @@ module.exports = function (api) {
       [
         'module-resolver',
         {
-          root: ['./'],
+          root: ['./src'],
           alias: {
             '@': './src',
             '@theme': './src/theme',
             '@components': './src/components',
             '@features': './src/features',
             '@lib': './src/lib',
+            // Replace lucide-react-native with our custom Paper & Ink icon set
+            'lucide-react-native': './src/components/icons/index',
           },
         },
       ],
-      'react-native-reanimated/plugin',
     ],
   };
 };

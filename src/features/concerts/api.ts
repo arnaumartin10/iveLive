@@ -1,130 +1,353 @@
 import { supabase } from '@lib/supabase';
-import type { ConcertWithRelations, LogConcertFormData, UserStats } from './types';
+import * as Crypto from 'expo-crypto';
+import { ensureSpotifyArtist } from '../artists/api';
+import type {
+  Artist,
+  ConcertLogUpdate,
+  ConcertWithRelations,
+  FetchMyLogsParams,
+  LogConcertFormData,
+  UserArtistSummary,
+  UserGenreStats,
+  UserVenueStats,
+} from './types';
+import type { VenueType } from '../venues/venueTypes';
+import { signMediaRows } from '../media/api';
+import type { LogMedia, SignedLogMedia } from '../media/types';
+import { cancelQueuedMediaForLog } from '../media/queue';
 
 // ─── Concerts ────────────────────────────────────────────────────────────────
 
-/** Fetch all concerts for a user with joined artist + venue */
-export async function fetchUserConcerts(userId: string): Promise<ConcertWithRelations[]> {
-  const { data, error } = await supabase
-    .from('concerts')
-    .select(
-      `
-      *,
-      artist:artists(*),
-      venue:venues(*)
-    `,
-    )
-    .eq('user_id', userId)
-    .order('concert_date', { ascending: false });
+export async function fetchMyLogs({
+  userId,
+  order = 'newest',
+  cursor,
+  limit = 30,
+  filters,
+}: FetchMyLogsParams): Promise<ConcertWithRelations[]> {
+  const isAscending = order === 'oldest';
 
+  // Use !inner join when filtering on artist fields so parent rows without match are filtered
+  const hasGenreFilter = (filters?.genres?.length ?? 0) > 0;
+  const selectClause = hasGenreFilter
+    ? filters?.onlyMedia
+      ? '*, artist:artists!inner(*), media:log_media!inner(*)'
+      : '*, artist:artists!inner(*), media:log_media(*)'
+    : filters?.onlyMedia
+      ? '*, artist:artists(*), media:log_media!inner(*)'
+      : '*, artist:artists(*), media:log_media(*)';
+
+  let query = supabase
+    .from('concert_logs')
+    .select(selectClause)
+    .eq('user_id', userId);
+
+  if (filters?.venueTypes && filters.venueTypes.length > 0) {
+    query = query.in('venue_type', filters.venueTypes);
+  }
+
+  if (filters?.genres && filters.genres.length > 0) {
+    query = query.overlaps('artist.macro_genres', filters.genres);
+  }
+
+  if (filters?.minRating != null) {
+    query = query.gte('rating', filters.minRating);
+  }
+  if (filters?.maxRating != null) {
+    query = query.lte('rating', filters.maxRating);
+  }
+  if (filters?.year != null) {
+    query = query
+      .gte('event_date', `${filters.year}-01-01`)
+      .lte('event_date', `${filters.year}-12-31`);
+  }
+  if (filters?.eventDate) {
+    query = query.eq('event_date', filters.eventDate);
+  }
+  if (filters?.onlyMedia) {
+    query = query.not('media.id', 'is', null);
+  }
+
+  if (cursor) {
+    if (isAscending) {
+      query = query.or(
+        `event_date.gt.${cursor.event_date},and(event_date.eq.${cursor.event_date},id.gt.${cursor.id})`
+      );
+    } else {
+      query = query.or(
+        `event_date.lt.${cursor.event_date},and(event_date.eq.${cursor.event_date},id.lt.${cursor.id})`
+      );
+    }
+  }
+
+  query = query
+    .order('event_date', { ascending: isAscending })
+    .order('id', { ascending: isAscending })
+    .limit(limit);
+
+  const { data, error } = await query;
   if (error) throw new Error(error.message);
-  // Type assertion: Supabase returns `any` for joined shapes
-  return (data as unknown as ConcertWithRelations[]) ?? [];
+  return signConcertMedia(data ?? []);
 }
 
-/** Fetch a single concert by ID */
+export async function fetchUserConcerts(
+  userId: string,
+): Promise<ConcertWithRelations[]> {
+  const { data, error } = await supabase
+    .from('concert_logs')
+    .select('*, artist:artists(*), media:log_media(*)')
+    .eq('user_id', userId)
+    .order('event_date', { ascending: false });
+
+  if (error) throw new Error(error.message);
+  return signConcertMedia(data ?? []);
+}
+
+export async function fetchUserMediaCount(userId: string): Promise<number> {
+  const { count, error } = await supabase
+    .from('log_media')
+    .select('id', { count: 'exact', head: true })
+    .eq('user_id', userId);
+  if (error) throw new Error(error.message);
+  if (count === null) throw new Error('Could not read the keepsake count.');
+  return count;
+}
+
+export async function fetchArtistConcertHistory(
+  userId: string,
+  artistId: string,
+): Promise<ConcertWithRelations[]> {
+  const { data, error } = await supabase
+    .from('concert_logs')
+    .select('*, artist:artists(*), media:log_media(*)')
+    .eq('user_id', userId)
+    .eq('artist_id', artistId)
+    .order('event_date', { ascending: false });
+  if (error) throw new Error(error.message);
+  return signConcertMedia(data ?? []);
+}
+
 export async function fetchConcertById(id: string): Promise<ConcertWithRelations> {
   const { data, error } = await supabase
-    .from('concerts')
-    .select(
-      `
-      *,
-      artist:artists(*),
-      venue:venues(*)
-    `,
-    )
+    .from('concert_logs')
+    .select('*, artist:artists(*), media:log_media(*)')
     .eq('id', id)
     .single();
 
   if (error) throw new Error(error.message);
-  return data as unknown as ConcertWithRelations;
+  const [signed] = await signConcertMedia([data]);
+  if (!signed) throw new Error('Could not load keepsake details.');
+  return signed;
 }
 
-// ─── Upsert ──────────────────────────────────────────────────────────────────
+async function signConcertMedia(
+  concerts: (ConcertWithRelations & { media?: LogMedia[] })[],
+): Promise<ConcertWithRelations[]> {
+  const allMedia = concerts.flatMap((concert) => concert.media ?? []);
+  const signedRows = await signMediaRows(allMedia);
+  const byId = new Map<string, SignedLogMedia>(
+    signedRows.map((media) => [media.id, media]),
+  );
+  return concerts.map((concert) => ({
+    ...concert,
+    media: (concert.media ?? []).map(
+      (media) => byId.get(media.id) ?? media,
+    ),
+  }));
+}
 
-/**
- * Log a new concert.
- * Upserts the artist and venue first, then inserts the concert row.
- */
-export async function logConcert(
-  userId: string,
-  formData: LogConcertFormData,
+export async function updateConcert(
+  id: string,
+  formData: Partial<LogConcertFormData>,
 ): Promise<ConcertWithRelations> {
-  // 1. Upsert artist
-  const { data: artistData, error: artistError } = await supabase
-    .from('artists')
-    .upsert(
-      {
-        name: formData.artist_name,
-        spotify_id: formData.spotify_artist_id ?? null,
-      },
-      { onConflict: 'spotify_id', ignoreDuplicates: false },
-    )
-    .select()
-    .single();
+  const updatePayload: ConcertLogUpdate = {
+    updated_at: new Date().toISOString(),
+  };
 
-  if (artistError) throw new Error(artistError.message);
-
-  // 2. Upsert venue
-  let venueId: string | null = null;
-  if (formData.venue_name) {
-    const { data: venueData, error: venueError } = await supabase
-      .from('venues')
-      .upsert(
-        {
-          name: formData.venue_name,
-          city: formData.venue_city,
-          country: formData.venue_country,
-        },
-        { onConflict: 'name,city,country', ignoreDuplicates: false },
-      )
-      .select()
-      .single();
-
-    if (venueError) throw new Error(venueError.message);
-    venueId = venueData.id as string;
+  if (formData.concert_date !== undefined) updatePayload.event_date = formData.concert_date;
+  if (formData.venue_type !== undefined) updatePayload.venue_type = formData.venue_type;
+  if (formData.venue_name !== undefined) {
+    updatePayload.venue_name = formData.venue_name.trim() || null;
+  }
+  if (formData.notes !== undefined) {
+    updatePayload.review = formData.notes.trim() || null;
+  }
+  if (formData.rating !== undefined) {
+    updatePayload.rating = formData.rating;
   }
 
-  // 3. Insert concert
-  const { data: concertData, error: concertError } = await supabase
-    .from('concerts')
-    .insert({
-      user_id: userId,
-      artist_id: artistData.id as string,
-      venue_id: venueId,
-      concert_date: formData.concert_date,
-      notes: formData.notes || null,
-      rating: formData.rating ?? null,
-    })
-    .select(
-      `
-      *,
-      artist:artists(*),
-      venue:venues(*)
-    `,
-    )
-    .single();
-
-  if (concertError) throw new Error(concertError.message);
-  return concertData as unknown as ConcertWithRelations;
-}
-
-/** Delete a concert by ID (RLS ensures ownership) */
-export async function deleteConcert(id: string): Promise<void> {
-  const { error } = await supabase.from('concerts').delete().eq('id', id);
-  if (error) throw new Error(error.message);
-}
-
-// ─── Stats ───────────────────────────────────────────────────────────────────
-
-/** Fetch user stats from DB view or edge function */
-export async function fetchUserStats(userId: string): Promise<UserStats> {
   const { data, error } = await supabase
-    .from('user_stats')
-    .select('*')
-    .eq('user_id', userId)
+    .from('concert_logs')
+    .update(updatePayload)
+    .eq('id', id)
+    .select('*, artist:artists(*), media:log_media(*)')
     .single();
 
   if (error) throw new Error(error.message);
-  return data as unknown as UserStats;
+  const [signed] = await signConcertMedia([data]);
+  if (!signed) throw new Error('Could not load keepsake details.');
+  return signed;
+}
+
+export async function fetchUserVenueNames(
+  userId: string,
+  venueType: VenueType,
+): Promise<string[]> {
+  const { data, error } = await supabase
+    .from('concert_logs')
+    .select('venue_name')
+    .eq('user_id', userId)
+    .eq('venue_type', venueType)
+    .not('venue_name', 'is', null)
+    .neq('venue_name', '')
+    .order('event_date', { ascending: false })
+    .limit(100);
+
+  if (error) throw new Error(error.message);
+
+  const uniqueNames = new Map<string, string>();
+  for (const row of data ?? []) {
+    const name = row.venue_name?.trim();
+    if (name) {
+      const key = name.toLocaleLowerCase();
+      if (!uniqueNames.has(key)) uniqueNames.set(key, name);
+    }
+  }
+  return [...uniqueNames.values()];
+}
+
+export async function logConcert(
+  formData: LogConcertFormData,
+  selectedArtist: Artist,
+): Promise<ConcertWithRelations> {
+  const { data: authData, error: authError } = await supabase.auth.getUser();
+  if (authError) throw new Error(`Could not verify your session: ${authError.message}`);
+  if (!authData.user) {
+    throw new Error('Your session has expired. Sign in again before saving this show.');
+  }
+  const userId = authData.user.id;
+  let artistId = formData.artist_id;
+  let artist = selectedArtist;
+
+  if (!artistId) {
+    if (formData.spotify_artist_id) {
+      const { data, error } = await supabase
+        .from('artists')
+        .select('*')
+        .eq('spotify_id', formData.spotify_artist_id)
+        .maybeSingle();
+
+      if (error) throw new Error(error.message);
+      if (!data) {
+        artist = await ensureSpotifyArtist(formData.spotify_artist_id);
+      } else {
+        artist = data;
+      }
+    } else {
+      const { data, error } = await supabase
+        .from('artists')
+        .insert({
+          name: formData.artist_name,
+          source: 'manual',
+          created_by: userId,
+        })
+        .select('*')
+        .single();
+
+      if (error) throw new Error(error.message);
+      artist = data;
+    }
+    artistId = artist.id;
+  }
+
+  const id = Crypto.randomUUID();
+  const now = new Date().toISOString();
+  const { error } = await supabase
+    .from('concert_logs')
+    .insert({
+      id,
+      user_id: userId,
+      artist_id: artistId,
+      event_date: formData.concert_date,
+      venue_type: formData.venue_type,
+      venue_name: formData.venue_name || null,
+      review: formData.notes || null,
+      rating: formData.rating ?? null,
+    });
+
+  if (error) throw new Error(error.message);
+  return {
+    id,
+    user_id: userId,
+    artist_id: artistId,
+    event_date: formData.concert_date,
+    venue_type: formData.venue_type,
+    venue_name: formData.venue_name || null,
+    rating: formData.rating ?? null,
+    review: formData.notes || null,
+    created_at: now,
+    updated_at: now,
+    artist,
+    media: [],
+  };
+}
+
+export async function deleteConcert(id: string): Promise<void> {
+  await cancelQueuedMediaForLog(id);
+  const { data: media, error: mediaError } = await supabase
+    .from('log_media')
+    .select('storage_path,thumb_path,poster_path')
+    .eq('log_id', id);
+  if (mediaError) throw new Error(mediaError.message);
+  const paths = (media ?? []).flatMap((item) =>
+    [item.storage_path, item.thumb_path, item.poster_path].filter(
+      (path): path is string => path !== null,
+    ),
+  );
+  if (paths.length) {
+    const { error: storageError } = await supabase.storage
+      .from('log-media')
+      .remove(paths);
+    if (storageError) throw new Error(storageError.message);
+  }
+  const { count, error } = await supabase
+    .from('concert_logs')
+    .delete({ count: 'exact' })
+    .eq('id', id);
+  if (error) throw new Error(error.message);
+  if (count !== 1) {
+    throw new Error('Could not delete this log. Check that you are signed in as its owner and try again.');
+  }
+}
+
+export async function fetchUserArtistSummary(
+  userId: string,
+): Promise<UserArtistSummary[]> {
+  const { data, error } = await supabase.rpc('user_artist_summary', {
+    p_user: userId,
+  });
+  if (error) throw new Error(error.message);
+  return data ?? [];
+}
+
+export async function fetchUserGenreStats(
+  userId: string,
+): Promise<UserGenreStats[]> {
+  const { data, error } = await supabase.rpc('user_genre_stats', {
+    p_user: userId,
+    p_year: null,
+  });
+  if (error) throw new Error(error.message);
+  return data;
+}
+
+export async function fetchUserVenueStats(
+  userId: string,
+): Promise<UserVenueStats[]> {
+  const { data, error } = await supabase.rpc('user_venue_stats', {
+    p_user: userId,
+    p_year: null,
+  });
+  if (error) throw new Error(error.message);
+  return data;
 }

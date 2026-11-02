@@ -1,128 +1,88 @@
-import React from 'react';
+/**
+ * PAPER & INK — Card / Panel primitive
+ *
+ * Replaces soft rounded cards with printed, bordered panels:
+ * 1.5px solid ink border, crisp 2-4px hard offset shadow, mostly square corners.
+ */
+import type { PropsWithChildren } from 'react';
 import {
   Pressable,
   StyleSheet,
   View,
-  ViewProps,
-  ViewStyle,
+  type StyleProp,
+  type ViewStyle,
 } from 'react-native';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-} from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
-import { palette, radius, spacing, spring } from '@theme/tokens';
+import { useTheme } from '../../theme/ThemeProvider';
+import { radius, hardShadow, spacing } from '../../theme/tokens';
 
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-
-interface CardProps extends ViewProps {
+export type CardProps = PropsWithChildren<{
+  variant?: 'default' | 'elevated' | 'outlined' | 'sunken';
+  padding?: number;
   onPress?: () => void;
-  glow?: boolean;
-  accent?: 'crimson' | 'amber' | 'steel' | 'none';
-  style?: ViewStyle;
-}
+  style?: StyleProp<ViewStyle>;
+}>;
 
 export function Card({
   children,
+  variant = 'default',
+  padding = spacing.lg,
   onPress,
-  glow = false,
-  accent = 'none',
   style,
-  ...props
 }: CardProps) {
-  const scale = useSharedValue(1);
+  const { colors } = useTheme();
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
-
-  const handlePressIn = () => {
-    if (onPress) {
-      scale.value = withSpring(0.98, spring.snappy);
-    }
+  const bgMap = {
+    default: colors.surface,
+    elevated: colors.surfaceRaised,
+    outlined: colors.surface,
+    sunken: colors.bgSunken,
   };
 
-  const handlePressOut = () => {
-    if (onPress) {
-      scale.value = withSpring(1, spring.bouncy);
-    }
-  };
-
-  const handlePress = async () => {
-    if (!onPress) return;
-    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    onPress();
-  };
-
-  const accentBorderColor =
-    accent === 'crimson'
-      ? palette.crimson
-      : accent === 'amber'
-      ? palette.amber
-      : accent === 'steel'
-      ? palette.steel
-      : palette.border;
-
-  const glowShadow = glow
-    ? {
-        shadowColor: accent === 'crimson' ? palette.crimson : palette.amber,
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.35,
-        shadowRadius: 16,
-        elevation: 6,
-      }
-    : styles.baseShadow;
+  const containerStyle = [
+    styles.base,
+    hardShadow.sm,
+    {
+      padding,
+      backgroundColor: bgMap[variant] ?? colors.surface,
+      borderColor: colors.ink,
+    },
+    variant === 'elevated' && hardShadow.md,
+    variant === 'sunken' && styles.sunken,
+    style,
+  ];
 
   if (onPress) {
     return (
-      <AnimatedPressable
-        onPress={handlePress}
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}
-        style={[
-          styles.container,
-          glowShadow,
-          { borderColor: accentBorderColor },
-          animatedStyle,
-          style,
-        ]}
+      <Pressable
         accessibilityRole="button"
-        {...props}
+        onPress={onPress}
+        style={({ pressed }) => [
+          containerStyle,
+          pressed && {
+            transform: [{ translateX: 1.5 }, { translateY: 1.5 }],
+            shadowOffset: { width: 1, height: 1 },
+          },
+        ]}
       >
         {children}
-      </AnimatedPressable>
+      </Pressable>
     );
   }
 
-  return (
-    <View
-      style={[
-        styles.container,
-        glowShadow,
-        { borderColor: accentBorderColor },
-        style,
-      ]}
-      {...props}
-    >
-      {children}
-    </View>
-  );
+  return <View style={containerStyle}>{children}</View>;
 }
 
+// Panel alias as requested by Paper & Ink shape language
+export const Panel = Card;
+
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: palette.surface1,
-    borderRadius: radius.xl,
-    padding: spacing[4],
-    borderWidth: 1,
-    borderColor: palette.border,
+  base: {
+    borderRadius: radius.sm,
+    borderWidth: 1.5,
   },
-  baseShadow: {
-    shadowColor: palette.navy,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
-    elevation: 3,
+  sunken: {
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0,
+    elevation: 0,
   },
 });

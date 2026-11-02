@@ -1,0 +1,17 @@
+appId: com.ivelive.app
+---
+- launchApp:
+    clearState: false
+- tapOn:
+    text: Profile
+- assertVisible: 'Profile'
+- tapOn:
+    text: Timeline
+- assertVisible: 'Your live music journey'
+- tapOn:
+    text: Wishlist
+- assertVisible: 'WISHLIST'
+- tapOn:
+    text: Friends
+- assertVisible: 'Find people'
+- assertVisible: 'Activity'

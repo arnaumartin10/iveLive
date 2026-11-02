@@ -1,50 +1,58 @@
-import React from 'react';
-import { View, StyleSheet, ViewStyle } from 'react-native';
-import { palette, spacing } from '@theme/tokens';
+/**
+ * PAPER & INK — EmptyState
+ *
+ * Physical paper aesthetic: stamped iconography, dry gig-flavored voice,
+ * Young Serif headings, no emoji.
+ */
+import type { ReactNode } from 'react';
+import type { LucideIcon } from 'lucide-react-native';
+import { StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
+import { useTheme } from '../../theme/ThemeProvider';
+import { spacing, hardShadow } from '../../theme/tokens';
 import { Text } from './Text';
-import { Button } from './Button';
 
-interface EmptyStateProps {
+export type EmptyStateProps = {
   title?: string;
-  subtitle?: string;
-  actionLabel?: string;
-  onAction?: () => void;
-  style?: ViewStyle;
-}
+  description?: string;
+  icon?: LucideIcon;
+  action?: ReactNode;
+  style?: StyleProp<ViewStyle>;
+};
 
 export function EmptyState({
-  title = 'Your Stage is Quiet',
-  subtitle = 'Log every artist you have seen live and watch your visual collection grow.',
-  actionLabel = 'Log Your First Concert',
-  onAction,
+  title = 'Nothing on the setlist yet',
+  description,
+  icon: Icon,
+  action,
   style,
 }: EmptyStateProps) {
+  const { colors } = useTheme();
+
   return (
     <View style={[styles.container, style]}>
-      <View style={styles.iconCircle}>
-        <View style={styles.innerPulse} />
-        <Text variant="title" color="crimson" weight="black">
-          ♫
-        </Text>
-      </View>
-
-      <Text variant="headline" weight="bold" center style={styles.title}>
+      {Icon ? (
+        <View
+          style={[
+            styles.iconWrap,
+            hardShadow.sm,
+            {
+              backgroundColor: colors.surface,
+              borderColor: colors.ink,
+            },
+          ]}
+        >
+          <Icon color={colors.accent} size={28} strokeWidth={2.5} />
+        </View>
+      ) : null}
+      <Text variant="title" center style={styles.title}>
         {title}
       </Text>
-
-      <Text variant="body" color="secondary" center style={styles.subtitle}>
-        {subtitle}
-      </Text>
-
-      {actionLabel && onAction && (
-        <Button
-          label={actionLabel}
-          variant="primary"
-          size="lg"
-          onPress={onAction}
-          style={styles.actionButton}
-        />
-      )}
+      {description ? (
+        <Text variant="body" color="secondary" center style={styles.description}>
+          {description}
+        </Text>
+      ) : null}
+      {action ? <View style={styles.action}>{action}</View> : null}
     </View>
   );
 }
@@ -52,41 +60,27 @@ export function EmptyState({
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: spacing[6],
-    paddingVertical: spacing[10],
+    padding: spacing.xl,
   },
-  iconCircle: {
-    width: 96,
-    height: 96,
-    borderRadius: 48,
-    backgroundColor: palette.surface2,
-    borderWidth: 2,
-    borderColor: palette.border,
+  iconWrap: {
     alignItems: 'center',
+    borderWidth: 1.5,
+    height: 60,
     justifyContent: 'center',
-    marginBottom: spacing[6],
-    shadowColor: palette.crimson,
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.3,
-    shadowRadius: 20,
-    elevation: 4,
-  },
-  innerPulse: {
-    position: 'absolute',
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: 'rgba(251, 54, 64, 0.08)',
+    marginBottom: spacing.lg,
+    width: 60,
+    transform: [{ rotate: '-1.5deg' }],
   },
   title: {
-    marginBottom: spacing[2],
+    fontSize: 22,
+    letterSpacing: -0.5,
   },
-  subtitle: {
-    maxWidth: 280,
-    marginBottom: spacing[8],
+  description: {
+    marginTop: spacing.sm,
+    maxWidth: 290,
+    lineHeight: 22,
   },
-  actionButton: {
-    minWidth: 220,
+  action: {
+    marginTop: spacing.xl,
   },
 });
