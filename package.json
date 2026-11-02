@@ -93,6 +93,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
+    "build:web": "node node_modules/@shopify/react-native-skia/scripts/setup-canvaskit.js public/_expo/static/js/web && expo export --platform web",
     "assets:generate": "tsx scripts/generate-brand-assets.ts",
     "lint": "expo lint",
     "typecheck": "tsc --noEmit",

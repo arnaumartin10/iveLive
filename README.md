@@ -281,6 +281,10 @@ npx expo run:ios
 npx expo run:android
 ```
 
+For the Vercel web deployment, use `npm run build:web`. It copies Skia's
+CanvasKit WebAssembly runtime to the path expected by the web bundle before
+exporting the site to `dist`.
+
 ## Checks
 
 ```sh
