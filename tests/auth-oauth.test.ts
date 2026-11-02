@@ -10,9 +10,9 @@ import {
 } from '../src/features/auth/oauth';
 
 describe('auth redirect URI', () => {
-  it('uses the deployed web origin and callback route', () => {
+  it('uses the deployed web root so static hosts can return to the SPA entrypoint', () => {
     expect(getAuthRedirectUri('web', 'https://ivelive.example.com')).toBe(
-      'https://ivelive.example.com/callback',
+      'https://ivelive.example.com/',
     );
   });
 

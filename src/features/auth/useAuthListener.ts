@@ -28,7 +28,7 @@ export function useAuthListener() {
     });
 
     async function handleUrl(url: string | null) {
-      if (!url || !url.includes('callback')) return;
+      if (!url || (Platform.OS !== 'web' && !url.includes('callback'))) return;
       try {
         await completeAuthRedirect(url);
       } catch (error) {

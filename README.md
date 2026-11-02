@@ -30,7 +30,7 @@ The repository's `.env.example` already contains the current Supabase URL and an
 
 - Enable Email and Google in **Supabase Dashboard → Authentication → Providers**. Configure Google client credentials there and set its authorized callback to `https://<project-ref>.supabase.co/auth/v1/callback`.
 - Enable Apple in Supabase and configure the Apple Services ID/key. The native app uses the `expo-apple-authentication` capability on iOS.
-- Add `ivelive://callback`, the production web callback (`https://<your-domain>/callback`), and the local web URLs from `supabase/config.toml` to the Supabase Auth redirect allowlist. Keep Google's authorized redirect URI set to `https://<project-ref>.supabase.co/auth/v1/callback`. OAuth client secrets belong in Supabase, never in `EXPO_PUBLIC_` variables.
+- Add `ivelive://callback`, the production web site URL (`https://<your-domain>/`), and the local web URLs from `supabase/config.toml` to the Supabase Auth redirect allowlist. Keep Google's authorized redirect URI set to `https://<project-ref>.supabase.co/auth/v1/callback`. OAuth client secrets belong in Supabase, never in `EXPO_PUBLIC_` variables.
 - Supabase Edge Functions require a valid Supabase session JWT. The configured functions include `delete-account`, `spotify-search`, `spotify-upsert-artist`, and `enrich-artist`.
 
 ### Supabase Edge Functions

@@ -23,7 +23,7 @@ export function getAuthRedirectUri(
       webOrigin ??
       (typeof window !== 'undefined' ? window.location.origin : undefined);
     if (!origin) throw new Error('The web sign-in origin is unavailable.');
-    return new URL('/callback', origin).toString();
+    return new URL('/', origin).toString();
   }
 
   return AUTH_REDIRECT_URI;
