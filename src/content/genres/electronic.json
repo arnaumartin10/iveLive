@@ -1,0 +1,31 @@
+{
+  "slug": "electronic",
+  "title": "Electronic",
+  "tagline": "Machines become instruments; rooms become rhythm.",
+  "summary": "Electronic music uses circuits, synthesizers, samplers and software as central tools for making sound. It stretches from listening-focused experiments to club forms designed for movement. Because its instruments and methods keep changing, the umbrella includes many scenes rather than one style. This guide follows a few influential paths through studios, dance floors and independent communities, while recognizing that electronic music has always travelled through shared technology and local invention.",
+  "origin_place": "Europe and United States",
+  "origin_years": "1960s–1980s",
+  "history": [
+    { "years": "1950s–1960s", "heading": "Sound in the studio", "text": "Composers and engineers began shaping tape, oscillators and electronic instruments into new musical materials. Experimental studios treated recording itself as a creative process. Early synthesizers were large and specialized, yet their unusual timbres suggested a future in which sound could be designed as carefully as it was performed." },
+    { "years": "1970s", "heading": "New machines, new bands", "text": "Portable synthesizers and drum machines brought electronic timbres into popular records. European groups explored repetition and texture, while disco producers used studio technology to extend dance grooves. These parallel developments connected experimental listening with the energy of clubs and radio." },
+    { "years": "1980s–1990s", "heading": "Cities build dance cultures", "text": "House and techno grew through DJs, clubs and producers in Chicago and Detroit, then travelled through European nightlife. Rave, ambient and breakbeat scenes developed their own sounds and communities. Affordable samplers and sequencers let small teams create detailed tracks without traditional studio infrastructure." },
+    { "years": "2000s–today", "heading": "Tools everywhere", "text": "Laptops and online distribution made production accessible to more artists, while clubs and festivals remained important meeting places. Electronic sounds now shape pop, hip-hop and film as well as dedicated dance scenes. Regional styles continue to adapt the tools to different rhythms and social spaces." }
+  ],
+  "related_slugs": ["pop", "hip_hop", "indie", "rnb_soul"],
+  "wikipedia_title": "Electronic music",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Kraftwerk", "why": "The group's precise use of synthesizers and rhythmic repetition helped make electronic sound a compelling language for popular music." },
+    { "name": "Giorgio Moroder", "why": "Moroder's sequenced dance productions helped establish a durable meeting point between disco and electronic instruments." },
+    { "name": "Juan Atkins", "why": "As a key Detroit innovator, Atkins helped shape techno's machine-driven pulse and its vision of forward-looking dance music." }
+  ],
+  "examples": [
+    { "name": "Suzanne Ciani" }, { "name": "Brian Eno" }, { "name": "Yellow Magic Orchestra" }, { "name": "Afrika Bambaataa" },
+    { "name": "Frankie Knuckles" }, { "name": "Derrick May" }, { "name": "The Prodigy" }, { "name": "Aphex Twin" },
+    { "name": "The Chemical Brothers" }, { "name": "Daft Punk" }, { "name": "Underworld" }, { "name": "Burial" },
+    { "name": "Sónar" }, { "name": "John Talabot" }, { "name": "Ólafur Arnalds" }, { "name": "Mura Masa" },
+    { "name": "Peggy Gou" }, { "name": "Four Tet" }, { "name": "Bicep" }, { "name": "Bad Gyal" }
+  ],
+  "sources_to_verify": ["Electronic music", "Techno", "House music", "Kraftwerk", "Giorgio Moroder", "Juan Atkins"]
+}

@@ -1,0 +1,34 @@
+{
+  "slug": "dream-pop",
+  "parent_slug": "indie",
+  "title": "Dream Pop",
+  "tagline": "Songs that let atmosphere become part of the melody.",
+  "summary": "Dream pop puts tone, space, and vocal texture at the heart of a song. Guitars and keyboards often blur into soft layers, while melodies stay clear without demanding a forceful delivery. The style took shape in independent scenes and travels across pop, shoegaze, and electronic production. Its artists create intimacy through sound design as much as through lyrics.",
+  "origin_place": "United Kingdom and the United States",
+  "origin_years": "1980s",
+  "history": [],
+  "related_slugs": ["indie", "shoegaze", "chamber-pop"],
+  "wikipedia_title": "Dream pop",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Cocteau Twins", "why": "Cocteau Twins made voice and guitar timbre central to a distinctive, impressionistic pop language." },
+    { "name": "Mazzy Star", "why": "Mazzy Star brought a hushed, blues-tinged intimacy to dream pop's spacious arrangements." },
+    { "name": "Beach House", "why": "Beach House carried the style into a later era with carefully repeated melodies and warm keyboard-led textures." }
+  ],
+  "examples": [
+    { "name": "Slowdive" },
+    { "name": "Galaxie 500" },
+    { "name": "The Sundays" },
+    { "name": "Lush" },
+    { "name": "Still Corners" },
+    { "name": "Wild Nothing" },
+    { "name": "Alvvays" },
+    { "name": "Cigarettes After Sex" },
+    { "name": "The Radio Dept." },
+    { "name": "Broadcast" },
+    { "name": "Melenas" },
+    { "name": "A.R. Kane" }
+  ],
+  "sources_to_verify": ["Dream pop", "Cocteau Twins", "Mazzy Star", "Beach House"]
+}

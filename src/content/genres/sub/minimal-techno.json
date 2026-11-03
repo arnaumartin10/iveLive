@@ -1,0 +1,75 @@
+{
+  "slug": "minimal-techno",
+  "parent_slug": "electronic",
+  "title": "Minimal Techno",
+  "tagline": "Tight loops, reduced elements and a precise sense of forward motion.",
+  "summary": "Minimal techno strips electronic music down to the essential pulse: a repeating loop, a small set of tones and a precise sense of pressure. It rewards repetition and subtle variation, creating a hypnotic momentum that feels both disciplined and immersive. In many cases the effect is less about drama than about steady propulsion.",
+  "origin_place": "Germany and the Netherlands",
+  "origin_years": "1990s",
+  "history": [],
+  "related_slugs": [
+    "electronic",
+    "techno"
+  ],
+  "wikipedia_title": "Minimal techno",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    {
+      "name": "Ricardo Villalobos",
+      "why": "Villalobos made minimal techno feel organic and emotional without abandoning strict structural discipline."
+    },
+    {
+      "name": "Robert Hood",
+      "why": "Robert Hood framed the form with a clear, functional rhythm and a deep sense of forward drive."
+    },
+    {
+      "name": "Jeff Mills",
+      "why": "Jeff Mills helped define the harder edge of minimal electronic music while keeping each rhythm highly purposeful."
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic Channel"
+    },
+    {
+      "name": "Monolake"
+    },
+    {
+      "name": "Sven Väth"
+    },
+    {
+      "name": "Nils Frahm"
+    },
+    {
+      "name": "Marcel Dettmann"
+    },
+    {
+      "name": "Maceo Plex"
+    },
+    {
+      "name": "Rødhåd"
+    },
+    {
+      "name": "Stephan Bodzin"
+    },
+    {
+      "name": "Recondite"
+    },
+    {
+      "name": "Tale Of Us"
+    },
+    {
+      "name": "Rene Breitbarth"
+    },
+    {
+      "name": "Benny Burle"
+    }
+  ],
+  "sources_to_verify": [
+    "Minimal techno",
+    "Ricardo Villalobos",
+    "Robert Hood",
+    "Jeff Mills"
+  ]
+}

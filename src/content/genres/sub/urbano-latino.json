@@ -1,0 +1,28 @@
+{
+  "slug": "urbano-latino",
+  "parent_slug": "latin",
+  "title": "Urbano Latino",
+  "tagline": "Contemporary Latin urban sounds moving between reggaeton, rap, and pop.",
+  "summary": "Urbano latino is an umbrella for contemporary Latin urban music, including reggaeton, Latin trap, and related pop and hip-hop styles. It grew through Caribbean and Latin American scenes, then spread globally through digital platforms and collaborations. The category is broad and continues to change as artists blend rhythms, languages, and production approaches.",
+  "origin_place": "Puerto Rico, the Caribbean, and Latin America",
+  "origin_years": "2000s onwards",
+  "history": [],
+  "related_slugs": ["latin", "reggaeton", "latin-pop"],
+  "wikipedia_title": "Latin urban",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Daddy Yankee", "why": "Daddy Yankee was a major figure in reggaeton's rise from Caribbean and Puerto Rican scenes to global pop." },
+    { "name": "Tego Calderón", "why": "Calderón brought a distinctive lyrical voice and Afro-Caribbean references to reggaeton." },
+    { "name": "Bad Bunny", "why": "Bad Bunny expanded Latin urban music's global visibility while moving between reggaeton, trap, and other styles." }
+  ],
+  "examples": [
+    { "name": "Ivy Queen" }, { "name": "Don Omar" },
+    { "name": "J Balvin" }, { "name": "Ozuna" },
+    { "name": "Karol G" }, { "name": "Rauw Alejandro" },
+    { "name": "Anuel AA" }, { "name": "Wisin & Yandel" },
+    { "name": "Nicky Jam" }, { "name": "Residente" },
+    { "name": "Cazzu" }, { "name": "Feid" }
+  ],
+  "sources_to_verify": ["Latin urban", "Daddy Yankee", "Tego Calderón", "Bad Bunny"]
+}

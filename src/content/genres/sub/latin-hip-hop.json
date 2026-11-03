@@ -1,0 +1,75 @@
+{
+  "slug": "latin-hip-hop",
+  "parent_slug": "hip_hop",
+  "title": "Latin Hip-Hop",
+  "tagline": "Rap shaped by Spanish-language flows, regional rhythms and urban storytelling.",
+  "summary": "Latin hip-hop brings rap into Spanish- and Portuguese-speaking communities while keeping the core ideas of rhythm, narration and movement. It grows from local scenes in Latin America and the United States but quickly becomes transnational, mixing Caribbean, African and urban influences. The style feels flexible, rhythmic and highly local at the same time.",
+  "origin_place": "United States, Latin America and the Caribbean",
+  "origin_years": "1990s and 2000s",
+  "history": [],
+  "related_slugs": [
+    "hip_hop",
+    "latin"
+  ],
+  "wikipedia_title": "Latin hip-hop",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    {
+      "name": "Vico C",
+      "why": "Vico C helped establish a respected Spanish-language rap lineage grounded in lyrical craft and personal voice."
+    },
+    {
+      "name": "Residente",
+      "why": "Residente brought a sharp, highly personal perspective to Latin hip-hop and expanded its reach beyond the club."
+    },
+    {
+      "name": "Calle 13",
+      "why": "Calle 13 combined rigorous writing with a broad cultural frame that made the form feel expansive and contemporary."
+    }
+  ],
+  "examples": [
+    {
+      "name": "Daddy Yankee"
+    },
+    {
+      "name": "Ivy Queen"
+    },
+    {
+      "name": "J Balvin"
+    },
+    {
+      "name": "Bad Bunny"
+    },
+    {
+      "name": "Tego Calderón"
+    },
+    {
+      "name": "Don Omar"
+    },
+    {
+      "name": "Wisin & Yandel"
+    },
+    {
+      "name": "Nicky Jam"
+    },
+    {
+      "name": "Farruko"
+    },
+    {
+      "name": "Kase.O"
+    },
+    {
+      "name": "Alemán"
+    },
+    {
+      "name": "Mala Rodríguez"
+    }
+  ],
+  "sources_to_verify": [
+    "Latin hip-hop",
+    "Vico C",
+    "Residente",
+    "Calle 13"
+  ]
+}

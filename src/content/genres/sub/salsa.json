@@ -1,0 +1,28 @@
+{
+  "slug": "salsa",
+  "parent_slug": "latin",
+  "title": "Salsa",
+  "tagline": "A vibrant Afro-Caribbean dance music tradition shaped by horns, percussion, and clave.",
+  "summary": "Salsa is a broad Afro-Caribbean dance music tradition that developed through Cuban forms and New York's Latin music scene. Its arrangements often feature layered percussion, piano, bass, and brass, organized around clave rhythms. Salsa has grown into many regional styles while remaining central to social dance and Latin music culture.",
+  "origin_place": "Cuba and New York City",
+  "origin_years": "1960s–1970s",
+  "history": [],
+  "related_slugs": ["latin", "cumbia", "bachata"],
+  "wikipedia_title": "Salsa music",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Celia Cruz", "why": "Cruz became one of salsa's most celebrated vocalists, known for her commanding performance and repertoire." },
+    { "name": "Willie Colón", "why": "Colón helped shape New York salsa through trombone-led arrangements and influential collaborations." },
+    { "name": "Héctor Lavoe", "why": "Lavoe's expressive singing became central to the sound and identity of classic New York salsa." }
+  ],
+  "examples": [
+    { "name": "Rubén Blades" }, { "name": "Fania All-Stars" },
+    { "name": "Eddie Palmieri" }, { "name": "Johnny Pacheco" },
+    { "name": "Ray Barretto" }, { "name": "Ismael Rivera" },
+    { "name": "Oscar D'León" }, { "name": "El Gran Combo de Puerto Rico" },
+    { "name": "La Sonora Ponceña" }, { "name": "Grupo Niche" },
+    { "name": "Marc Anthony" }, { "name": "Tito Puente" }
+  ],
+  "sources_to_verify": ["Salsa music", "Celia Cruz", "Willie Colón", "Héctor Lavoe"]
+}

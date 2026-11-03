@@ -1,0 +1,31 @@
+{
+  "slug": "rnb_soul",
+  "title": "R&B / Soul",
+  "tagline": "Voices that turn feeling into a shared rhythm.",
+  "summary": "Rhythm and blues and soul draw on Black American musical traditions including gospel, blues and jazz. Their histories overlap, with expressive vocals, rhythmic invention and strong songwriting at the center. The sounds have changed across generations, from small-group recordings to richly arranged orchestras and contemporary studio production. This wide family has influenced nearly every corner of popular music and continues to grow through artists who make intimacy and movement meet.",
+  "origin_place": "United States",
+  "origin_years": "1940s–1960s",
+  "history": [
+    { "years": "1940s–1950s", "heading": "Rhythm and blues names a sound", "text": "The term rhythm and blues gathered several Black American popular traditions as records and radio reached new audiences. Blues structures, jazz phrasing and gospel vocal intensity shaped the music. Independent labels documented distinctive regional sounds and helped performers build careers beyond local venues." },
+    { "years": "1960s", "heading": "Soul finds its voice", "text": "Gospel-influenced singing and emotionally direct songwriting became central to soul. Memphis, Detroit and other centers developed contrasting production styles. Artists brought personal feeling and social themes into popular songs, while arrangers, studio musicians and writers formed crucial creative partnerships." },
+    { "years": "1970s–1980s", "heading": "New grooves and arrangements", "text": "Funk, disco and sophisticated studio arrangements expanded the rhythmic possibilities of soul and R&B. Synthesizers and drum machines entered the music, but vocal performance remained a defining element. Artists used longer forms and richer textures to connect dance-floor energy with intimate songwriting." },
+    { "years": "1990s–today", "heading": "Contemporary R&B", "text": "Hip-hop production and contemporary recording tools reshaped R&B, creating new approaches to rhythm, harmony and vocal layering. Artists around the world now reinterpret the tradition in varied languages and settings. The genre remains a flexible space where performance, production and personal storytelling continually meet." }
+  ],
+  "related_slugs": ["pop", "hip_hop", "jazz_blues", "electronic"],
+  "wikipedia_title": "Rhythm and blues",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Ray Charles", "why": "Charles helped bring gospel expression into secular rhythm and blues, creating a powerful model for soul performance." },
+    { "name": "Aretha Franklin", "why": "Franklin's voice and interpretations became central to soul's expressive power and its lasting place in popular culture." },
+    { "name": "Marvin Gaye", "why": "Gaye joined intimate vocal delivery with ambitious songwriting and arrangements, widening the emotional scope of soul." }
+  ],
+  "examples": [
+    { "name": "Ruth Brown" }, { "name": "Sam Cooke" }, { "name": "Otis Redding" }, { "name": "Nina Simone" },
+    { "name": "Etta James" }, { "name": "Stevie Wonder" }, { "name": "Al Green" }, { "name": "Curtis Mayfield" },
+    { "name": "Chaka Khan" }, { "name": "Whitney Houston" }, { "name": "D'Angelo" }, { "name": "Erykah Badu" },
+    { "name": "Alicia Keys" }, { "name": "Frank Ocean" }, { "name": "SZA" }, { "name": "Rosalía" },
+    { "name": "María José Llergo" }, { "name": "Nathy Peluso" }, { "name": "Judith Hill" }, { "name": "James Blake" }
+  ],
+  "sources_to_verify": ["Rhythm and blues", "Soul music", "Ray Charles", "Aretha Franklin", "Marvin Gaye"]
+}

@@ -74,7 +74,8 @@ describe('Welcome poster brand', () => {
     fireEvent.press(screen.getByLabelText(/Change mascot colorway/));
 
     expect(
-      screen.getByText('THIS WEEK: INDIE').props.accessibilityLiveRegion,
+      screen.getByLabelText('Open the THIS WEEK: INDIE page').props
+        .accessibilityLiveRegion,
     ).toBe('polite');
     expect(Haptics.impactAsync).toHaveBeenCalled();
 

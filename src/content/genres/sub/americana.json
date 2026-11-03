@@ -1,0 +1,34 @@
+{
+  "slug": "americana",
+  "parent_slug": "folk_acoustic",
+  "title": "Americana",
+  "tagline": "American roots traditions retold with a modern, independent voice.",
+  "summary": "Americana brings together strands of American roots music, including folk, country, blues, and gospel. Rather than a single sound, it describes a broad tradition of songcraft and instrumentation shaped by regional histories. Contemporary artists reinterpret these sources through personal writing, independent production, and an ongoing conversation between old forms and new audiences.",
+  "origin_place": "United States",
+  "origin_years": "1990s",
+  "history": [],
+  "related_slugs": ["folk_acoustic", "alt-country", "singer-songwriter"],
+  "wikipedia_title": "Americana music",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Emmylou Harris", "why": "Emmylou Harris has moved across country, folk, and roots traditions while keeping song interpretation at the center." },
+    { "name": "Lucinda Williams", "why": "Lucinda Williams combines literary songwriting with blues and country influences in a distinctive roots-rock voice." },
+    { "name": "The Band", "why": "The Band drew on multiple American roots styles and helped establish a durable ensemble approach to Americana." }
+  ],
+  "examples": [
+    { "name": "Jason Isbell" },
+    { "name": "Gillian Welch" },
+    { "name": "Ryan Adams" },
+    { "name": "Steve Earle" },
+    { "name": "Brandi Carlile" },
+    { "name": "Margo Price" },
+    { "name": "Chris Stapleton" },
+    { "name": "Drive-By Truckers" },
+    { "name": "Old Crow Medicine Show" },
+    { "name": "The Avett Brothers" },
+    { "name": "Rhiannon Giddens" },
+    { "name": "Wilco" }
+  ],
+  "sources_to_verify": ["Americana music", "Emmylou Harris", "Lucinda Williams", "The Band"]
+}

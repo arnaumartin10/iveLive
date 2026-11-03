@@ -1,0 +1,28 @@
+{
+  "slug": "drill",
+  "parent_slug": "hip_hop",
+  "title": "Drill",
+  "tagline": "Dark, sparse production and sharply clipped rap flows.",
+  "summary": "Drill is a hip-hop style that emerged in Chicago and later developed influential scenes in the United Kingdom and elsewhere. Its production often uses ominous melodies, sliding bass, and spare percussion, while vocal delivery can be direct and rhythmically distinctive. The sound has evolved across cities, each adding its own local character.",
+  "origin_place": "Chicago, United States; later London, United Kingdom",
+  "origin_years": "early 2010s",
+  "history": [],
+  "related_slugs": ["hip_hop", "trap", "grime"],
+  "wikipedia_title": "Drill music",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Chief Keef", "why": "Chief Keef's early recordings became a prominent reference point for Chicago drill's sound and reach." },
+    { "name": "King Louie", "why": "King Louie was an early Chicago artist associated with the city's drill scene and its local vocabulary." },
+    { "name": "Pop Smoke", "why": "Pop Smoke helped bring Brooklyn drill to a wider audience with a deep voice and UK-influenced production." }
+  ],
+  "examples": [
+    { "name": "Lil Durk" }, { "name": "G Herbo" },
+    { "name": "Fivio Foreign" }, { "name": "Central Cee" },
+    { "name": "Headie One" }, { "name": "Digga D" },
+    { "name": "Unknown T" }, { "name": "Abra Cadabra" },
+    { "name": "Sheff G" }, { "name": "42 Dugg" },
+    { "name": "M1llionz" }, { "name": "Loski" }
+  ],
+  "sources_to_verify": ["Drill music", "Chief Keef", "King Louie", "Pop Smoke"]
+}

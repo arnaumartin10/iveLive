@@ -1,0 +1,34 @@
+{
+  "slug": "doom-metal",
+  "parent_slug": "metal",
+  "title": "Doom Metal",
+  "tagline": "Slow, crushing riffs that make every note feel monumental.",
+  "summary": "Doom metal stretches heavy riffs into slow, weighty forms. Long sustain, low tunings, and spacious arrangements create a sense of scale that can feel mournful, ominous, or meditative. While Black Sabbath supplied an early blueprint, later scenes developed distinct approaches, from epic vocals to dense, distorted minimalism.",
+  "origin_place": "United Kingdom and United States",
+  "origin_years": "1970s",
+  "history": [],
+  "related_slugs": ["metal", "heavy-metal", "stoner-rock"],
+  "wikipedia_title": "Doom metal",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Black Sabbath", "why": "Black Sabbath's slow, ominous riffs supplied a central early reference point for doom metal." },
+    { "name": "Pentagram", "why": "Pentagram helped carry a raw, riff-centered American strain of doom through changing lineups and eras." },
+    { "name": "Candlemass", "why": "Candlemass brought a grand, dramatic scale to doom, pairing slow heaviness with soaring vocals." }
+  ],
+  "examples": [
+    { "name": "Saint Vitus" },
+    { "name": "Trouble" },
+    { "name": "Sleep" },
+    { "name": "Electric Wizard" },
+    { "name": "Cathedral" },
+    { "name": "My Dying Bride" },
+    { "name": "Paradise Lost" },
+    { "name": "Witchfinder General" },
+    { "name": "The Obsessed" },
+    { "name": "YOB" },
+    { "name": "Pallbearer" },
+    { "name": "Boris" }
+  ],
+  "sources_to_verify": ["Doom metal", "Black Sabbath", "Pentagram", "Candlemass"]
+}

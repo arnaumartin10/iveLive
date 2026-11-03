@@ -1,0 +1,28 @@
+{
+  "slug": "jangle-pop",
+  "parent_slug": "indie",
+  "title": "Jangle Pop",
+  "tagline": "Bright, chiming guitars and melodic songs with a light, ringing sound.",
+  "summary": "Jangle pop is built around bright, ringing electric guitars and melodic songwriting. Its sound draws on 1960s pop and folk-rock, often pairing chiming guitar tones with concise arrangements and reflective lyrics. The style has appeared across independent scenes in different countries and generations.",
+  "origin_place": "United States and United Kingdom",
+  "origin_years": "1980s",
+  "history": [],
+  "related_slugs": ["indie", "indie-rock", "dream-pop"],
+  "wikipedia_title": "Jangle pop",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "The Byrds", "why": "The Byrds' chiming twelve-string guitar sound became a key influence on later jangle-pop bands." },
+    { "name": "R.E.M.", "why": "R.E.M. brought jangling guitars and literate songwriting into a distinctive American college-rock sound." },
+    { "name": "The Smiths", "why": "Johnny Marr's bright, melodic guitar work helped make the Smiths a major reference for jangle pop." }
+  ],
+  "examples": [
+    { "name": "The Go-Betweens" }, { "name": "The dB's" },
+    { "name": "The Rain Parade" }, { "name": "The Feelies" },
+    { "name": "Let's Active" }, { "name": "The La's" },
+    { "name": "The Sundays" }, { "name": "The Chills" },
+    { "name": "The Ocean Blue" }, { "name": "The Bats" },
+    { "name": "Real Estate" }, { "name": "Alvvays" }
+  ],
+  "sources_to_verify": ["Jangle pop", "The Byrds", "R.E.M.", "The Smiths"]
+}

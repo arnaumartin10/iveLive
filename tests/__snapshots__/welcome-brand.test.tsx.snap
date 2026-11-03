@@ -323,32 +323,155 @@ exports[`Welcome poster brand renders and matches the welcome layout on iPhone S
             />
           </View>
         </View>
-        <Text
+        <View
           accessibilityLiveRegion="none"
           style={
-            [
-              {
-                "includeFontPadding": false,
-              },
-              {
-                "color": "#432534",
-                "fontFamily": "DMMono_400Regular",
-                "fontSize": 13,
-                "letterSpacing": 0.3,
-                "lineHeight": 20,
-                "textAlign": undefined,
-                "textTransform": undefined,
-              },
-              {
-                "color": "#963a23",
-                "letterSpacing": 1.1,
-                "paddingTop": 1,
-              },
-            ]
+            {
+              "letterSpacing": 1.1,
+              "paddingTop": 1,
+            }
           }
         >
-          THIS WEEK: ROCK
-        </Text>
+          <View
+            accessibilityLabel="Open the THIS WEEK: ROCK page"
+            accessibilityLiveRegion="none"
+            accessibilityRole="link"
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            hitSlop={10}
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "alignSelf": "flex-start",
+                "justifyContent": "center",
+              }
+            }
+          >
+            <View
+              accessibilityRole="text"
+              style={
+                [
+                  {
+                    "alignItems": "center",
+                    "alignSelf": "flex-start",
+                    "borderRadius": 2,
+                    "flexDirection": "row",
+                    "maxWidth": "100%",
+                    "overflow": "visible",
+                  },
+                  {
+                    "elevation": 2,
+                    "shadowColor": "#432534",
+                    "shadowOffset": {
+                      "height": 2,
+                      "width": 2,
+                    },
+                    "shadowOpacity": 0.85,
+                    "shadowRadius": 0,
+                  },
+                  {
+                    "backgroundColor": "#432534",
+                    "borderColor": "#EFD6AC",
+                    "borderWidth": 1.5,
+                    "gap": 6,
+                    "paddingHorizontal": 8,
+                    "paddingVertical": 4,
+                  },
+                  undefined,
+                ]
+              }
+            >
+              <View
+                style={
+                  [
+                    {
+                      "borderWidth": 1,
+                      "padding": 1,
+                    },
+                    {
+                      "backgroundColor": "#432534",
+                      "borderColor": "#432534",
+                    },
+                  ]
+                }
+              >
+                <View
+                  style={
+                    [
+                      {
+                        "overflow": "hidden",
+                      },
+                      {
+                        "height": 18,
+                        "width": 18,
+                      },
+                      {
+                        "backgroundColor": "#EFD6AC",
+                        "borderColor": "#EFD6AC",
+                        "borderWidth": 1,
+                      },
+                    ]
+                  }
+                />
+              </View>
+              <Text
+                numberOfLines={1}
+                style={
+                  [
+                    {
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "color": "#432534",
+                      "fontFamily": "DMMono_500Medium",
+                      "fontSize": 11,
+                      "letterSpacing": 1.5,
+                      "lineHeight": 16,
+                      "textAlign": undefined,
+                      "textTransform": "uppercase",
+                    },
+                    {
+                      "color": "#EFD6AC",
+                      "flexShrink": 1,
+                      "fontFamily": "DMMono_500Medium",
+                      "fontSize": 12,
+                      "letterSpacing": 0.9,
+                      "lineHeight": 16,
+                    },
+                  ]
+                }
+              >
+                THIS WEEK: ROCK
+              </Text>
+            </View>
+          </View>
+        </View>
         <Text
           style={
             [
@@ -1268,32 +1391,155 @@ exports[`Welcome poster brand renders and matches the welcome layout on large ph
             />
           </View>
         </View>
-        <Text
+        <View
           accessibilityLiveRegion="none"
           style={
-            [
-              {
-                "includeFontPadding": false,
-              },
-              {
-                "color": "#432534",
-                "fontFamily": "DMMono_400Regular",
-                "fontSize": 13,
-                "letterSpacing": 0.3,
-                "lineHeight": 20,
-                "textAlign": undefined,
-                "textTransform": undefined,
-              },
-              {
-                "color": "#963a23",
-                "letterSpacing": 1.1,
-                "paddingTop": 1,
-              },
-            ]
+            {
+              "letterSpacing": 1.1,
+              "paddingTop": 1,
+            }
           }
         >
-          THIS WEEK: ROCK
-        </Text>
+          <View
+            accessibilityLabel="Open the THIS WEEK: ROCK page"
+            accessibilityLiveRegion="none"
+            accessibilityRole="link"
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            hitSlop={10}
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "alignSelf": "flex-start",
+                "justifyContent": "center",
+              }
+            }
+          >
+            <View
+              accessibilityRole="text"
+              style={
+                [
+                  {
+                    "alignItems": "center",
+                    "alignSelf": "flex-start",
+                    "borderRadius": 2,
+                    "flexDirection": "row",
+                    "maxWidth": "100%",
+                    "overflow": "visible",
+                  },
+                  {
+                    "elevation": 2,
+                    "shadowColor": "#432534",
+                    "shadowOffset": {
+                      "height": 2,
+                      "width": 2,
+                    },
+                    "shadowOpacity": 0.85,
+                    "shadowRadius": 0,
+                  },
+                  {
+                    "backgroundColor": "#432534",
+                    "borderColor": "#EFD6AC",
+                    "borderWidth": 1.5,
+                    "gap": 6,
+                    "paddingHorizontal": 8,
+                    "paddingVertical": 4,
+                  },
+                  undefined,
+                ]
+              }
+            >
+              <View
+                style={
+                  [
+                    {
+                      "borderWidth": 1,
+                      "padding": 1,
+                    },
+                    {
+                      "backgroundColor": "#432534",
+                      "borderColor": "#432534",
+                    },
+                  ]
+                }
+              >
+                <View
+                  style={
+                    [
+                      {
+                        "overflow": "hidden",
+                      },
+                      {
+                        "height": 18,
+                        "width": 18,
+                      },
+                      {
+                        "backgroundColor": "#EFD6AC",
+                        "borderColor": "#EFD6AC",
+                        "borderWidth": 1,
+                      },
+                    ]
+                  }
+                />
+              </View>
+              <Text
+                numberOfLines={1}
+                style={
+                  [
+                    {
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "color": "#432534",
+                      "fontFamily": "DMMono_500Medium",
+                      "fontSize": 11,
+                      "letterSpacing": 1.5,
+                      "lineHeight": 16,
+                      "textAlign": undefined,
+                      "textTransform": "uppercase",
+                    },
+                    {
+                      "color": "#EFD6AC",
+                      "flexShrink": 1,
+                      "fontFamily": "DMMono_500Medium",
+                      "fontSize": 12,
+                      "letterSpacing": 0.9,
+                      "lineHeight": 16,
+                    },
+                  ]
+                }
+              >
+                THIS WEEK: ROCK
+              </Text>
+            </View>
+          </View>
+        </View>
         <Text
           style={
             [

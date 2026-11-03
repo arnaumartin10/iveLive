@@ -1,0 +1,28 @@
+{
+  "slug": "electropop",
+  "parent_slug": "pop",
+  "title": "Electropop",
+  "tagline": "Electronic textures and synthesizers shaped into concise pop songs.",
+  "summary": "Electropop uses electronic instruments and studio production as the foundation for pop songwriting. Synthesizers, drum machines, and processed vocals can create sounds that are bright, cool, or experimental while keeping hooks and melody central. The style has moved through many eras, adapting to new technologies and dance-music influences.",
+  "origin_place": "United Kingdom and United States",
+  "origin_years": "1980s onwards",
+  "history": [],
+  "related_slugs": ["pop", "synth-pop", "dance-pop"],
+  "wikipedia_title": "Electropop",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Kraftwerk", "why": "Kraftwerk's electronic arrangements and melodic repetition strongly influenced the development of synth-based pop." },
+    { "name": "Depeche Mode", "why": "Depeche Mode brought electronic instrumentation and dark, memorable songwriting to a large pop audience." },
+    { "name": "Pet Shop Boys", "why": "Pet Shop Boys paired synth production with sharp lyrics and highly crafted pop melodies." }
+  ],
+  "examples": [
+    { "name": "Robyn" }, { "name": "La Roux" },
+    { "name": "Goldfrapp" }, { "name": "M83" },
+    { "name": "CHVRCHES" }, { "name": "Gossip" },
+    { "name": "The Knife" }, { "name": "Ladytron" },
+    { "name": "Empire of the Sun" }, { "name": "Purity Ring" },
+    { "name": "Fever Ray" }, { "name": "Christine and the Queens" }
+  ],
+  "sources_to_verify": ["Electropop", "Kraftwerk", "Depeche Mode", "Pet Shop Boys"]
+}

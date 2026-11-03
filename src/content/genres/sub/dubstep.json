@@ -1,0 +1,28 @@
+{
+  "slug": "dubstep",
+  "parent_slug": "electronic",
+  "title": "Dubstep",
+  "tagline": "Sub-bass pressure, half-time rhythms, and space between the beats.",
+  "summary": "Dubstep emerged in South London from UK garage, dub, and soundsystem culture. Early tracks used sparse half-time rhythms, deep sub-bass, and a strong sense of space. The style later branched into many forms, from atmospheric productions to more aggressive festival sounds, while its low-frequency focus remains a defining feature.",
+  "origin_place": "South London, United Kingdom",
+  "origin_years": "late 1990s–2000s",
+  "history": [],
+  "related_slugs": ["electronic", "drum-and-bass", "grime"],
+  "wikipedia_title": "Dubstep",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Skream", "why": "Skream was among the early producers whose releases helped define dubstep's first wave." },
+    { "name": "Benga", "why": "Benga helped shape the Croydon scene with bass-heavy productions and influential collaborations." },
+    { "name": "Digital Mystikz", "why": "Digital Mystikz connected dubstep to deep bass, dubplate culture, and the community around DMZ nights." }
+  ],
+  "examples": [
+    { "name": "Burial" }, { "name": "Mala" },
+    { "name": "Coki" }, { "name": "Kode9" },
+    { "name": "Loefah" }, { "name": "Pinch" },
+    { "name": "Rusko" }, { "name": "Caspa" },
+    { "name": "Zomby" }, { "name": "The Bug" },
+    { "name": "James Blake" }, { "name": "Skrillex" }
+  ],
+  "sources_to_verify": ["Dubstep", "Skream", "Benga", "Digital Mystikz"]
+}

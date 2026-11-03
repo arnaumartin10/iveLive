@@ -125,6 +125,7 @@ export function DuplicateArtistSheet({
                             key={macro}
                             genre={macro as keyof typeof MACRO_GENRES}
                             size="xs"
+                            interactive={false}
                           />
                         );
                       })}

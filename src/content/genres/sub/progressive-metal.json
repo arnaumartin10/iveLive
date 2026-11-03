@@ -1,0 +1,75 @@
+{
+  "slug": "progressive-metal",
+  "parent_slug": "metal",
+  "title": "Progressive Metal",
+  "tagline": "A big, structurally ambitious form that treats the song like a long-form idea.",
+  "summary": "Progressive metal brings the complexity of progressive rock into the world of heavy guitar writing and modern production. It often uses unusual meters, extended arrangements and contrasting sections as part of the same piece. The result is music that feels architectural, demanding and emotionally wide.",
+  "origin_place": "United States and United Kingdom",
+  "origin_years": "1980s",
+  "history": [],
+  "related_slugs": [
+    "metal",
+    "rock"
+  ],
+  "wikipedia_title": "Progressive metal",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    {
+      "name": "Dream Theater",
+      "why": "Dream Theater made technical precision and emotional breadth part of the genre’s main vocabulary."
+    },
+    {
+      "name": "Queensrÿche",
+      "why": "Queensrÿche balanced theatrical writing with muscular rock energy and memorable hooks."
+    },
+    {
+      "name": "Tool",
+      "why": "Tool turned tension, space and a sense of gradual release into a distinctive modern progressive-metal language."
+    }
+  ],
+  "examples": [
+    {
+      "name": "Fates Warning"
+    },
+    {
+      "name": "Symphony X"
+    },
+    {
+      "name": "Mastodon"
+    },
+    {
+      "name": "Opeth"
+    },
+    {
+      "name": "Between the Buried and Me"
+    },
+    {
+      "name": "Meshuggah"
+    },
+    {
+      "name": "Porcupine Tree"
+    },
+    {
+      "name": "Yes"
+    },
+    {
+      "name": "King Crimson"
+    },
+    {
+      "name": "The Mars Volta"
+    },
+    {
+      "name": "Haken"
+    },
+    {
+      "name": "Periphery"
+    }
+  ],
+  "sources_to_verify": [
+    "Progressive metal",
+    "Dream Theater",
+    "Queensrÿche",
+    "Tool"
+  ]
+}

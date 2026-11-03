@@ -1,0 +1,28 @@
+{
+  "slug": "highlife",
+  "parent_slug": "world",
+  "title": "Highlife",
+  "tagline": "West African dance music built around bright guitars, horns, and elegant grooves.",
+  "summary": "Highlife developed in Ghana and Nigeria through the meeting of local rhythms with brass-band, guitar, and popular dance music traditions. Its melodic guitar lines and buoyant arrangements spread across West Africa, with artists shaping distinctive regional forms. Highlife remains an important influence on modern African popular music.",
+  "origin_place": "Ghana and Nigeria",
+  "origin_years": "early 20th century",
+  "history": [],
+  "related_slugs": ["world", "afrobeat", "afropop"],
+  "wikipedia_title": "Highlife",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "E. T. Mensah", "why": "Mensah helped popularize Ghanaian dance-band highlife and became known as a major bandleader." },
+    { "name": "Ebo Taylor", "why": "Taylor connected Ghanaian highlife with jazz and funk through decades of composing, performing, and arranging." },
+    { "name": "Victor Olaiya", "why": "Olaiya was a leading Nigerian bandleader whose trumpet-driven highlife recordings became widely celebrated." }
+  ],
+  "examples": [
+    { "name": "Osibisa" }, { "name": "King Sunny Adé" },
+    { "name": "Chief Stephen Osita Osadebe" }, { "name": "Pat Thomas" },
+    { "name": "Amakye Dede" }, { "name": "Nana Ampadu" },
+    { "name": "The African Brothers" }, { "name": "Koo Nimo" },
+    { "name": "Rex Lawson" }, { "name": "Sir Victor Uwaifo" },
+    { "name": "Kwamz and Flava" }, { "name": "Gyedu-Blay Ambolley" }
+  ],
+  "sources_to_verify": ["Highlife", "E. T. Mensah", "Ebo Taylor", "Victor Olaiya"]
+}

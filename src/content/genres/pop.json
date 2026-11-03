@@ -1,0 +1,31 @@
+{
+  "slug": "pop",
+  "title": "Pop",
+  "tagline": "A melody made to meet the moment.",
+  "summary": "Pop is music built for connection: memorable melodies, clear forms and performances that travel through radio, records, screens and shared spaces. It absorbs sounds from dance, soul, rock, hip-hop and many regional traditions, so no single arrangement defines it. The genre's history is also a story of changing technology and audiences. This selection celebrates artists who reshaped popular songwriting and the sound of their era.",
+  "origin_place": "United States and United Kingdom",
+  "origin_years": "1950s onward",
+  "history": [
+    { "years": "1950s–1960s", "heading": "Songs meet new media", "text": "Radio, singles and television helped concise songs reach growing youth audiences. Brill Building writers, vocal groups and British bands brought distinct approaches to melody and performance. Pop quickly became an exchange between songwriters, producers and charismatic performers, not a single musical style." },
+    { "years": "1970s", "heading": "Studio as instrument", "text": "Multitrack recording and ambitious production expanded the palette of mainstream songs. Disco connected pop to club culture and dance floors, while singer-songwriters and glam performers widened its emotional range. International hits moved more easily across borders as television and touring grew." },
+    { "years": "1980s–1990s", "heading": "Spectacle and new rhythms", "text": "Music video made visual identity part of pop's vocabulary. Synthesizers, drum machines and polished production sat alongside R&B and hip-hop influence. Artists from many backgrounds entered global charts, while dance-pop and ballads each offered a different way to turn a song into a public event." },
+    { "years": "2000s–today", "heading": "Global and collaborative", "text": "Digital production and streaming changed how songs are released and discovered. Pop increasingly blends local languages, electronic textures, rap and older forms, with collaborations connecting scenes across continents. The center is less a single radio format than a shifting conversation among audiences and creators." }
+  ],
+  "related_slugs": ["rnb_soul", "electronic", "hip_hop", "indie"],
+  "wikipedia_title": "Pop music",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "The Beatles", "why": "Their melodic craft and studio curiosity helped reset expectations for popular songwriting and album-making." },
+    { "name": "Michael Jackson", "why": "Jackson joined precise performance, memorable songwriting and visual storytelling in a globally influential pop career." },
+    { "name": "Madonna", "why": "Madonna repeatedly adapted pop's sound and image, showing how artists could direct their own public narrative across changing eras." }
+  ],
+  "examples": [
+    { "name": "Dion" }, { "name": "The Supremes" }, { "name": "ABBA" }, { "name": "Prince" },
+    { "name": "Whitney Houston" }, { "name": "Janet Jackson" }, { "name": "Céline Dion" }, { "name": "Britney Spears" },
+    { "name": "Beyoncé" }, { "name": "Rihanna" }, { "name": "Kylie Minogue" }, { "name": "Robyn" },
+    { "name": "Rosalía" }, { "name": "Bad Gyal" }, { "name": "La Oreja de Van Gogh" }, { "name": "Mecano" },
+    { "name": "Mònica Naranjo" }, { "name": "Aitana" }, { "name": "Charli XCX" }, { "name": "Dua Lipa" }
+  ],
+  "sources_to_verify": ["Pop music", "The Beatles", "Michael Jackson", "Madonna", "Popular music"]
+}

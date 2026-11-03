@@ -1,0 +1,28 @@
+{
+  "slug": "lo-fi",
+  "parent_slug": "indie",
+  "title": "Lo-Fi",
+  "tagline": "Rough edges and intimate recording that make the process part of the sound.",
+  "summary": "Lo-fi describes music whose recording texture retains audible imperfections, room sound, or inexpensive equipment character. In independent scenes, these qualities can create an intimate, handmade feel rather than polished studio sheen. Lo-fi appears across styles, from home-recorded indie pop to hip-hop beats and experimental music.",
+  "origin_place": "United States and United Kingdom",
+  "origin_years": "1980s onwards",
+  "history": [],
+  "related_slugs": ["indie", "indie-rock", "cloud-rap"],
+  "wikipedia_title": "Lo-fi music",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Guided by Voices", "why": "Guided by Voices became known for prolific songwriting and deliberately rough, home-recorded releases." },
+    { "name": "Daniel Johnston", "why": "Johnston's intimate recordings and direct songwriting became a touchstone for independent lo-fi music." },
+    { "name": "Sebadoh", "why": "Sebadoh's inexpensive recording approach and candid songwriting helped define an influential indie lo-fi sound." }
+  ],
+  "examples": [
+    { "name": "Beat Happening" }, { "name": "The Mountain Goats" },
+    { "name": "Pavement" }, { "name": "R. Stevie Moore" },
+    { "name": "Ariel Pink" }, { "name": "Mac DeMarco" },
+    { "name": "Alex G" }, { "name": "Car Seat Headrest" },
+    { "name": "The Microphones" }, { "name": "Sparklehorse" },
+    { "name": "Clairo" }, { "name": "Current Joys" }
+  ],
+  "sources_to_verify": ["Lo-fi music", "Guided by Voices", "Daniel Johnston", "Sebadoh"]
+}

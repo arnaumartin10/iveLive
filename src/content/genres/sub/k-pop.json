@@ -1,0 +1,28 @@
+{
+  "slug": "k-pop",
+  "parent_slug": "pop",
+  "title": "K-Pop",
+  "tagline": "Korean popular music shaped by performance, production, and global fandom.",
+  "summary": "K-pop is South Korea's broad popular-music industry, encompassing pop, hip-hop, R&B, dance, and electronic influences. Carefully produced recordings, choreography, visual concepts, and group performance are central to many acts. The music's global reach has grown through digital platforms and dedicated fan communities.",
+  "origin_place": "South Korea",
+  "origin_years": "1990s modern industry",
+  "history": [],
+  "related_slugs": ["pop", "k-indie", "dance-pop"],
+  "wikipedia_title": "K-pop",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Seo Taiji and Boys", "why": "Their early-1990s blend of Korean lyrics with contemporary pop and hip-hop is widely seen as a turning point." },
+    { "name": "BoA", "why": "BoA became an early Korean pop star with major success in South Korea and Japan." },
+    { "name": "BIGBANG", "why": "BIGBANG helped shape the modern idol group's sound and creative identity through songwriting and performance." }
+  ],
+  "examples": [
+    { "name": "BTS" }, { "name": "BLACKPINK" },
+    { "name": "Girls' Generation" }, { "name": "SHINee" },
+    { "name": "EXO" }, { "name": "TWICE" },
+    { "name": "Red Velvet" }, { "name": "IU" },
+    { "name": "Stray Kids" }, { "name": "SEVENTEEN" },
+    { "name": "NewJeans" }, { "name": "Wonder Girls" }
+  ],
+  "sources_to_verify": ["K-pop", "Seo Taiji and Boys", "BoA", "BIGBANG"]
+}

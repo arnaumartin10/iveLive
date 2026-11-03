@@ -1,0 +1,28 @@
+{
+  "slug": "trance",
+  "parent_slug": "electronic",
+  "title": "Trance",
+  "tagline": "Extended electronic builds and repeating melodies designed for immersive dance floors.",
+  "summary": "Trance is electronic dance music built around repeating melodic phrases, gradual builds, and extended arrangements. The style developed in European club scenes and diversified into many substyles, from atmospheric to high-energy. DJs and producers use repetition and changes in texture to create a sustained, immersive dance experience.",
+  "origin_place": "Germany and the Netherlands",
+  "origin_years": "1990s",
+  "history": [],
+  "related_slugs": ["electronic", "house", "techno"],
+  "wikipedia_title": "Trance music",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Paul van Dyk", "why": "Paul van Dyk became a prominent figure in trance through influential productions and international DJ performances." },
+    { "name": "Sven Väth", "why": "Väth helped shape German electronic club culture and supported the development of trance and techno." },
+    { "name": "Robert Miles", "why": "Miles brought melodic, piano-led trance to a broad audience with internationally successful recordings." }
+  ],
+  "examples": [
+    { "name": "Armin van Buuren" }, { "name": "Tiesto" },
+    { "name": "Above & Beyond" }, { "name": "Ferry Corsten" },
+    { "name": "Paul Oakenfold" }, { "name": "ATB" },
+    { "name": "Sasha" }, { "name": "John Digweed" },
+    { "name": "Aly & Fila" }, { "name": "Gareth Emery" },
+    { "name": "Solarstone" }, { "name": "The Thrillseekers" }
+  ],
+  "sources_to_verify": ["Trance music", "Paul van Dyk", "Sven Väth", "Robert Miles"]
+}

@@ -1,0 +1,28 @@
+{
+  "slug": "motown",
+  "parent_slug": "rnb_soul",
+  "title": "Motown",
+  "tagline": "A landmark soul sound built on tight rhythm sections, vivid vocals, and unforgettable hooks.",
+  "summary": "Motown refers to the influential Detroit record label and the polished soul sound developed by its artists, writers, and studio musicians. Strong melodies, rhythmic precision, and carefully arranged vocals helped the label reach broad audiences. Its catalog shaped pop, R&B, and the development of Black popular music.",
+  "origin_place": "Detroit, United States",
+  "origin_years": "1960s",
+  "history": [],
+  "related_slugs": ["rnb_soul", "funk", "disco"],
+  "wikipedia_title": "Motown",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "The Supremes", "why": "The Supremes became one of Motown's most successful groups through polished harmonies and memorable singles." },
+    { "name": "Marvin Gaye", "why": "Gaye's recordings ranged from classic Motown duets to ambitious, socially engaged soul albums." },
+    { "name": "Stevie Wonder", "why": "Wonder grew from a Motown child performer into a groundbreaking songwriter and multi-instrumentalist." }
+  ],
+  "examples": [
+    { "name": "The Temptations" }, { "name": "The Four Tops" },
+    { "name": "Smokey Robinson" }, { "name": "The Miracles" },
+    { "name": "Martha and the Vandellas" }, { "name": "The Jackson 5" },
+    { "name": "The Marvelettes" }, { "name": "Gladys Knight & the Pips" },
+    { "name": "The Isley Brothers" }, { "name": "Diana Ross" },
+    { "name": "Edwin Starr" }, { "name": "The Spinners" }
+  ],
+  "sources_to_verify": ["Motown", "The Supremes", "Marvin Gaye", "Stevie Wonder"]
+}

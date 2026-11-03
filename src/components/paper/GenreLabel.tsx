@@ -1,4 +1,11 @@
-import { StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
+import {
+  Pressable,
+  StyleSheet,
+  View,
+  type StyleProp,
+  type ViewStyle,
+} from 'react-native';
+import { router } from 'expo-router';
 import { useTheme } from '../../theme/ThemeProvider';
 import {
   fontFamily,
@@ -10,6 +17,10 @@ import {
   MACRO_GENRES,
   type MacroGenre,
 } from '../../features/genres/macroGenres';
+import {
+  findGenreCatalogEntry,
+  useGenreCatalog,
+} from '../../features/genres/catalog';
 import { VENUE_TYPES, type VenueType } from '../../features/venues/venueTypes';
 import {
   labelColors,
@@ -119,7 +130,34 @@ function LabelPlate({
   );
 }
 
-export function GenreLabel({
+type GenreLabelProps = {
+  genre: MacroGenre | string;
+  label?: string;
+  size?: LabelSize;
+  variant?: LabelVariant;
+  surface?: LabelSurface;
+  schemeOverride?: ColorScheme;
+  style?: StyleProp<ViewStyle>;
+  interactive?: boolean;
+  accessibilityLiveRegion?: 'none' | 'polite' | 'assertive';
+};
+
+export function GenreLabel(props: GenreLabelProps) {
+  if (Object.prototype.hasOwnProperty.call(MACRO_GENRES, props.genre)) {
+    return <GenreLabelBody {...props} catalogEntry={null} />;
+  }
+  return <CatalogGenreLabel {...props} />;
+}
+
+function CatalogGenreLabel(props: GenreLabelProps) {
+  const catalogQuery = useGenreCatalog();
+  const catalogEntry = catalogQuery.data
+    ? findGenreCatalogEntry(catalogQuery.data, props.genre)
+    : null;
+  return <GenreLabelBody {...props} catalogEntry={catalogEntry} />;
+}
+
+function GenreLabelBody({
   genre,
   label,
   size = 'sm',
@@ -127,26 +165,37 @@ export function GenreLabel({
   surface = 'surface',
   schemeOverride,
   style,
-}: {
-  genre: MacroGenre;
-  label?: string;
-  size?: LabelSize;
-  variant?: LabelVariant;
-  surface?: LabelSurface;
-  schemeOverride?: ColorScheme;
-  style?: StyleProp<ViewStyle>;
+  interactive = true,
+  accessibilityLiveRegion,
+  catalogEntry,
+}: GenreLabelProps & {
+  catalogEntry: ReturnType<typeof findGenreCatalogEntry>;
 }) {
   const { colors: contextColors } = useTheme();
   const theme = schemeOverride ? themeColors[schemeOverride] : contextColors;
   const metrics = SIZE_METRICS[size];
-  const definition = MACRO_GENRES[genre];
-  const selection = labelColors(genre, theme, surface);
-  return (
+  const isMacroGenre = Object.prototype.hasOwnProperty.call(
+    MACRO_GENRES,
+    genre,
+  );
+  const identityGenre = isMacroGenre
+    ? (genre as MacroGenre)
+    : catalogEntry?.parent_slug &&
+        Object.prototype.hasOwnProperty.call(
+          MACRO_GENRES,
+          catalogEntry.parent_slug,
+        )
+      ? (catalogEntry.parent_slug as MacroGenre)
+      : 'other';
+  const definition = MACRO_GENRES[identityGenre] ?? MACRO_GENRES.other;
+  const labelText = label ?? catalogEntry?.label ?? definition.label;
+  const selection = labelColors(identityGenre, theme, surface);
+  const plate = (
     <LabelPlate
       size={size}
       variant={variant}
       colors={selection}
-      label={label ?? definition.label}
+      label={labelText}
       style={style}
     >
       <View
@@ -172,6 +221,23 @@ export function GenreLabel({
         />
       </View>
     </LabelPlate>
+  );
+  const routeSlug = isMacroGenre ? genre : catalogEntry?.slug;
+  if (!interactive || !routeSlug) return plate;
+  return (
+    <Pressable
+      accessibilityRole="link"
+      accessibilityLabel={`Open the ${labelText} page`}
+      accessibilityLiveRegion={accessibilityLiveRegion}
+      hitSlop={10}
+      onPress={(event) => {
+        event?.stopPropagation?.();
+        router.push({ pathname: '/genre/[slug]', params: { slug: routeSlug } });
+      }}
+      style={styles.interactive}
+    >
+      {plate}
+    </Pressable>
   );
 }
 
@@ -219,6 +285,7 @@ export function VenueLabel({
 }
 
 const styles = StyleSheet.create({
+  interactive: { alignSelf: 'flex-start', justifyContent: 'center' },
   plate: {
     alignSelf: 'flex-start',
     alignItems: 'center',

@@ -1,0 +1,28 @@
+{
+  "slug": "psychedelic-rock",
+  "parent_slug": "rock",
+  "title": "Psychedelic Rock",
+  "tagline": "Rock altered by studio experiments, extended improvisation, and vivid sonic color.",
+  "summary": "Psychedelic rock emerged in the 1960s as musicians used effects, unusual structures, and extended improvisation to evoke altered perception. The style drew on blues, folk, Indian music, and studio experimentation. Its influence can be heard in progressive rock, garage music, and many later alternative scenes.",
+  "origin_place": "United States and United Kingdom",
+  "origin_years": "mid-1960s",
+  "history": [],
+  "related_slugs": ["rock", "garage-rock", "art-rock"],
+  "wikipedia_title": "Psychedelic rock",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "The Beatles", "why": "The Beatles' mid-1960s recordings used studio effects and unconventional arrangements associated with psychedelic rock." },
+    { "name": "The Jimi Hendrix Experience", "why": "Hendrix combined blues-based guitar playing with imaginative effects and expansive performance." },
+    { "name": "The Grateful Dead", "why": "The Grateful Dead made extended improvisation and live exploration central to their psychedelic-era sound." }
+  ],
+  "examples": [
+    { "name": "Jefferson Airplane" }, { "name": "The 13th Floor Elevators" },
+    { "name": "Pink Floyd" }, { "name": "The Doors" },
+    { "name": "Cream" }, { "name": "Love" },
+    { "name": "The Byrds" }, { "name": "Traffic" },
+    { "name": "The Pretty Things" }, { "name": "Tame Impala" },
+    { "name": "King Gizzard & the Lizard Wizard" }, { "name": "Animal Collective" }
+  ],
+  "sources_to_verify": ["Psychedelic rock", "The Beatles", "The Jimi Hendrix Experience", "The Grateful Dead"]
+}

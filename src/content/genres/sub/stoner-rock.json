@@ -1,0 +1,75 @@
+{
+  "slug": "stoner-rock",
+  "parent_slug": "rock",
+  "title": "Stoner Rock",
+  "tagline": "Heavy riffs with a slow, drifting pulse.",
+  "summary": "Stoner rock stretches riff-based rock into slower, more hypnotic forms, often with a warm psychedelic haze. It draws on blues, hard rock and acid rock without needing speed as its main weapon. The result is music that feels tactile and spacious, balancing heaviness with trancelike repetition.",
+  "origin_place": "United States",
+  "origin_years": "1990s and early 2000s",
+  "history": [],
+  "related_slugs": [
+    "rock",
+    "metal"
+  ],
+  "wikipedia_title": "Stoner rock",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    {
+      "name": "Kyuss",
+      "why": "Kyuss made fuzz, groove and atmosphere feel as important as melody."
+    },
+    {
+      "name": "Sleep",
+      "why": "Sleep stretched the genre into a dense, hypnotic language of slow riffs and huge volume."
+    },
+    {
+      "name": "Monster Magnet",
+      "why": "Monster Magnet gave the form a sharper, more melodic edge while keeping its heavy drift."
+    }
+  ],
+  "examples": [
+    {
+      "name": "Electric Wizard"
+    },
+    {
+      "name": "Fu Manchu"
+    },
+    {
+      "name": "The Sword"
+    },
+    {
+      "name": "Earth"
+    },
+    {
+      "name": "Bongripper"
+    },
+    {
+      "name": "Mastodon"
+    },
+    {
+      "name": "Corrosion of Conformity"
+    },
+    {
+      "name": "Red Fang"
+    },
+    {
+      "name": "Witchcraft"
+    },
+    {
+      "name": "Uncle Acid & the Deadbeats"
+    },
+    {
+      "name": "Windhand"
+    },
+    {
+      "name": "Dead Meadow"
+    }
+  ],
+  "sources_to_verify": [
+    "Stoner rock",
+    "Kyuss",
+    "Sleep",
+    "Monster Magnet"
+  ]
+}

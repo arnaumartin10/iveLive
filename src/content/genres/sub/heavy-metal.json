@@ -1,0 +1,34 @@
+{
+  "slug": "heavy-metal",
+  "parent_slug": "metal",
+  "title": "Heavy Metal",
+  "tagline": "Amplified riffs, commanding voices, and a sound built for scale.",
+  "summary": "Heavy metal took the volume and distortion of hard rock and made them the center of the music. Its defining language includes weighty guitar riffs, emphatic drums, dramatic vocals, and a taste for bold imagery. Different scenes made the sound faster, darker, or more technical, but its core appeal is the physical force of a band playing at full intensity.",
+  "origin_place": "United Kingdom",
+  "origin_years": "late 1960s",
+  "history": [],
+  "related_slugs": ["metal", "hard-rock", "doom-metal"],
+  "wikipedia_title": "Heavy metal music",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Black Sabbath", "why": "Black Sabbath established a darker, heavier guitar vocabulary that became foundational for metal." },
+    { "name": "Judas Priest", "why": "Judas Priest sharpened the genre's twin-guitar attack and helped make leather-and-studs imagery part of its visual identity." },
+    { "name": "Iron Maiden", "why": "Iron Maiden paired intricate guitar harmonies and driving rhythms with expansive, story-led songs." }
+  ],
+  "examples": [
+    { "name": "Deep Purple" },
+    { "name": "Motörhead" },
+    { "name": "Dio" },
+    { "name": "Saxon" },
+    { "name": "Accept" },
+    { "name": "Scorpions" },
+    { "name": "Ozzy Osbourne" },
+    { "name": "Mercyful Fate" },
+    { "name": "Rainbow" },
+    { "name": "Blue Öyster Cult" },
+    { "name": "UFO" },
+    { "name": "Diamond Head" }
+  ],
+  "sources_to_verify": ["Heavy metal music", "Black Sabbath", "Judas Priest", "Iron Maiden"]
+}

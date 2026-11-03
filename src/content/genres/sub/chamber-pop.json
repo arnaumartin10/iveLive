@@ -1,0 +1,34 @@
+{
+  "slug": "chamber-pop",
+  "parent_slug": "indie",
+  "title": "Chamber Pop",
+  "tagline": "Pop songs framed by orchestral color and carefully shaped arrangements.",
+  "summary": "Chamber pop blends pop songwriting with the timbres and detail of chamber music. Strings, woodwinds, and arranged vocal parts can create a lush or intimate setting around clear melodies. The style has appeared in different eras, often among artists who use orchestral writing to give independent pop songs a distinctive sense of scale and nuance.",
+  "origin_place": "United Kingdom and United States",
+  "origin_years": "1960s and 1990s revival",
+  "history": [],
+  "related_slugs": ["indie", "art-pop", "dream-pop"],
+  "wikipedia_title": "Chamber pop",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "The Beach Boys", "why": "The Beach Boys' layered vocal writing and orchestral studio ambition influenced later chamber-pop arrangements." },
+    { "name": "The Left Banke", "why": "The Left Banke paired pop melodies with classical string parts in recordings associated with the early baroque-pop tradition." },
+    { "name": "The Divine Comedy", "why": "The Divine Comedy brought witty songwriting and elaborate orchestral arrangements into a modern pop setting." }
+  ],
+  "examples": [
+    { "name": "Belle and Sebastian" },
+    { "name": "Rufus Wainwright" },
+    { "name": "Sufjan Stevens" },
+    { "name": "The Decemberists" },
+    { "name": "Andrew Bird" },
+    { "name": "Owen Pallett" },
+    { "name": "The Magnetic Fields" },
+    { "name": "Camera Obscura" },
+    { "name": "Final Fantasy" },
+    { "name": "Joanna Newsom" },
+    { "name": "Patrick Wolf" },
+    { "name": "The High Llamas" }
+  ],
+  "sources_to_verify": ["Chamber pop", "The Beach Boys", "The Left Banke", "The Divine Comedy"]
+}

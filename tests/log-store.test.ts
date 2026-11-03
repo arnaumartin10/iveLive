@@ -12,6 +12,7 @@ const artist: ArtistRow = {
   image_url_thumb: null,
   genres: [],
   macro_genres: [],
+  sub_genres: [],
   primary_macro: null,
   is_on_tour: false,
   public_avg_rating: null,

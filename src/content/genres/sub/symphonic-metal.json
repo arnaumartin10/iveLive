@@ -1,0 +1,75 @@
+{
+  "slug": "symphonic-metal",
+  "parent_slug": "metal",
+  "title": "Symphonic Metal",
+  "tagline": "A grand, orchestral frame around a driving metal song.",
+  "summary": "Symphonic metal blends heavy rock with strings, choirs and dramatic arrangements, creating a more theatrical sound than most forms of metal. The style often pairs detailed composition with soaring melodies, allowing the voice and the arrangement to carry the same emotional weight.",
+  "origin_place": "Europe",
+  "origin_years": "1990s",
+  "history": [],
+  "related_slugs": [
+    "metal",
+    "classical"
+  ],
+  "wikipedia_title": "Symphonic metal",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    {
+      "name": "Nightwish",
+      "why": "Nightwish made the combination of operatic vocals and metal rhythm a durable and widely recognizable form."
+    },
+    {
+      "name": "Within Temptation",
+      "why": "Within Temptation balanced melodic clarity with a more modern, polished production style."
+    },
+    {
+      "name": "Therion",
+      "why": "Therion brought a deliberately grand, orchestral dimension to the genre and expanded its ambition."
+    }
+  ],
+  "examples": [
+    {
+      "name": "Epica"
+    },
+    {
+      "name": "Avantasia"
+    },
+    {
+      "name": "Kamelot"
+    },
+    {
+      "name": "Delain"
+    },
+    {
+      "name": "Tarja"
+    },
+    {
+      "name": "Tristania"
+    },
+    {
+      "name": "The Sirens"
+    },
+    {
+      "name": "Xandria"
+    },
+    {
+      "name": "Leaves’ Eyes"
+    },
+    {
+      "name": "Evanescence"
+    },
+    {
+      "name": "Sirenia"
+    },
+    {
+      "name": "After Forever"
+    }
+  ],
+  "sources_to_verify": [
+    "Symphonic metal",
+    "Nightwish",
+    "Within Temptation",
+    "Therion"
+  ]
+}

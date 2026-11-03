@@ -4,8 +4,16 @@ import { render, screen } from '@testing-library/react-native';
 import ComponentsPreviewScreen from '../src/app/(dev)/components';
 import { ThemeProvider } from '../src/theme/ThemeProvider';
 import { useThemeStore } from '../src/theme/store';
-import { paperTheme, nightTheme, getContrastRatio, RAW } from '../src/theme/palette';
-import { getSeededRotation, getSeededOffset } from '../src/components/paper/hash';
+import {
+  paperTheme,
+  nightTheme,
+  getContrastRatio,
+  RAW,
+} from '../src/theme/palette';
+import {
+  getSeededRotation,
+  getSeededOffset,
+} from '../src/components/paper/hash';
 import { Ticket, Stub, Stamp, Sticker } from '../src/components/paper';
 import { Text } from '../src/components/ui/Text';
 
@@ -26,11 +34,12 @@ describe('Paper & Ink Brand Sheet & Foundations', () => {
       expect(screen.getByText('02. Typography')).toBeTruthy();
       expect(screen.getByText('03. Paper Shapes')).toBeTruthy();
       expect(screen.getByText('04. 14 Genre Patterns')).toBeTruthy();
-      expect(screen.getByText('05. Venue Stamps')).toBeTruthy();
-      expect(screen.getByText('06. Core Primitives')).toBeTruthy();
-      expect(screen.getByText('07. Custom Icon Set')).toBeTruthy();
-      expect(screen.getByText('08. Physical Motion')).toBeTruthy();
-      expect(screen.getByText('09. Voice & Empty State')).toBeTruthy();
+      expect(screen.getByText('05. Genre label contrast matrix')).toBeTruthy();
+      expect(screen.getByText('06. Venue Stamps')).toBeTruthy();
+      expect(screen.getByText('07. Core Primitives')).toBeTruthy();
+      expect(screen.getByText('08. Custom Icon Set')).toBeTruthy();
+      expect(screen.getByText('09. Physical Motion')).toBeTruthy();
+      expect(screen.getByText('10. Voice & Empty State')).toBeTruthy();
     },
   );
 
@@ -41,7 +50,10 @@ describe('Paper & Ink Brand Sheet & Foundations', () => {
       expect(contrastBg).toBeGreaterThanOrEqual(4.5);
 
       // ink on surface
-      const contrastSurface = getContrastRatio(paperTheme.ink, paperTheme.surface);
+      const contrastSurface = getContrastRatio(
+        paperTheme.ink,
+        paperTheme.surface,
+      );
       expect(contrastSurface).toBeGreaterThanOrEqual(4.5);
     });
 
@@ -51,13 +63,19 @@ describe('Paper & Ink Brand Sheet & Foundations', () => {
       expect(contrastBg).toBeGreaterThanOrEqual(4.5);
 
       // ink on surface
-      const contrastSurface = getContrastRatio(nightTheme.ink, nightTheme.surface);
+      const contrastSurface = getContrastRatio(
+        nightTheme.ink,
+        nightTheme.surface,
+      );
       expect(contrastSurface).toBeGreaterThanOrEqual(4.5);
     });
 
     it('enforces large/bold text & accent fill contrast >= 3:1', () => {
       // accentInk on accent
-      const contrastAccent = getContrastRatio(paperTheme.accentInk, paperTheme.accent);
+      const contrastAccent = getContrastRatio(
+        paperTheme.accentInk,
+        paperTheme.accent,
+      );
       expect(contrastAccent).toBeGreaterThanOrEqual(3.0);
     });
   });
@@ -75,7 +93,14 @@ describe('Paper & Ink Brand Sheet & Foundations', () => {
     });
 
     it('stays strictly within bounded rotation range [-3, 3] degrees', () => {
-      const testIds = ['band-1', 'band-2', 'band-3', 'show-99', 'venue-abc', 'artist-999'];
+      const testIds = [
+        'band-1',
+        'band-2',
+        'band-3',
+        'show-99',
+        'venue-abc',
+        'artist-999',
+      ];
       for (const id of testIds) {
         const rot = getSeededRotation(id, 3);
         expect(rot).toBeGreaterThanOrEqual(-3);

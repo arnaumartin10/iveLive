@@ -1,0 +1,75 @@
+{
+  "slug": "industrial-metal",
+  "parent_slug": "metal",
+  "title": "Industrial Metal",
+  "tagline": "Machinery, repetition and weight with a sharp, mechanical edge.",
+  "summary": "Industrial metal transforms the abrasive textures of industrial music into heavy guitar forms. It often pairs metallic drums, processed vocals and repetitive loops with riffs that feel stamped and mechanical. The result is a style built on pressure, rhythm and a sense of urban unease.",
+  "origin_place": "United Kingdom and Germany",
+  "origin_years": "1980s and 1990s",
+  "history": [],
+  "related_slugs": [
+    "metal",
+    "electronic"
+  ],
+  "wikipedia_title": "Industrial metal",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    {
+      "name": "Ministry",
+      "why": "Ministry merged metal weight with electronic treatment and a confrontational industrial attitude."
+    },
+    {
+      "name": "Front 242",
+      "why": "Front 242 placed steady electronic pulse and muscular production at the center of the sound."
+    },
+    {
+      "name": "Rammstein",
+      "why": "Rammstein made industrial-metal spectacle feel huge, disciplined and immediate."
+    }
+  ],
+  "examples": [
+    {
+      "name": "Nine Inch Nails"
+    },
+    {
+      "name": "KMFDM"
+    },
+    {
+      "name": "Skinny Puppy"
+    },
+    {
+      "name": "Stahlmann"
+    },
+    {
+      "name": "Marilyn Manson"
+    },
+    {
+      "name": "Static-X"
+    },
+    {
+      "name": "Filter"
+    },
+    {
+      "name": "Pain"
+    },
+    {
+      "name": "Danzig"
+    },
+    {
+      "name": "The Prodigy"
+    },
+    {
+      "name": "Dope"
+    },
+    {
+      "name": "Godflesh"
+    }
+  ],
+  "sources_to_verify": [
+    "Industrial metal",
+    "Ministry",
+    "Front 242",
+    "Rammstein"
+  ]
+}

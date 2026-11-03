@@ -1,0 +1,34 @@
+{
+  "slug": "bachata",
+  "parent_slug": "latin",
+  "title": "Bachata",
+  "tagline": "A Dominican guitar tradition with a close, romantic pulse.",
+  "summary": "Bachata developed in the Dominican Republic around guitar-led songs, a steady dance rhythm, and lyrics often centered on love and heartbreak. Its early recordings circulated beyond elite venues before the style gained wider recognition. Modern bachata has incorporated pop and other Latin influences while retaining the guitar patterns and rhythmic feel that mark the tradition.",
+  "origin_place": "Dominican Republic",
+  "origin_years": "1960s",
+  "history": [],
+  "related_slugs": ["latin", "salsa", "urbano-latino"],
+  "wikipedia_title": "Bachata (music)",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Jose Manuel Calderon", "why": "Jose Manuel Calderon is widely recognized for early bachata recordings that helped establish the genre's recorded tradition." },
+    { "name": "Juan Luis Guerra", "why": "Juan Luis Guerra brought bachata to wider international audiences through polished songwriting and musical arrangements." },
+    { "name": "Aventura", "why": "Aventura blended bachata with contemporary pop and R&B, helping introduce the style to a new generation of listeners." }
+  ],
+  "examples": [
+    { "name": "Romeo Santos" },
+    { "name": "Prince Royce" },
+    { "name": "Anthony Santos" },
+    { "name": "Raulin Rodriguez" },
+    { "name": "Luis Vargas" },
+    { "name": "Frank Reyes" },
+    { "name": "Monchy y Alexandra" },
+    { "name": "Joe Veras" },
+    { "name": "Zacarías Ferreira" },
+    { "name": "Elvis Martinez" },
+    { "name": "Domenic Marte" },
+    { "name": "Leslie Grace" }
+  ],
+  "sources_to_verify": ["Bachata (music)", "Jose Manuel Calderon", "Juan Luis Guerra", "Aventura"]
+}

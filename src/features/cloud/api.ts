@@ -40,18 +40,28 @@ export async function fetchUserCloudData(
   }
   const artistIds = normalized.artists.map((artist) => artist.id);
   if (artistIds.length) {
-    const { data: overrides, error: overridesError } = await supabase
-      .from('user_artist_image_overrides')
-      .select('artist_id,profile_image_url')
-      .eq('user_id', userId)
-      .in('artist_id', artistIds);
-    if (overridesError) throw new Error(overridesError.message);
+    const [overridesResult, subGenresResult] = await Promise.all([
+      supabase
+        .from('user_artist_image_overrides')
+        .select('artist_id,profile_image_url')
+        .eq('user_id', userId)
+        .in('artist_id', artistIds),
+      supabase.from('artists').select('id,sub_genres').in('id', artistIds),
+    ]);
+    if (overridesResult.error) throw new Error(overridesResult.error.message);
+    if (subGenresResult.error) throw new Error(subGenresResult.error.message);
     const imageByArtist = new Map(
-      (overrides ?? []).flatMap((override) =>
+      (overridesResult.data ?? []).flatMap((override) =>
         override.profile_image_url
           ? [[override.artist_id, override.profile_image_url] as const]
           : [],
       ),
+    );
+    const subGenresByArtist = new Map(
+      (subGenresResult.data ?? []).map((artist) => [
+        artist.id,
+        artist.sub_genres ?? [],
+      ]),
     );
     for (const artist of normalized.artists) {
       const image = imageByArtist.get(artist.id);
@@ -59,6 +69,7 @@ export async function fetchUserCloudData(
         artist.image_url_thumb = image;
         artist.image_url_large = image;
       }
+      artist.sub_genres = subGenresByArtist.get(artist.id) ?? [];
     }
   }
   return normalized satisfies UserCloudData;

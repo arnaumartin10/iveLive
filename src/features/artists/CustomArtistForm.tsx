@@ -443,6 +443,7 @@ export function CustomArtistForm({
                     genre={slug}
                     size="xs"
                     variant={isSelected ? 'solid' : 'outline'}
+                    interactive={false}
                   />
                 </Pressable>
               );

@@ -1,0 +1,34 @@
+{
+  "slug": "gothic-rock",
+  "parent_slug": "punk",
+  "title": "Gothic Rock",
+  "tagline": "Dark melodies, theatrical mood, and a dramatic sense of atmosphere.",
+  "summary": "Gothic rock takes punk's confrontational charge and turns it into something more atmospheric, ornate, and emotionally intense. It pairs sharp rhythm sections with deep reverb, minor-key melodies, and a strong visual identity rooted in post-punk culture. The result is a sound built as much for shadow and ritual as for dance floors.",
+  "origin_place": "United Kingdom",
+  "origin_years": "late 1970s",
+  "history": [],
+  "related_slugs": ["punk", "post-punk", "dream-pop"],
+  "wikipedia_title": "Gothic rock",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Siouxsie and the Banshees", "why": "Their mix of dark romance, tension, and hypnotic rhythm helped define the style's dramatic pull." },
+    { "name": "The Cure", "why": "The Cure translated gothic mood into sweeping, melodic drama while keeping the songs intimate and direct." },
+    { "name": "The Damned", "why": "The Damned's early work helped push gothic culture toward a punk edge without losing the atmosphere." }
+  ],
+  "examples": [
+    { "name": "Bauhaus" },
+    { "name": "Joy Division" },
+    { "name": "The Cramps" },
+    { "name": "The Sisters of Mercy" },
+    { "name": "The Mission" },
+    { "name": "Christian Death" },
+    { "name": "Fields of the Nephilim" },
+    { "name": "The Birthday Party" },
+    { "name": "Xmal Deutschland" },
+    { "name": "The Smiths" },
+    { "name": "The Jesus and Mary Chain" },
+    { "name": "Killing Joke" }
+  ],
+  "sources_to_verify": ["Gothic rock", "Siouxsie and the Banshees", "Bauhaus", "The Sisters of Mercy"]
+}

@@ -145,6 +145,7 @@ export function PickRow({
                   size="xs"
                   variant="outline"
                   surface="surface"
+                  interactive={false}
                 />
               ) : (
                 <Text variant="overline" color="secondary" numberOfLines={1}>

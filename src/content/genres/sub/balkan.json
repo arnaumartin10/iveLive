@@ -1,0 +1,28 @@
+{
+  "slug": "balkan",
+  "parent_slug": "world",
+  "title": "Balkan",
+  "tagline": "Brass, strings, and rhythms shaped by the many musical traditions of Southeast Europe.",
+  "summary": "Balkan music brings together diverse traditions from Southeast Europe, including brass bands, vocal styles, and dance rhythms. Modern performers often combine regional instruments and melodies with jazz, rock, and electronic production. The label describes a broad musical region rather than a single uniform genre.",
+  "origin_place": "Southeast Europe",
+  "origin_years": "Traditional; contemporary revival from the 20th century",
+  "history": [],
+  "related_slugs": ["world", "celtic", "highlife"],
+  "wikipedia_title": "Balkan music",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Goran Bregović", "why": "Bregović brought Balkan brass and folk influences into widely heard film scores and ensemble arrangements." },
+    { "name": "Esma Redžepova", "why": "Redžepova became an internationally recognized singer associated with Romani music from the Balkans." },
+    { "name": "Boban Marković", "why": "Marković is known for energetic Serbian brass-band performance and virtuoso trumpet playing." }
+  ],
+  "examples": [
+    { "name": "Fanfare Ciocărlia" }, { "name": "Kočani Orkestar" },
+    { "name": "Taraf de Haïdouks" }, { "name": "Shantel" },
+    { "name": "Balkan Beat Box" }, { "name": "Dubioza Kolektiv" },
+    { "name": "Mahala Rai Banda" }, { "name": "Saban Bajramovic" },
+    { "name": "Vlatko Stefanovski" }, { "name": "Mostar Sevdah Reunion" },
+    { "name": "Djordje Balasevic" }, { "name": "Lajko Felix" }
+  ],
+  "sources_to_verify": ["Balkan music", "Goran Bregović", "Esma Redžepova", "Boban Marković"]
+}

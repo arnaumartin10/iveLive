@@ -1,0 +1,28 @@
+{
+  "slug": "jazz-fusion",
+  "parent_slug": "jazz_blues",
+  "title": "Jazz Fusion",
+  "tagline": "Jazz improvisation meeting rock volume, electric instruments, and global rhythms.",
+  "summary": "Jazz fusion combines jazz improvisation and harmony with elements of rock, funk, and other musical traditions. Electric instruments and amplified ensembles became especially prominent in the late 1960s and 1970s. Fusion remains an open-ended field in which musicians experiment with rhythm, virtuosity, and cross-cultural influences.",
+  "origin_place": "United States",
+  "origin_years": "late 1960s",
+  "history": [],
+  "related_slugs": ["jazz_blues", "jazz-funk", "rock"],
+  "wikipedia_title": "Jazz fusion",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Miles Davis", "why": "Davis's electric recordings opened a major path for jazz musicians to engage with rock and funk." },
+    { "name": "Weather Report", "why": "Weather Report developed an adventurous ensemble sound that drew on jazz, electronics, and global rhythms." },
+    { "name": "Mahavishnu Orchestra", "why": "The group combined high-energy rock volume with virtuosic jazz improvisation and complex arrangements." }
+  ],
+  "examples": [
+    { "name": "Chick Corea" }, { "name": "Return to Forever" },
+    { "name": "Herbie Hancock" }, { "name": "John McLaughlin" },
+    { "name": "Pat Metheny Group" }, { "name": "The Tony Williams Lifetime" },
+    { "name": "Brand X" }, { "name": "Al Di Meola" },
+    { "name": "Larry Coryell" }, { "name": "Hiromi" },
+    { "name": "Snarky Puppy" }, { "name": "Esperanza Spalding" }
+  ],
+  "sources_to_verify": ["Jazz fusion", "Miles Davis", "Weather Report", "Mahavishnu Orchestra"]
+}

@@ -1,0 +1,34 @@
+{
+  "slug": "thrash-metal",
+  "parent_slug": "metal",
+  "title": "Thrash Metal",
+  "tagline": "Breakneck tempos, tightly cut riffs, and relentless momentum.",
+  "summary": "Thrash metal combines metal's heavy guitar sound with the speed and attack of hardcore punk. Its songs often hinge on rapid palm-muted riffs, precise drumming, and sharp changes in pace. The style grew through local scenes that prized energy and musicianship in equal measure, becoming one of metal's most influential routes into faster and more extreme sounds.",
+  "origin_place": "United States and Germany",
+  "origin_years": "early 1980s",
+  "history": [],
+  "related_slugs": ["metal", "heavy-metal", "death-metal"],
+  "wikipedia_title": "Thrash metal",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Metallica", "why": "Metallica brought tightly arranged speed and memorable songcraft to a broad audience without softening thrash's attack." },
+    { "name": "Slayer", "why": "Slayer made the style darker and more extreme through relentless tempos and dissonant guitar work." },
+    { "name": "Megadeth", "why": "Megadeth emphasized intricate guitar lines and technically demanding arrangements within thrash's fast framework." }
+  ],
+  "examples": [
+    { "name": "Anthrax" },
+    { "name": "Exodus" },
+    { "name": "Testament" },
+    { "name": "Overkill" },
+    { "name": "Kreator" },
+    { "name": "Sodom" },
+    { "name": "Destruction" },
+    { "name": "Sepultura" },
+    { "name": "Death Angel" },
+    { "name": "Forbidden" },
+    { "name": "Nuclear Assault" },
+    { "name": "Vio-lence" }
+  ],
+  "sources_to_verify": ["Thrash metal", "Metallica", "Slayer", "Megadeth"]
+}

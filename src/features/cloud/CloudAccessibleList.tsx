@@ -33,7 +33,7 @@ export function CloudAccessibleList({ artists }: CloudAccessibleListProps) {
         return (
           <View key={slug} accessibilityRole="summary" style={styles.territory}>
             <View style={styles.territoryHeading}>
-              <GenreLabel genre={slug} size="sm" />
+              <GenreLabel genre={slug} size="sm" interactive={false} />
               <Text variant="caption" color="secondary">
                 {members.length} artists
               </Text>

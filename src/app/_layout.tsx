@@ -173,6 +173,8 @@ function AppContent({ fontsReady }: { fontsReady: boolean }) {
       ) : (
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="genre/[slug]" />
+          <Stack.Screen name="genres/index" />
           <Stack.Screen
             name="log"
             options={{

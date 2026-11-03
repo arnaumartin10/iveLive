@@ -1,0 +1,28 @@
+{
+  "slug": "romantic",
+  "parent_slug": "classical",
+  "title": "Romantic",
+  "tagline": "Expressive orchestral music that puts individuality and emotional scale in focus.",
+  "summary": "The Romantic period in classical music favored expressive individuality, expanded orchestral forces, and dramatic contrasts. Composers developed symphonies, concertos, songs, and operas with heightened emotional range and national influences. The era's music remains central to concert repertoires and shaped later approaches to orchestration and melody.",
+  "origin_place": "Europe",
+  "origin_years": "19th century",
+  "history": [],
+  "related_slugs": ["classical", "opera", "baroque"],
+  "wikipedia_title": "Romantic music",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Ludwig van Beethoven", "why": "Beethoven's later works expanded musical form and helped bridge Classical and Romantic traditions." },
+    { "name": "Frédéric Chopin", "why": "Chopin developed a distinctive piano style known for expressive melody and subtle rhythmic flexibility." },
+    { "name": "Franz Schubert", "why": "Schubert's songs and instrumental works brought lyricism and harmonic richness to the Romantic repertoire." }
+  ],
+  "examples": [
+    { "name": "Pyotr Ilyich Tchaikovsky" }, { "name": "Johannes Brahms" },
+    { "name": "Robert Schumann" }, { "name": "Clara Schumann" },
+    { "name": "Franz Liszt" }, { "name": "Richard Wagner" },
+    { "name": "Hector Berlioz" }, { "name": "Antonín Dvořák" },
+    { "name": "Edvard Grieg" }, { "name": "Gustav Mahler" },
+    { "name": "Camille Saint-Saëns" }, { "name": "Fanny Mendelssohn" }
+  ],
+  "sources_to_verify": ["Romantic music", "Ludwig van Beethoven", "Frédéric Chopin", "Franz Schubert"]
+}

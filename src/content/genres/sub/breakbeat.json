@@ -1,0 +1,75 @@
+{
+  "slug": "breakbeat",
+  "parent_slug": "electronic",
+  "title": "Breakbeat",
+  "tagline": "Rhythm as the main event, with sharp accents and off-kilter energy.",
+  "summary": "Breakbeat puts rhythmic displacement at the center of the song, using syncopated drum patterns to create motion and tension. It emerged from club culture, where dancers needed a groove that could feel urgent, elastic and slightly unpredictable. The style sits between electronic dance music and the more open textures of experimental club production.",
+  "origin_place": "United Kingdom",
+  "origin_years": "1990s",
+  "history": [],
+  "related_slugs": [
+    "electronic",
+    "hip_hop"
+  ],
+  "wikipedia_title": "Breakbeat",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    {
+      "name": "The Prodigy",
+      "why": "The Prodigy made breakbeat feel immediate, loud and unmistakably club-ready."
+    },
+    {
+      "name": "A Guy Called Gerald",
+      "why": "A Guy Called Gerald helped define breakbeat as a rhythmic language with a strong sense of movement and atmosphere."
+    },
+    {
+      "name": "Photek",
+      "why": "Photek linked breakbeat to a more atmospheric and bass-heavy club aesthetic."
+    }
+  ],
+  "examples": [
+    {
+      "name": "Goldie"
+    },
+    {
+      "name": "LTJ Bukem"
+    },
+    {
+      "name": "Roni Size"
+    },
+    {
+      "name": "DJ Shadow"
+    },
+    {
+      "name": "The Chemical Brothers"
+    },
+    {
+      "name": "Roachford"
+    },
+    {
+      "name": "Shy FX"
+    },
+    {
+      "name": "The Black Dog"
+    },
+    {
+      "name": "Ragga Twins"
+    },
+    {
+      "name": "Noisia"
+    },
+    {
+      "name": "Mighty Dub Katz"
+    },
+    {
+      "name": "DJ Fresh"
+    }
+  ],
+  "sources_to_verify": [
+    "Breakbeat",
+    "The Prodigy",
+    "A Guy Called Gerald",
+    "Photek"
+  ]
+}

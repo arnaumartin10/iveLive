@@ -1,0 +1,75 @@
+{
+  "slug": "alternative-rock",
+  "parent_slug": "rock",
+  "title": "Alternative Rock",
+  "tagline": "Tension, hooks and a little friction in the signal.",
+  "summary": "Alternative rock gathers the strands of guitar music that refused to fit inside a single pop or underground lane. It grew from post-punk, punk, and college-radio scenes and turned experimentation into a mainstream possibility. Its appeal lies in contrast: sharp hooks, restless rhythms, and the feeling that a song might bend before it resolves.",
+  "origin_place": "United States and the United Kingdom",
+  "origin_years": "1980s",
+  "history": [],
+  "related_slugs": [
+    "rock",
+    "indie"
+  ],
+  "wikipedia_title": "Alternative rock",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    {
+      "name": "Pixies",
+      "why": "Pixies made abrupt dynamics and big hooks feel essential, helping define the sound of a new alternative wave."
+    },
+    {
+      "name": "R.E.M.",
+      "why": "R.E.M. showed how strong songwriting and atmosphere could carry a rock band beyond the underground."
+    },
+    {
+      "name": "Radiohead",
+      "why": "Radiohead expanded alternative rock with layered writing and a willingness to shift again and again."
+    }
+  ],
+  "examples": [
+    {
+      "name": "The Smiths"
+    },
+    {
+      "name": "The Cure"
+    },
+    {
+      "name": "Jane’s Addiction"
+    },
+    {
+      "name": "Red Hot Chili Peppers"
+    },
+    {
+      "name": "Placebo"
+    },
+    {
+      "name": "The Sundays"
+    },
+    {
+      "name": "The Jesus and Mary Chain"
+    },
+    {
+      "name": "Sonic Youth"
+    },
+    {
+      "name": "The Stooges"
+    },
+    {
+      "name": "Blur"
+    },
+    {
+      "name": "The Breeders"
+    },
+    {
+      "name": "Yo La Tengo"
+    }
+  ],
+  "sources_to_verify": [
+    "Alternative rock",
+    "Pixies",
+    "R.E.M.",
+    "Radiohead"
+  ]
+}

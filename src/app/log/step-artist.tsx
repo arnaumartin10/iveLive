@@ -19,19 +19,26 @@ import {
   View,
 } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
-import { AlertCircle, Info, Music2, RefreshCw, Search, X } from 'lucide-react-native';
+import {
+  AlertCircle,
+  Info,
+  Music2,
+  RefreshCw,
+  Search,
+  X,
+} from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 
 import { useLogDraft } from '../../features/log/store';
 import { useArtistCard } from '../../features/artists/ArtistCardProvider';
-import {
-  useArtistSearch,
-  useEnsureArtist,
-} from '../../features/artists/hooks';
+import { useArtistSearch, useEnsureArtist } from '../../features/artists/hooks';
 import { useUserConcerts as useConcertList } from '../../features/concerts/hooks';
-import type { ArtistSearchResult, ArtistRow } from '../../features/artists/types';
+import type {
+  ArtistSearchResult,
+  ArtistRow,
+} from '../../features/artists/types';
 import { useAuthStore } from '../../features/auth/store';
 import { WizardStepView } from '../../components/log/WizardStepView';
 import { Skeleton } from '../../components/ui/Skeleton';
@@ -105,11 +112,20 @@ function RecentArtistChip({
             <Music2 size={14} color={colors.inkMuted} />
           </View>
         )}
-        <Text variant="caption" weight="semibold" numberOfLines={1} style={styles.recentChipLabel}>
+        <Text
+          variant="caption"
+          weight="semibold"
+          numberOfLines={1}
+          style={styles.recentChipLabel}
+        >
           {artist.name}
         </Text>
         {isLoading && (
-          <ActivityIndicator size="small" color={colors.accent} style={styles.recentChipSpinner} />
+          <ActivityIndicator
+            size="small"
+            color={colors.accent}
+            style={styles.recentChipSpinner}
+          />
         )}
       </Pressable>
       <Pressable
@@ -171,12 +187,16 @@ export default function StepArtist() {
       ensureArtist.mutate(result, {
         onSuccess: (artist) => {
           setArtist(artist);
-          void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+          void Haptics.notificationAsync(
+            Haptics.NotificationFeedbackType.Success,
+          );
           goNext();
         },
         onError: () => {
           setLoadingKey(null);
-          void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+          void Haptics.notificationAsync(
+            Haptics.NotificationFeedbackType.Error,
+          );
         },
         onSettled: () => setLoadingKey(null),
       });
@@ -231,7 +251,11 @@ export default function StepArtist() {
   );
 
   return (
-    <WizardStepView step={1} continueLabel="Continue" disableContinue={!draftArtist}>
+    <WizardStepView
+      step={1}
+      continueLabel="Continue"
+      disableContinue={!draftArtist}
+    >
       <View style={[styles.container, { paddingHorizontal: spacing[4] }]}>
         {/* ── Search input ─────────────────────────────────────────────── */}
         <View
@@ -260,20 +284,43 @@ export default function StepArtist() {
             <Pressable
               accessibilityRole="button"
               accessibilityLabel="Clear search"
-              onPress={() => { setQuery(''); inputRef.current?.focus(); }}
+              onPress={() => {
+                setQuery('');
+                inputRef.current?.focus();
+              }}
               hitSlop={8}
             >
               <X size={16} color={colors.inkMuted} />
             </Pressable>
           ) : null}
         </View>
+        <Pressable
+          accessibilityRole="link"
+          accessibilityLabel="Browse music genres"
+          hitSlop={8}
+          onPress={() => router.push('/genres')}
+          style={styles.browseGenresLink}
+        >
+          <Text variant="caption" color="accent" weight="bold">
+            Browse genres
+          </Text>
+        </Pressable>
 
         {/* ── Rate-limit banner ────────────────────────────────────────── */}
         {rateLimited && (
-          <View style={[styles.banner, { backgroundColor: `${colors.warning}1A`, borderColor: `${colors.warning}40` }]}>
+          <View
+            style={[
+              styles.banner,
+              {
+                backgroundColor: `${colors.warning}1A`,
+                borderColor: `${colors.warning}40`,
+              },
+            ]}
+          >
             <AlertCircle size={15} color={colors.warning} />
             <Text variant="caption" color="secondary" style={styles.bannerText}>
-              Spotify search is temporarily busy. Manual and local artists still work.
+              Spotify search is temporarily busy. Manual and local artists still
+              work.
             </Text>
             <Pressable
               accessibilityRole="button"
@@ -288,7 +335,15 @@ export default function StepArtist() {
 
         {/* ── Error banner ─────────────────────────────────────────────── */}
         {error && !rateLimited && (
-          <View style={[styles.banner, { backgroundColor: `${colors.danger}18`, borderColor: `${colors.danger}40` }]}>
+          <View
+            style={[
+              styles.banner,
+              {
+                backgroundColor: `${colors.danger}18`,
+                borderColor: `${colors.danger}40`,
+              },
+            ]}
+          >
             <AlertCircle size={15} color={colors.danger} />
             <Text variant="caption" color="danger" style={styles.bannerText}>
               {error}
@@ -299,7 +354,12 @@ export default function StepArtist() {
         {/* ── Quick-pick recents ───────────────────────────────────────── */}
         {showRecents && (
           <View style={styles.recentsSection}>
-            <Text variant="caption" weight="semibold" color="secondary" style={styles.sectionLabel}>
+            <Text
+              variant="caption"
+              weight="semibold"
+              color="secondary"
+              style={styles.sectionLabel}
+            >
               RECENTLY LOGGED
             </Text>
             <ScrollView
@@ -399,6 +459,12 @@ const styles = StyleSheet.create({
     minHeight: 50,
     gap: 10,
     marginBottom: spacing[3],
+  },
+  browseGenresLink: {
+    alignSelf: 'flex-start',
+    justifyContent: 'center',
+    minHeight: 40,
+    marginBottom: spacing[2],
   },
   input: {
     flex: 1,

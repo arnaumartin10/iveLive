@@ -1,0 +1,28 @@
+{
+  "slug": "pop-punk",
+  "parent_slug": "punk",
+  "title": "Pop Punk",
+  "tagline": "Fast punk energy paired with melodic hooks and shout-along choruses.",
+  "summary": "Pop punk combines punk's speed and directness with concise melodies and catchy choruses. It developed through independent scenes before reaching a wider audience in successive waves. The style ranges from raw and scrappy to polished, but keeps short songs, energetic performance, and youthful perspective close to its center.",
+  "origin_place": "United States and United Kingdom",
+  "origin_years": "1970s onwards",
+  "history": [],
+  "related_slugs": ["punk", "hardcore-punk", "emo"],
+  "wikipedia_title": "Pop punk",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Buzzcocks", "why": "Buzzcocks paired punk's urgency with sharp pop melodies and helped establish a lasting template." },
+    { "name": "The Ramones", "why": "The Ramones' short, direct songs provided a foundational model for melodic punk bands." },
+    { "name": "Green Day", "why": "Green Day brought a highly melodic punk sound to a large international audience in the 1990s." }
+  ],
+  "examples": [
+    { "name": "The Offspring" }, { "name": "Blink-182" },
+    { "name": "Sum 41" }, { "name": "New Found Glory" },
+    { "name": "Screeching Weasel" }, { "name": "Descendents" },
+    { "name": "All Time Low" }, { "name": "Paramore" },
+    { "name": "The Wonder Years" }, { "name": "Jimmy Eat World" },
+    { "name": "Simple Plan" }, { "name": "The Menzingers" }
+  ],
+  "sources_to_verify": ["Pop punk", "Buzzcocks", "The Ramones", "Green Day"]
+}

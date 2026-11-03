@@ -1,0 +1,75 @@
+{
+  "slug": "electronic-body-music",
+  "parent_slug": "electronic",
+  "title": "Electronic Body Music",
+  "tagline": "Machine rhythm turned into a physical, body-led pulse.",
+  "summary": "Electronic body music builds on synthesizers, percussion and constant pulse to create a direct physical response. It often feels colder and more mechanical than dance-pop, but its aim is not distance: it is movement, pressure and a sense of being pulled forward. The style became central to club and post-industrial scenes in Europe.",
+  "origin_place": "Belgium and Germany",
+  "origin_years": "1980s",
+  "history": [],
+  "related_slugs": [
+    "electronic",
+    "punk"
+  ],
+  "wikipedia_title": "Electronic body music",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    {
+      "name": "Front 242",
+      "why": "Front 242 made EBM feel disciplined and tense, with precise rhythm and strong low-end drive."
+    },
+    {
+      "name": "Nitzer Ebb",
+      "why": "Nitzer Ebb brought a more hook-driven and danceable edge to the style without losing the weight."
+    },
+    {
+      "name": "The Neon Judgement",
+      "why": "The Neon Judgement helped extend the sound into a more atmospheric, synth-heavy register."
+    }
+  ],
+  "examples": [
+    {
+      "name": "The Kovenant"
+    },
+    {
+      "name": "Psyclon Nine"
+    },
+    {
+      "name": "Das Ich"
+    },
+    {
+      "name": "D.A.F."
+    },
+    {
+      "name": "Leæther Strip"
+    },
+    {
+      "name": "Cubanate"
+    },
+    {
+      "name": "Cabaret Voltaire"
+    },
+    {
+      "name": "Liaisons Dangereuses"
+    },
+    {
+      "name": "Flesh Field"
+    },
+    {
+      "name": "Beborn Beton"
+    },
+    {
+      "name": "The Klinik"
+    },
+    {
+      "name": "Xeno & Oaklander"
+    }
+  ],
+  "sources_to_verify": [
+    "Electronic body music",
+    "Front 242",
+    "Nitzer Ebb",
+    "The Neon Judgement"
+  ]
+}

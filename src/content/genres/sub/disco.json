@@ -1,0 +1,28 @@
+{
+  "slug": "disco",
+  "parent_slug": "rnb_soul",
+  "title": "Disco",
+  "tagline": "Orchestral strings, steady four-on-the-floor beats, and communal release.",
+  "summary": "Disco grew from Black, Latino, and LGBTQ+ dance-floor cultures in the United States during the 1970s. Orchestral arrangements, steady beats, and extended mixes made the music central to club life. Its production techniques shaped house, dance-pop, and modern electronic music long after disco's initial chart era.",
+  "origin_place": "New York City and Philadelphia, United States",
+  "origin_years": "1970s",
+  "history": [],
+  "related_slugs": ["rnb_soul", "dance-pop", "house"],
+  "wikipedia_title": "Disco",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Donna Summer", "why": "Summer's recordings with producer Giorgio Moroder connected disco to electronic sequencing and expansive club arrangements." },
+    { "name": "Chic", "why": "Chic's precise rhythm guitar and elegant production became a defining template for disco and dance music." },
+    { "name": "Gloria Gaynor", "why": "Gaynor's powerful vocals and enduring dance-floor recordings made her one of disco's best-known performers." }
+  ],
+  "examples": [
+    { "name": "Bee Gees" }, { "name": "Sister Sledge" },
+    { "name": "KC and the Sunshine Band" }, { "name": "Sylvester" },
+    { "name": "Diana Ross" }, { "name": "The Trammps" },
+    { "name": "Village People" }, { "name": "MFSB" },
+    { "name": "Loleatta Holloway" }, { "name": "Thelma Houston" },
+    { "name": "Boney M." }, { "name": "Barry White" }
+  ],
+  "sources_to_verify": ["Disco", "Donna Summer", "Chic", "Gloria Gaynor"]
+}

@@ -65,6 +65,7 @@ export default function WrappedScreen() {
                   genre={genres[0].macro_genre as keyof typeof MACRO_GENRES}
                   size="md"
                   variant="stamp"
+                  interactive={false}
                 />
               ) : (
                 <Text variant="title" weight="bold">

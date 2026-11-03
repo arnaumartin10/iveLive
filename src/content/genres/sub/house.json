@@ -1,0 +1,34 @@
+{
+  "slug": "house",
+  "parent_slug": "electronic",
+  "title": "House",
+  "tagline": "A steady pulse built for shared rooms and long nights.",
+  "summary": "House music emerged from Black, Latino, and queer dance communities in Chicago, then developed through clubs, records, and DJs across the world. A four-beat pulse, looping parts, and soulful or synthetic details give producers room to shape a journey. House is a broad family rather than a single formula, with local scenes continually changing its tempos, textures, and emotional character.",
+  "origin_place": "Chicago, United States",
+  "origin_years": "early 1980s",
+  "history": [],
+  "related_slugs": ["electronic", "disco", "deep-house"],
+  "wikipedia_title": "House music",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Frankie Knuckles", "why": "Knuckles helped shape the Chicago club sound through influential DJ sets and productions." },
+    { "name": "Marshall Jefferson", "why": "Jefferson's records helped define the musical vocabulary of early Chicago house." },
+    { "name": "Larry Heard", "why": "Heard brought introspective harmony and atmosphere to house, expanding its emotional range." }
+  ],
+  "examples": [
+    { "name": "Jesse Saunders" },
+    { "name": "Adonis" },
+    { "name": "Phuture" },
+    { "name": "Farley Jackmaster Funk" },
+    { "name": "Kerri Chandler" },
+    { "name": "Masters at Work" },
+    { "name": "Daft Punk" },
+    { "name": "The Basement Jaxx" },
+    { "name": "Stardust" },
+    { "name": "Peggy Gou" },
+    { "name": "Honey Dijon" },
+    { "name": "Folamour" }
+  ],
+  "sources_to_verify": ["House music", "Frankie Knuckles", "Marshall Jefferson", "Larry Heard"]
+}

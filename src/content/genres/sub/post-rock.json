@@ -1,0 +1,28 @@
+{
+  "slug": "post-rock",
+  "parent_slug": "rock",
+  "title": "Post-Rock",
+  "tagline": "Rock instrumentation used for long-form texture, dynamics, and instrumental storytelling.",
+  "summary": "Post-rock uses familiar rock instruments in ways that emphasize texture, timbre, and gradual development over conventional verse-chorus songwriting. Many artists build instrumental pieces from quiet beginnings toward large dynamic peaks, while others use electronics and unusual structures. The style grew through independent scenes and remains diverse in approach.",
+  "origin_place": "United Kingdom and United States",
+  "origin_years": "1990s",
+  "history": [],
+  "related_slugs": ["rock", "math-rock", "ambient"],
+  "wikipedia_title": "Post-rock",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Talk Talk", "why": "Talk Talk's later albums used rock instrumentation for spacious, exploratory compositions that influenced post-rock." },
+    { "name": "Slint", "why": "Slint's quiet-loud dynamics and unusual structures became an influential reference for post-rock bands." },
+    { "name": "Tortoise", "why": "Tortoise combined instrumental rock with electronic and jazz ideas in a distinctive Chicago sound." }
+  ],
+  "examples": [
+    { "name": "Mogwai" }, { "name": "Godspeed You! Black Emperor" },
+    { "name": "Explosions in the Sky" }, { "name": "Sigur Rós" },
+    { "name": "Bark Psychosis" }, { "name": "Do Make Say Think" },
+    { "name": "65daysofstatic" }, { "name": "This Will Destroy You" },
+    { "name": "Mono" }, { "name": "Caspian" },
+    { "name": "The Album Leaf" }, { "name": "Russian Circles" }
+  ],
+  "sources_to_verify": ["Post-rock", "Talk Talk", "Slint", "Tortoise"]
+}

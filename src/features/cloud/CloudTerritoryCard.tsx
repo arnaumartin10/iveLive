@@ -1,4 +1,5 @@
 import { Pressable, StyleSheet, View } from 'react-native';
+import { router } from 'expo-router';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { Text } from '../../components/ui/Text';
@@ -15,6 +16,7 @@ export type TerritoryVenueStamp = {
   label: string;
   venue: VenueType;
 };
+export type TerritorySubgenre = { slug: string; count: number };
 
 type CloudTerritoryCardProps = {
   genre: MacroGenre;
@@ -25,6 +27,7 @@ type CloudTerritoryCardProps = {
   firstSeen?: string | null;
   lastSeen?: string | null;
   artists?: TerritoryCardArtist[];
+  subgenres?: TerritorySubgenre[];
   venues?: TerritoryVenueStamp[];
   discoveries?: string[];
   discoveriesLoading?: boolean;
@@ -42,6 +45,7 @@ export function CloudTerritoryCard({
   firstSeen = null,
   lastSeen = null,
   artists = [],
+  subgenres = [],
   venues = [],
   discoveries = [],
   discoveriesLoading = false,
@@ -53,7 +57,13 @@ export function CloudTerritoryCard({
   return (
     <Card padding={12} style={styles.card}>
       <View style={styles.titleRow}>
-        <GenreLabel genre={genre} label={label} size="md" variant="stamp" />
+        <GenreLabel
+          genre={genre}
+          label={label}
+          size="md"
+          variant="stamp"
+          interactive={false}
+        />
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Close territory card"
@@ -63,6 +73,19 @@ export function CloudTerritoryCard({
           <Text variant="label">CLOSE</Text>
         </Pressable>
       </View>
+      <Pressable
+        accessibilityRole="link"
+        accessibilityLabel={`About ${label}`}
+        hitSlop={8}
+        onPress={() =>
+          router.push({ pathname: '/genre/[slug]', params: { slug: genre } })
+        }
+        style={styles.aboutGenre}
+      >
+        <Text variant="caption" weight="bold" color="accent">
+          About this genre
+        </Text>
+      </Pressable>
       {unexplored ? (
         <>
           <Stamp
@@ -107,6 +130,23 @@ export function CloudTerritoryCard({
         </>
       ) : (
         <>
+          {subgenres.length ? (
+            <View style={styles.subgenres}>
+              <Text variant="mono" weight="bold">
+                DISTRICT SOUNDS
+              </Text>
+              <View style={styles.subgenreLabels}>
+                {subgenres.map((item) => (
+                  <GenreLabel
+                    key={item.slug}
+                    genre={item.slug}
+                    size="xs"
+                    label={`${item.slug.replaceAll('-', ' ')} · ${item.count}`}
+                  />
+                ))}
+              </View>
+            </View>
+          ) : null}
           <View style={styles.statsRow}>
             <Text variant="mono">
               {cloudExperienceStrings.territory.share} {sharePercent}%
@@ -168,6 +208,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  aboutGenre: {
+    alignSelf: 'flex-start',
+    justifyContent: 'center',
+    minHeight: 44,
+  },
+  subgenres: { gap: 5 },
+  subgenreLabels: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
   statsRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',

@@ -119,6 +119,7 @@ export function TimelineFilterSheet({
                     genre={genreKey}
                     size="xs"
                     variant={isSelected ? 'solid' : 'outline'}
+                    interactive={false}
                   />
                   {isSelected ? (
                     <Check size={12} color={colors.ink} strokeWidth={2.5} />

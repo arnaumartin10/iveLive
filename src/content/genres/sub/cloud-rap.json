@@ -1,0 +1,75 @@
+{
+  "slug": "cloud-rap",
+  "parent_slug": "hip_hop",
+  "title": "Cloud Rap",
+  "tagline": "Drift, haze and space around the beat instead of high-definition punch.",
+  "summary": "Cloud rap emphasizes atmosphere, floating vocal textures and a softer approach to rhythm than classic boom-bap. It often blends melodic singing, looser tempos and digital production textures with rap delivery. The result feels airy and suspended, more tactile than rigid.",
+  "origin_place": "United States",
+  "origin_years": "2010s",
+  "history": [],
+  "related_slugs": [
+    "hip_hop",
+    "pop"
+  ],
+  "wikipedia_title": "Cloud rap",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    {
+      "name": "Lil Wayne",
+      "why": "Lil Wayne helped bring the style into wider rap culture with melodic flow and a relaxed rhythmic approach."
+    },
+    {
+      "name": "Young Thug",
+      "why": "Young Thug made melodic drift and vocal texture central to the form."
+    },
+    {
+      "name": "A$AP Rocky",
+      "why": "A$AP Rocky balanced floating production with sharp rap timing and a more polished visual identity."
+    }
+  ],
+  "examples": [
+    {
+      "name": "Future"
+    },
+    {
+      "name": "The Weeknd"
+    },
+    {
+      "name": "Kanye West"
+    },
+    {
+      "name": "Migos"
+    },
+    {
+      "name": "Playboi Carti"
+    },
+    {
+      "name": "Travis Scott"
+    },
+    {
+      "name": "Tyler, The Creator"
+    },
+    {
+      "name": "ASAP Ferg"
+    },
+    {
+      "name": "Kendrick Lamar"
+    },
+    {
+      "name": "21 Savage"
+    },
+    {
+      "name": "Lil Uzi Vert"
+    },
+    {
+      "name": "Smoke DZA"
+    }
+  ],
+  "sources_to_verify": [
+    "Cloud rap",
+    "Lil Wayne",
+    "Young Thug",
+    "A$AP Rocky"
+  ]
+}

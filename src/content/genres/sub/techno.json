@@ -1,0 +1,34 @@
+{
+  "slug": "techno",
+  "parent_slug": "electronic",
+  "title": "Techno",
+  "tagline": "Machine rhythm made human by movement.",
+  "summary": "Techno is a dance music tradition shaped by repetition, machines, and the creative choices of producers and DJs. Detroit artists in the 1980s connected futuristic electronic sounds with local histories and Black musical innovation. The music grew into international scenes, each with its own clubs and approaches to rhythm. Its minimal tools invite detailed listening as well as collective dance.",
+  "origin_place": "Detroit, United States",
+  "origin_years": "1980s",
+  "history": [],
+  "related_slugs": ["electronic", "house", "minimal-techno"],
+  "wikipedia_title": "Techno",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Juan Atkins", "why": "Atkins helped define Detroit techno's forward-looking electronic language through production and the Model 500 project." },
+    { "name": "Derrick May", "why": "May's productions connected machine precision with expressive, dramatic arrangements." },
+    { "name": "Kevin Saunderson", "why": "Saunderson helped carry Detroit techno into wider club culture while maintaining its local roots." }
+  ],
+  "examples": [
+    { "name": "Jeff Mills" },
+    { "name": "Carl Craig" },
+    { "name": "Underground Resistance" },
+    { "name": "Richie Hawtin" },
+    { "name": "Robert Hood" },
+    { "name": "The Belleville Three" },
+    { "name": "Laurent Garnier" },
+    { "name": "Ellen Allien" },
+    { "name": "Amelie Lens" },
+    { "name": "DVS1" },
+    { "name": "Nina Kraviz" },
+    { "name": "Sven Väth" }
+  ],
+  "sources_to_verify": ["Techno", "Juan Atkins", "Derrick May", "Kevin Saunderson"]
+}

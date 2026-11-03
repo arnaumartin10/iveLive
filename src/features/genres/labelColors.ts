@@ -1,5 +1,6 @@
 import {
   getContrastRatio,
+  getLuminance,
   RAW,
   type SemanticColors,
 } from '../../theme/palette';
@@ -32,31 +33,48 @@ export function labelColors(
       ? MACRO_GENRES[genre as MacroGenre].color
       : VENUE_TYPES[genre as VenueType].primaryColor;
   const pageColor = getSurfaceColor(theme, surface);
-  const candidates = [
-    { plate: theme.ink, ink: theme.bg },
-    { plate: theme.ink, ink: theme.surface },
-    { plate: theme.surface, ink: theme.ink },
-    { plate: theme.ink, ink: theme.bgSunken },
-    { plate: theme.bgSunken, ink: theme.ink },
+  const pageIsDark = getLuminance(pageColor) < 0.35;
+
+  const candidatePairs = [
+    {
+      plate: pageIsDark ? RAW.wheat : theme.ink,
+      ink: pageIsDark ? RAW.violet : RAW.wheat,
+    },
+    {
+      plate: pageIsDark ? theme.bgSunken : theme.surface,
+      ink: pageIsDark ? theme.ink : theme.bg,
+    },
+    {
+      plate: pageIsDark ? theme.surfaceRaised : theme.surface,
+      ink: pageIsDark ? theme.ink : theme.bg,
+    },
+    {
+      plate: pageIsDark ? RAW.wheat : theme.surface,
+      ink: pageIsDark ? RAW.violet : theme.ink,
+    },
+    {
+      plate: pageIsDark ? theme.bgSunken : theme.surfaceRaised,
+      ink: pageIsDark ? theme.ink : theme.ink,
+    },
     { plate: theme.positive, ink: theme.positiveText },
+    {
+      plate: pageIsDark ? theme.bg : theme.surface,
+      ink: pageIsDark ? theme.ink : theme.bg,
+    },
+    { plate: identityColor, ink: pageIsDark ? theme.surface : theme.bg },
     { plate: theme.accent, ink: theme.accentInk },
     { plate: theme.surfaceRaised, ink: theme.ink },
-    { plate: identityColor, ink: theme.surface },
-    { plate: theme.bg, ink: theme.ink },
   ];
-  const selected = candidates.find(
+
+  const selected = candidatePairs.find(
     ({ plate, ink }) =>
       getContrastRatio(ink, plate) >= 4.5 &&
       getContrastRatio(plate, pageColor) >= 3,
   ) ?? { plate: RAW.wheat, ink: RAW.violet };
 
-  const outlineCandidates = [
-    theme.ink,
-    theme.accentText,
-    theme.positiveText,
-    theme.warningText,
-    selected.ink,
-  ];
+  const outlineCandidates = pageIsDark
+    ? [theme.ink, RAW.violet, RAW.slate, theme.bgSunken, selected.ink]
+    : [theme.bg, RAW.wheat, theme.surface, theme.accentText, selected.ink];
   const outline =
     outlineCandidates.find(
       (candidate) => getContrastRatio(candidate, pageColor) >= 4.5,

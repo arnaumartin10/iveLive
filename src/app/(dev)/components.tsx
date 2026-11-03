@@ -37,19 +37,13 @@ import {
   MACRO_GENRE_ORDER,
   MACRO_GENRES,
 } from '../../features/genres/macroGenres';
-import type { LabelSurface } from '../../features/genres/labelColors';
 import {
   VENUE_TYPE_ORDER,
   VENUE_TYPES,
 } from '../../features/venues/venueTypes';
 import { useTheme } from '../../theme/ThemeProvider';
 import { RAW, mix } from '../../theme/palette';
-import {
-  spacing,
-  hardShadow,
-  colors as themeColors,
-  type ColorScheme,
-} from '../../theme/tokens';
+import { spacing, hardShadow, colors as themeColors } from '../../theme/tokens';
 import {
   Avatar,
   Button,
@@ -83,16 +77,16 @@ const themeOptions = [
   { label: 'Paper (Light)', value: 'light' },
   { label: 'Night Shift', value: 'dark' },
 ];
-const labelThemeOptions = [
-  { label: 'Paper', value: 'light' },
-  { label: 'Night Shift', value: 'dark' },
-];
-const labelSurfaceOptions = [
-  { label: 'Page', value: 'bg' },
-  { label: 'Surface', value: 'surface' },
-  { label: 'Raised', value: 'surfaceRaised' },
-  { label: 'Sunken', value: 'sunken' },
-];
+const labelThemes = [
+  ['light', 'PAPER / LIGHT'],
+  ['dark', 'NIGHT SHIFT / DARK'],
+] as const;
+const labelSurfaces = [
+  ['bg', 'PAGE'],
+  ['surface', 'SURFACE'],
+  ['surfaceRaised', 'RAISED'],
+  ['sunken', 'SUNKEN'],
+] as const;
 
 function BrandSection({
   title,
@@ -170,11 +164,6 @@ function ComponentsPreview() {
   const [toastVisible, setToastVisible] = useState(false);
   const [rating, setRating] = useState(4.5);
   const [selectedChip, setSelectedChip] = useState('Rock');
-  const [labelScheme, setLabelScheme] = useState<ColorScheme>(scheme);
-  const [labelSurface, setLabelSurface] = useState<LabelSurface>('surface');
-  const labelTheme = themeColors[labelScheme];
-  const labelSurfaceColor =
-    labelSurface === 'sunken' ? labelTheme.bgSunken : labelTheme[labelSurface];
 
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.bg }]}>
@@ -482,51 +471,72 @@ function ComponentsPreview() {
           title="05. Genre label contrast matrix"
           subtitle="15 GENRES · 2 THEMES · 3 SIZES · 3 VARIANTS · 4 SURFACES"
         >
-          <SegmentedControl
-            options={labelThemeOptions}
-            value={labelScheme}
-            onChange={(value) => setLabelScheme(value as ColorScheme)}
-          />
-          <SegmentedControl
-            options={labelSurfaceOptions}
-            value={labelSurface}
-            onChange={(value) => setLabelSurface(value as LabelSurface)}
-          />
-          <View
-            style={[
-              styles.labelMatrix,
-              {
-                backgroundColor: labelSurfaceColor,
-                borderColor: labelTheme.ink,
-              },
-            ]}
-          >
-            {([...MACRO_GENRE_ORDER, 'unclassified'] as const).map((slug) => (
-              <View key={slug} style={styles.labelMatrixRow}>
-                <Text
-                  variant="caption"
-                  weight="bold"
-                  style={[styles.labelMatrixName, { color: labelTheme.ink }]}
+          {labelThemes.map(([labelScheme, themeTitle]) =>
+            labelSurfaces.map(([labelSurface, surfaceTitle]) => {
+              const labelTheme = themeColors[labelScheme];
+              const labelSurfaceColor =
+                labelSurface === 'sunken'
+                  ? labelTheme.bgSunken
+                  : labelTheme[labelSurface];
+              return (
+                <View
+                  key={`${labelScheme}-${labelSurface}`}
+                  style={styles.labelMatrixGroup}
                 >
-                  {MACRO_GENRES[slug].label}
-                </Text>
-                <View style={styles.labelMatrixCells}>
-                  {(['xs', 'sm', 'md'] as const).flatMap((size) =>
-                    (['solid', 'outline', 'stamp'] as const).map((variant) => (
-                      <GenreLabel
-                        key={`${slug}-${size}-${variant}`}
-                        genre={slug}
-                        size={size}
-                        variant={variant}
-                        surface={labelSurface}
-                        schemeOverride={labelScheme}
-                      />
-                    )),
-                  )}
+                  <Text
+                    variant="mono"
+                    weight="bold"
+                    style={{ color: labelTheme.ink }}
+                  >
+                    {themeTitle} · {surfaceTitle}
+                  </Text>
+                  <View
+                    style={[
+                      styles.labelMatrix,
+                      {
+                        backgroundColor: labelSurfaceColor,
+                        borderColor: labelTheme.ink,
+                      },
+                    ]}
+                  >
+                    {([...MACRO_GENRE_ORDER, 'unclassified'] as const).map(
+                      (slug) => (
+                        <View key={slug} style={styles.labelMatrixRow}>
+                          <Text
+                            variant="caption"
+                            weight="bold"
+                            style={[
+                              styles.labelMatrixName,
+                              { color: labelTheme.ink },
+                            ]}
+                          >
+                            {MACRO_GENRES[slug].label}
+                          </Text>
+                          <View style={styles.labelMatrixCells}>
+                            {(['xs', 'sm', 'md'] as const).flatMap((size) =>
+                              (['solid', 'outline', 'stamp'] as const).map(
+                                (variant) => (
+                                  <GenreLabel
+                                    key={`${slug}-${size}-${variant}`}
+                                    genre={slug}
+                                    size={size}
+                                    variant={variant}
+                                    surface={labelSurface}
+                                    schemeOverride={labelScheme}
+                                    interactive={false}
+                                  />
+                                ),
+                              ),
+                            )}
+                          </View>
+                        </View>
+                      ),
+                    )}
+                  </View>
                 </View>
-              </View>
-            ))}
-          </View>
+              );
+            }),
+          )}
         </BrandSection>
 
         {/* 5. VENUE STAMPS */}
@@ -840,6 +850,7 @@ const styles = StyleSheet.create({
     gap: 8,
     padding: 8,
   },
+  labelMatrixGroup: { gap: 8 },
   labelMatrixRow: {
     borderBottomWidth: StyleSheet.hairlineWidth,
     gap: 6,

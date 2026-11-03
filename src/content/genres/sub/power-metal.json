@@ -1,0 +1,75 @@
+{
+  "slug": "power-metal",
+  "parent_slug": "metal",
+  "title": "Power Metal",
+  "tagline": "Big melodies, heroic shapes and a bright, triumphant lift.",
+  "summary": "Power metal takes the expressive scale of classic heavy rock and gives it a larger, more symphonic frame. It values clarity of melody, fast leads and dramatic phrasing over sheer darkness, often drawing from fantasy imagery and grand choruses. The genre is as much about uplift as about force.",
+  "origin_place": "Europe",
+  "origin_years": "1980s",
+  "history": [],
+  "related_slugs": [
+    "metal",
+    "classical"
+  ],
+  "wikipedia_title": "Power metal",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    {
+      "name": "Helloween",
+      "why": "Helloween set a template for bright, agile melodies with a strong sense of chorus and arrangement."
+    },
+    {
+      "name": "Blind Guardian",
+      "why": "Blind Guardian linked fast playing with epic themes and a strong narrative sense."
+    },
+    {
+      "name": "DragonForce",
+      "why": "DragonForce pushed speed and keyboard textures into a highly visible, hook-heavy form."
+    }
+  ],
+  "examples": [
+    {
+      "name": "Sabaton"
+    },
+    {
+      "name": "Rhapsody of Fire"
+    },
+    {
+      "name": "Nightwish"
+    },
+    {
+      "name": "Angra"
+    },
+    {
+      "name": "Sonata Arctica"
+    },
+    {
+      "name": "Kamelot"
+    },
+    {
+      "name": "Iron Maiden"
+    },
+    {
+      "name": "Gamma Ray"
+    },
+    {
+      "name": "Stratovarius"
+    },
+    {
+      "name": "Avenged Sevenfold"
+    },
+    {
+      "name": "Symphony X"
+    },
+    {
+      "name": "Luca Turilli"
+    }
+  ],
+  "sources_to_verify": [
+    "Power metal",
+    "Helloween",
+    "Blind Guardian",
+    "DragonForce"
+  ]
+}

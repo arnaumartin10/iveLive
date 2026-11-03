@@ -48,7 +48,9 @@ function normalizeLogs(value: unknown): CloudLogTuple[] {
   });
 }
 
-function normalizeVenueCounts(value: unknown): CloudArtistData['venue_type_counts'] {
+function normalizeVenueCounts(
+  value: unknown,
+): CloudArtistData['venue_type_counts'] {
   if (!isRecord(value)) return {};
   const counts: Partial<Record<VenueType, number>> = {};
   for (const [venue, count] of Object.entries(value)) {
@@ -93,6 +95,7 @@ export function normalizeCloudArtists(
         image_url_large: stringOrNull(entry.image_url_large),
         primary_macro: primaryMacro,
         macro_genres: macroGenres,
+        sub_genres: stringArray(entry.sub_genres),
         genres,
         begin_year: numberOrNull(entry.begin_year),
         log_count: numberOrNull(entry.log_count) ?? logs.length,
@@ -126,9 +129,7 @@ export function normalizeCloudLinks(value: unknown): CloudCoattendanceLink[] {
   });
 }
 
-export function normalizeUserCloudData(
-  value: unknown,
-): UserCloudData | null {
+export function normalizeUserCloudData(value: unknown): UserCloudData | null {
   if (!isRecord(value)) return null;
   return {
     artists: normalizeCloudArtists(value.artists),

@@ -1,0 +1,34 @@
+{
+  "slug": "indie-folk",
+  "parent_slug": "folk_acoustic",
+  "title": "Indie Folk",
+  "tagline": "Acoustic songwriting with an independent, intimate point of view.",
+  "summary": "Indie folk brings folk's acoustic instruments and narrative songwriting into independent music scenes. Its arrangements can be spare or richly layered, often favoring close vocals, unusual textures, and a handmade feel over conventional polish. The style moves easily between solo performance and ensemble work, connecting older folk traditions with contemporary songwriting.",
+  "origin_place": "United States and United Kingdom",
+  "origin_years": "1990s",
+  "history": [],
+  "related_slugs": ["folk_acoustic", "singer-songwriter", "indie-rock"],
+  "wikipedia_title": "Indie folk",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Iron & Wine", "why": "Iron & Wine brought hushed vocals and carefully detailed acoustic arrangements to a defining indie-folk catalog." },
+    { "name": "Bon Iver", "why": "Bon Iver expanded intimate folk songwriting with layered voices and adventurous studio production." },
+    { "name": "Fleet Foxes", "why": "Fleet Foxes combined folk-rooted writing with intricate harmonies and spacious, nature-focused arrangements." }
+  ],
+  "examples": [
+    { "name": "The Tallest Man on Earth" },
+    { "name": "Sufjan Stevens" },
+    { "name": "Joanna Newsom" },
+    { "name": "The Decemberists" },
+    { "name": "Devendra Banhart" },
+    { "name": "Laura Marling" },
+    { "name": "José González" },
+    { "name": "The Lumineers" },
+    { "name": "Mumford & Sons" },
+    { "name": "Angus & Julia Stone" },
+    { "name": "First Aid Kit" },
+    { "name": "The Avett Brothers" }
+  ],
+  "sources_to_verify": ["Indie folk", "Iron & Wine", "Bon Iver", "Fleet Foxes"]
+}

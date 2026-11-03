@@ -51,7 +51,6 @@ export interface ProviderContext {
   wikidataId: string | null;
   wikipediaTitle: string | null;
   lastfmApiKey: string | null;
-  language: string | null;
 }
 
 export interface ProviderResult {

@@ -10,6 +10,13 @@ import type {
 } from '../src/features/artists/types';
 import type { ConcertWithRelations } from '../src/features/concerts/types';
 
+jest.mock('../src/features/genres/catalog', () => ({
+  ...jest.requireActual<typeof import('../src/features/genres/catalog')>(
+    '../src/features/genres/catalog',
+  ),
+  useGenreCatalog: () => ({ data: [] }),
+}));
+
 const mockUseArtist = jest.fn();
 const mockUseArtistConcertHistory = jest.fn();
 const mockUseArtistFriends = jest.fn();
@@ -148,6 +155,7 @@ const fullArtist: ArtistWithAlbums = {
   image_url_thumb: 'https://example.test/profile-thumb.jpg',
   genres: ['indie rock', 'dream pop', 'alternative'],
   macro_genres: ['indie', 'rock'],
+  sub_genres: [],
   primary_macro: 'indie',
   is_on_tour: false,
   public_avg_rating: null,
@@ -448,6 +456,17 @@ describe('ArtistCardContent', () => {
     expect(
       screen.queryByLabelText('The Example Band artist banner'),
     ).toBeNull();
+  });
+
+  it('does not render a bio whose stored language is not English', () => {
+    renderCard({
+      ...fullArtist,
+      bio: 'La banda se formó en Barcelona y publicó varios discos.',
+      bio_lang: 'ca',
+    });
+    expect(screen.queryByText(/La banda se formó/)).toBeNull();
+    expect(screen.queryByText('From Wikipedia · CC BY-SA')).toBeNull();
+    expect(screen.getByText('No description yet')).toBeTruthy();
   });
 
   it('shows a shimmer instead of empty copy while enrichment is pending', () => {

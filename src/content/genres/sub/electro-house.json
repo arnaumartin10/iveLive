@@ -1,0 +1,75 @@
+{
+  "slug": "electro-house",
+  "parent_slug": "electronic",
+  "title": "Electro House",
+  "tagline": "A club-friendly form that leans on crisp hooks and punchy low end.",
+  "summary": "Electro house builds on house rhythm but pushes the track toward brighter synth lines, more obvious hooks and stronger accent patterns. It thrives in festivals and late-night sets, where the listener feels the beat as much as the melody. The sound is often clean, direct and built for movement.",
+  "origin_place": "United States and Europe",
+  "origin_years": "2000s",
+  "history": [],
+  "related_slugs": [
+    "electronic",
+    "pop"
+  ],
+  "wikipedia_title": "Electro house",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    {
+      "name": "Justice",
+      "why": "Justice made the style feel sharp and graphic, pairing bright synths with a strong sense of impact."
+    },
+    {
+      "name": "Simian Mobile Disco",
+      "why": "Simian Mobile Disco brought a playful, highly rhythmic energy to the sound without losing the club focus."
+    },
+    {
+      "name": "Steve Aoki",
+      "why": "Steve Aoki helped turn electro house into a bigger, more theatrical live experience."
+    }
+  ],
+  "examples": [
+    {
+      "name": "The Bloody Beetroots"
+    },
+    {
+      "name": "Dimitri Vegas & Like Mike"
+    },
+    {
+      "name": "Bob Sinclar"
+    },
+    {
+      "name": "Chiclete de Banana"
+    },
+    {
+      "name": "Duck Sauce"
+    },
+    {
+      "name": "Boys Noize"
+    },
+    {
+      "name": "Nervo"
+    },
+    {
+      "name": "Skrillex"
+    },
+    {
+      "name": "The Black Eyed Peas"
+    },
+    {
+      "name": "Laidback Luke"
+    },
+    {
+      "name": "Moguai"
+    },
+    {
+      "name": "Hardwell"
+    }
+  ],
+  "sources_to_verify": [
+    "Electro house",
+    "Justice",
+    "Simian Mobile Disco",
+    "Steve Aoki"
+  ]
+}

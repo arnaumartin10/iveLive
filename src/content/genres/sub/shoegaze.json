@@ -1,0 +1,34 @@
+{
+  "slug": "shoegaze",
+  "parent_slug": "indie",
+  "title": "Shoegaze",
+  "tagline": "A wall of sound with a soft-focus center.",
+  "summary": "Shoegaze builds songs from layered guitar effects, hazy vocals, and carefully shaped volume. Its name became associated with British independent bands whose performances focused on pedals and sound rather than stage spectacle. The style's dense surfaces can feel loud and delicate at once. Later scenes around the world adapted its techniques, folding them into indie rock, metal, and electronic music.",
+  "origin_place": "United Kingdom",
+  "origin_years": "late 1980s",
+  "history": [],
+  "related_slugs": ["dream-pop", "indie-rock", "post-rock"],
+  "wikipedia_title": "Shoegaze",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "My Bloody Valentine", "why": "My Bloody Valentine made extreme guitar layering and pitch movement central to a widely influential shoegaze sound." },
+    { "name": "Slowdive", "why": "Slowdive balanced dense guitar wash with clear melodic writing and a patient sense of space." },
+    { "name": "Ride", "why": "Ride brought bright hooks and forceful drums to the early British shoegaze vocabulary." }
+  ],
+  "examples": [
+    { "name": "Lush" },
+    { "name": "Chapterhouse" },
+    { "name": "Swervedriver" },
+    { "name": "Curve" },
+    { "name": "Medicine" },
+    { "name": "Catherine Wheel" },
+    { "name": "Nothing" },
+    { "name": "DIIV" },
+    { "name": "Whirr" },
+    { "name": "Alcest" },
+    { "name": "Parannoul" },
+    { "name": "A Sunny Day in Glasgow" }
+  ],
+  "sources_to_verify": ["Shoegaze", "My Bloody Valentine", "Slowdive", "Ride"]
+}

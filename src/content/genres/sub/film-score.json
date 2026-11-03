@@ -1,0 +1,28 @@
+{
+  "slug": "film-score",
+  "parent_slug": "classical",
+  "title": "Film Score",
+  "tagline": "Music composed to shape a film's emotion, rhythm, and sense of place.",
+  "summary": "Film scores use orchestral, electronic, and popular-music techniques to support a movie's story and visual world. Composers develop themes, textures, and rhythms that can guide attention or deepen a scene's emotional impact. The form spans silent-era accompaniment through contemporary studio recordings and concert performance.",
+  "origin_place": "International film industry",
+  "origin_years": "20th century onwards",
+  "history": [],
+  "related_slugs": ["classical", "ambient", "minimalism"],
+  "wikipedia_title": "Film score",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "John Williams", "why": "Williams is known for memorable orchestral themes written for major film franchises and standalone films." },
+    { "name": "Ennio Morricone", "why": "Morricone developed a distinctive cinematic sound using orchestral writing, unconventional timbres, and vocal textures." },
+    { "name": "Bernard Herrmann", "why": "Herrmann's scores used bold orchestration and musical motifs that became closely associated with classic cinema." }
+  ],
+  "examples": [
+    { "name": "Hans Zimmer" }, { "name": "Nino Rota" },
+    { "name": "Rachel Portman" }, { "name": "Howard Shore" },
+    { "name": "Hildur Guðnadóttir" }, { "name": "Ryuichi Sakamoto" },
+    { "name": "Alexandre Desplat" }, { "name": "Joe Hisaishi" },
+    { "name": "Vangelis" }, { "name": "Danny Elfman" },
+    { "name": "Michael Giacchino" }, { "name": "Ludwig Göransson" }
+  ],
+  "sources_to_verify": ["Film score", "John Williams", "Ennio Morricone", "Bernard Herrmann"]
+}

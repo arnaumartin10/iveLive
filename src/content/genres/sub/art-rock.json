@@ -1,0 +1,34 @@
+{
+  "slug": "art-rock",
+  "parent_slug": "rock",
+  "title": "Art Rock",
+  "tagline": "Rock music that treats arrangement, ideas, and form as creative material.",
+  "summary": "Art rock expands rock's basic band format with unusual structures, conceptual themes, and influences from experimental or classical music. It can be elaborate or minimal, but it typically treats the album and performance as spaces for deliberate artistic choices. The term covers many generations of musicians who use rock as a starting point rather than a boundary.",
+  "origin_place": "United Kingdom and United States",
+  "origin_years": "1960s",
+  "history": [],
+  "related_slugs": ["rock", "progressive-rock", "new-wave"],
+  "wikipedia_title": "Art rock",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "The Velvet Underground", "why": "The Velvet Underground brought avant-garde influence and urban subject matter into a stark, influential rock format." },
+    { "name": "Roxy Music", "why": "Roxy Music combined experimental arrangements with carefully constructed songs and a distinctive visual identity." },
+    { "name": "David Bowie", "why": "David Bowie used rock as a platform for reinvention, character, and adventurous studio work." }
+  ],
+  "examples": [
+    { "name": "Talking Heads" },
+    { "name": "Pink Floyd" },
+    { "name": "Radiohead" },
+    { "name": "Brian Eno" },
+    { "name": "Pere Ubu" },
+    { "name": "The Residents" },
+    { "name": "Sonic Youth" },
+    { "name": "The B-52's" },
+    { "name": "Television" },
+    { "name": "Japan" },
+    { "name": "The Stooges" },
+    { "name": "Patti Smith" }
+  ],
+  "sources_to_verify": ["Art rock", "The Velvet Underground", "Roxy Music", "David Bowie"]
+}

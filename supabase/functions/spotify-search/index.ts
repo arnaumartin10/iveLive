@@ -17,7 +17,7 @@ Deno.serve(async (request: Request) => {
   }
 
   try {
-    const auth = await authenticateRequest(request);
+    const auth = await authenticateRequest(request, true);
     if ('response' in auth) return auth.response;
 
     const input = await request.json().catch(() => null);

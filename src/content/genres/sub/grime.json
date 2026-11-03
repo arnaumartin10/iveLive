@@ -1,0 +1,28 @@
+{
+  "slug": "grime",
+  "parent_slug": "hip_hop",
+  "title": "Grime",
+  "tagline": "Fast, jagged MC flows over stark electronic beats from UK underground culture.",
+  "summary": "Grime emerged in early-2000s London from UK garage, jungle, and pirate-radio culture. Its producers built stark, fast electronic instrumentals, while MCs developed agile flows and a distinctly local voice. The scene grew through radio sets, collectives, and independent releases before reaching a wider international audience.",
+  "origin_place": "East London, United Kingdom",
+  "origin_years": "early 2000s",
+  "history": [],
+  "related_slugs": ["hip_hop", "dubstep", "drill"],
+  "wikipedia_title": "Grime (music genre)",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Wiley", "why": "Wiley's production and MC work helped establish grime's early sound and vocabulary." },
+    { "name": "Dizzee Rascal", "why": "Dizzee Rascal's early records brought grime's raw energy and intricate flows to a wider audience." },
+    { "name": "Skepta", "why": "Skepta became a leading figure in grime through independent releases, collective work, and international collaborations." }
+  ],
+  "examples": [
+    { "name": "Kano" }, { "name": "Kojey Radical" },
+    { "name": "Jme" }, { "name": "Lethal Bizzle" },
+    { "name": "D Double E" }, { "name": "Ghetts" },
+    { "name": "Wretch 32" }, { "name": "P Money" },
+    { "name": "M.I.A." }, { "name": "Lady Leshurr" },
+    { "name": "Stormzy" }, { "name": "Chip" }
+  ],
+  "sources_to_verify": ["Grime (music genre)", "Wiley", "Dizzee Rascal", "Skepta"]
+}

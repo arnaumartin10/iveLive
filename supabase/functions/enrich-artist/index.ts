@@ -1,7 +1,8 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.117.3';
+import type { Database } from '../../../src/lib/database.types.ts';
 import { authenticateRequest } from '../_shared/auth.ts';
 import { corsHeaders, jsonResponse } from '../_shared/http.ts';
-import { enrichArtist } from './src/enrich.ts';
+import { enrichArtist, enrichArtistBiosOnly } from './src/enrich.ts';
 
 Deno.serve(async (request: Request) => {
   if (request.method === 'OPTIONS')
@@ -16,7 +17,7 @@ Deno.serve(async (request: Request) => {
     return jsonResponse({ error: 'artistId is required' }, 400);
   }
 
-  const database = createClient(
+  const database = createClient<Database>(
     auth.context.supabaseUrl,
     auth.context.serviceRoleKey,
     {
@@ -24,6 +25,7 @@ Deno.serve(async (request: Request) => {
     },
   );
   const artistId = input.artistId.trim();
+  const biosOnly = input.biosOnly === true;
   const markFailed = async (reason: string) => {
     const safeReason = reason
       .replace(/https?:\/\/\S+/g, 'provider request failed')
@@ -57,7 +59,8 @@ Deno.serve(async (request: Request) => {
       'THEAUDIODB_API_KEY',
   ].filter((value): value is string => !!value);
   if (missingSecrets.length) {
-    await markFailed(`Missing required secret: ${missingSecrets.join(', ')}`);
+    if (!biosOnly)
+      await markFailed(`Missing required secret: ${missingSecrets.join(', ')}`);
     return jsonResponse(
       {
         code: 'MISSING_REQUIRED_SECRET',
@@ -77,7 +80,7 @@ Deno.serve(async (request: Request) => {
     },
   );
   if (claimError) {
-    await markFailed('Could not claim artist enrichment');
+    if (!biosOnly) await markFailed('Could not claim artist enrichment');
     return jsonResponse(
       { code: 'ENRICHMENT_CLAIM_FAILED', error: claimError.message },
       500,
@@ -90,16 +93,13 @@ Deno.serve(async (request: Request) => {
     );
 
   try {
-    const result = await enrichArtist(
-      database,
-      artistId,
-      typeof input.language === 'string' ? input.language : null,
-      force,
-    );
+    const result = biosOnly
+      ? await enrichArtistBiosOnly(database, artistId)
+      : await enrichArtist(database, artistId, force);
     return jsonResponse(result);
   } catch (error) {
     const reason = error instanceof Error ? error.message : 'Enrichment failed';
-    await markFailed(reason);
+    if (!biosOnly) await markFailed(reason);
     console.error(
       JSON.stringify({
         event: 'enrichment_run_failed',

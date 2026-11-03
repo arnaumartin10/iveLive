@@ -1,0 +1,28 @@
+{
+  "slug": "flamenco-pop",
+  "parent_slug": "latin",
+  "title": "Flamenco Pop",
+  "tagline": "Flamenco's vocal and rhythmic language meeting contemporary popular song.",
+  "summary": "Flamenco pop blends elements of flamenco singing, guitar, and rhythm with pop arrangements and production. Artists have brought the style into mainstream recordings while drawing on Spain's rich regional traditions. The sound can range from acoustic and intimate to electronic and dance-oriented, with flamenco expression remaining an important reference.",
+  "origin_place": "Spain",
+  "origin_years": "1960s onwards",
+  "history": [],
+  "related_slugs": ["latin", "flamenco", "latin-pop"],
+  "wikipedia_title": "Flamenco",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Manolo Escobar", "why": "Escobar brought popular Spanish song and flamenco-associated styles to a broad audience through film and recordings." },
+    { "name": "Lola Flores", "why": "Flores was a charismatic singer and performer whose work connected flamenco expression with popular entertainment." },
+    { "name": "Camarón de la Isla", "why": "Camarón's collaborations and recordings expanded flamenco's reach and influenced later popular interpretations." }
+  ],
+  "examples": [
+    { "name": "Rosalía" }, { "name": "Niña Pastori" },
+    { "name": "Ketama" }, { "name": "Pata Negra" },
+    { "name": "Estopa" }, { "name": "India Martínez" },
+    { "name": "El Barrio" }, { "name": "David Bisbal" },
+    { "name": "Miguel Poveda" }, { "name": "Rocío Márquez" },
+    { "name": "Chambao" }, { "name": "Maka" }
+  ],
+  "sources_to_verify": ["Flamenco", "Manolo Escobar", "Lola Flores", "Camarón de la Isla"]
+}

@@ -1,0 +1,34 @@
+{
+  "slug": "garage-rock",
+  "parent_slug": "rock",
+  "title": "Garage Rock",
+  "tagline": "Raw riffs, short songs, and a punk spark built in a garage.",
+  "summary": "Garage rock thrives on blunt energy: loud guitars, stripped arrangements, and songs built to explode in under three minutes. It grew from the urge to play loud without polished studio sheen, drawing from blues, beat music, and early punk. The sound spread through local scenes and underground radio, leaving a legacy in bands that prize immediacy over virtuosity.",
+  "origin_place": "United States and United Kingdom",
+  "origin_years": "1960s",
+  "history": [],
+  "related_slugs": ["rock", "punk", "alternative-rock"],
+  "wikipedia_title": "Garage rock",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "The Stooges", "why": "The Stooges turned sludgy riffs and confrontational attitude into a template for raw, direct rock." },
+    { "name": "The Kings of Convenience", "why": "The Kings of Convenience showed how stripped-back, slightly chaotic riffs could still feel melodic and memorable." },
+    { "name": "The Sonics", "why": "The Sonics amplified the style with brash tone and speed, making the garage aesthetic feel ferocious and fun." }
+  ],
+  "examples": [
+    { "name": "The White Stripes" },
+    { "name": "The Hives" },
+    { "name": "The Black Keys" },
+    { "name": "The Yeah Yeah Yeahs" },
+    { "name": "The Wrecks" },
+    { "name": "The Dead Boys" },
+    { "name": "The Flamin' Groovies" },
+    { "name": "The Kills" },
+    { "name": "The Mummies" },
+    { "name": "The Raveonettes" },
+    { "name": "Thee Oh Sees" },
+    { "name": "The Cramps" }
+  ],
+  "sources_to_verify": ["Garage rock", "The Stooges", "The Sonics", "The White Stripes"]
+}

@@ -1,0 +1,31 @@
+{
+  "slug": "hip_hop",
+  "title": "Hip-Hop",
+  "tagline": "A culture of rhythm, voice, invention and place.",
+  "summary": "Hip-hop began as a creative culture as well as a musical form, bringing together MCing, DJing, dance and visual art. Rap sits at its center, with rhythm, rhyme and storytelling shaped by the communities that make it. The sound has continually absorbed local languages and new production tools. This page honors early innovators and the many later voices who transformed a neighborhood practice into an international conversation.",
+  "origin_place": "The Bronx, New York City",
+  "origin_years": "1970s",
+  "history": [
+    { "years": "1970s", "heading": "Block parties and breakers", "text": "In the Bronx, DJs extended rhythmic passages from records while MCs addressed dancers and neighbors. Breakdance and graffiti developed alongside this musical practice. These parties made limited resources an invitation to invent, giving a new generation tools to create community and public expression." },
+    { "years": "1980s", "heading": "Records carry the voice", "text": "Hip-hop recordings travelled beyond local parties, and artists developed distinct approaches to rhyme, sampling and turntable performance. Groups and solo performers brought stories of city life to wider audiences. The music's growth depended on DJs, producers, dancers and neighborhood networks as much as recording stars." },
+    { "years": "1990s", "heading": "Regional languages emerge", "text": "Scenes across the United States developed recognizable rhythms, slang and production styles. Southern, West Coast and East Coast artists each shaped the genre in different ways. Independent labels and mixtapes widened access, while hip-hop became a platform for social observation and personal storytelling." },
+    { "years": "2000s–today", "heading": "A global vocabulary", "text": "Digital tools made beat-making and distribution more immediate, and local scenes around the world adapted rap to their languages and concerns. Streaming connected listeners across borders. Hip-hop now interacts continuously with pop and electronic music while retaining its roots in rhythmic invention and voice." }
+  ],
+  "related_slugs": ["rnb_soul", "pop", "electronic", "rock"],
+  "wikipedia_title": "Hip-hop music",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "DJ Kool Herc", "why": "Herc's party techniques helped establish the breakbeat approach that gave dancers and MCs new space to create." },
+    { "name": "Grandmaster Flash", "why": "His innovations in turntable technique and DJ performance expanded the possibilities of live hip-hop." },
+    { "name": "Run-D.M.C.", "why": "The group brought direct, forceful rap and stripped-back production into a defining mainstream moment for the genre." }
+  ],
+  "examples": [
+    { "name": "Afrika Bambaataa" }, { "name": "The Sugarhill Gang" }, { "name": "Public Enemy" }, { "name": "Queen Latifah" },
+    { "name": "A Tribe Called Quest" }, { "name": "De La Soul" }, { "name": "Nas" }, { "name": "The Notorious B.I.G." },
+    { "name": "Tupac Shakur" }, { "name": "Missy Elliott" }, { "name": "Kendrick Lamar" }, { "name": "Lauryn Hill" },
+    { "name": "Natos y Waor" }, { "name": "Kase.O" }, { "name": "Mala Rodríguez" }, { "name": "SFDK" },
+    { "name": "Bad Gyal" }, { "name": "Santa Salut" }, { "name": "C. Tangana" }, { "name": "Rapsusklei" }
+  ],
+  "sources_to_verify": ["Hip-hop music", "DJ Kool Herc", "Grandmaster Flash", "Run-D.M.C.", "Rap"]
+}

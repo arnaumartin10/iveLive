@@ -1,0 +1,34 @@
+{
+  "slug": "synth-pop",
+  "parent_slug": "pop",
+  "title": "Synth-Pop",
+  "tagline": "Pop songwriting reframed through electronic instruments.",
+  "summary": "Synth-pop places synthesizers and electronic production at the center of accessible songcraft. Early artists explored affordable keyboards and studio technology, pairing new timbres with vocals, hooks, and familiar pop structures. The sound became especially visible in the late 1970s and 1980s, then returned in many forms. Its legacy reaches from chart pop to independent electronic scenes.",
+  "origin_place": "United Kingdom and Germany",
+  "origin_years": "late 1970s",
+  "history": [],
+  "related_slugs": ["pop", "electronic", "new-wave"],
+  "wikipedia_title": "Synth-pop",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Kraftwerk", "why": "Kraftwerk's precise electronic arrangements helped establish a lasting vocabulary for pop made with machines." },
+    { "name": "Depeche Mode", "why": "Depeche Mode developed synth-pop into a durable band sound with dark textures and strong melodies." },
+    { "name": "Gary Numan", "why": "Numan brought stark synthesizer-led songwriting into the British pop mainstream." }
+  ],
+  "examples": [
+    { "name": "The Human League" },
+    { "name": "Orchestral Manoeuvres in the Dark" },
+    { "name": "Yazoo" },
+    { "name": "Soft Cell" },
+    { "name": "New Order" },
+    { "name": "Pet Shop Boys" },
+    { "name": "Erasure" },
+    { "name": "A-ha" },
+    { "name": "La Roux" },
+    { "name": "CHVRCHES" },
+    { "name": "Robyn" },
+    { "name": "Fangoria" }
+  ],
+  "sources_to_verify": ["Synth-pop", "Kraftwerk", "Depeche Mode", "Gary Numan"]
+}

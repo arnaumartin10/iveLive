@@ -1,0 +1,31 @@
+{
+  "slug": "folk_acoustic",
+  "title": "Folk / Acoustic",
+  "tagline": "Songs carried by voices, strings and memory.",
+  "summary": "Folk and acoustic music form a broad umbrella rather than one fixed genre. It includes community songs, ballads, country traditions and modern singer-songwriters, often foregrounding voice, story and accessible instruments. The music changes as it moves between oral traditions, recordings and stages. These examples represent several strands, not a single canon, and recognize that folk music everywhere belongs to the people and places that keep it alive.",
+  "origin_place": "Worldwide traditions; modern popular folk in the United States and United Kingdom",
+  "origin_years": "Traditional roots; popular revivals from the 1940s",
+  "history": [
+    { "years": "Traditional roots", "heading": "Songs held in community", "text": "Long before commercial recording, people carried songs through work, celebration, worship and storytelling. Each performance could change with its place and singer. Folk traditions therefore have many origins, and written archives preserve only part of music that was often learned by listening and participation." },
+    { "years": "1940s–1950s", "heading": "Collectors and revivalists", "text": "Radio, records and festivals helped bring regional and traditional songs to new audiences. Performers and researchers documented older repertories, sometimes reframing them for concert stages. The revival made folk more visible while raising lasting questions about ownership, representation and whose voices were preserved." },
+    { "years": "1960s–1970s", "heading": "Songwriting joins tradition", "text": "A new generation combined acoustic instruments with personal writing and public concerns. Coffeehouses and festivals created spaces for close listening, while folk-rock connected traditional song forms to amplified bands. Artists across regions adapted this approach to their own languages and histories." },
+    { "years": "1980s–today", "heading": "Roots keep changing", "text": "Independent musicians blended folk with country, rock, pop and sounds from local traditions. Home recording and online distribution gave more artists direct access to audiences. Acoustic performance remains a flexible choice rather than a boundary, and songs continue to travel between memory, community and new composition." }
+  ],
+  "related_slugs": ["indie", "rock", "world", "classical"],
+  "wikipedia_title": "Folk music",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Woody Guthrie", "why": "Guthrie's direct songwriting and travelling performance helped make folk a living vehicle for shared stories and social observation." },
+    { "name": "Bob Dylan", "why": "Dylan brought literary songwriting into the folk revival and demonstrated how acoustic music could continually change its form." },
+    { "name": "Joan Baez", "why": "Baez connected a clear, memorable voice with traditional repertoire and public performance, helping folk reach broad audiences." }
+  ],
+  "examples": [
+    { "name": "Lead Belly" }, { "name": "Pete Seeger" }, { "name": "Odetta" }, { "name": "Joni Mitchell" },
+    { "name": "Nick Drake" }, { "name": "Vashti Bunyan" }, { "name": "Fairport Convention" }, { "name": "Sandy Denny" },
+    { "name": "Gillian Welch" }, { "name": "Bon Iver" }, { "name": "Joan Manuel Serrat" }, { "name": "Paco Ibáñez" },
+    { "name": "Lluís Llach" }, { "name": "Maria del Mar Bonet" }, { "name": "Raimon" }, { "name": "Silvia Pérez Cruz" },
+    { "name": "Sílvia Comes" }, { "name": "Judit Neddermann" }, { "name": "Amancio Prada" }, { "name": "El Kanka" }
+  ],
+  "sources_to_verify": ["Folk music", "Folk revival", "Woody Guthrie", "Bob Dylan", "Joan Baez"]
+}

@@ -1,0 +1,31 @@
+{
+  "slug": "indie",
+  "title": "Indie",
+  "tagline": "Independent spirit, close-up detail, open doors.",
+  "summary": "Indie describes music shaped by independent scenes, labels and aesthetics rather than one fixed sound. Guitar pop, folk, electronic experiments and lo-fi recordings all meet under the name. The umbrella is wide and its meaning has shifted as independent sounds entered the mainstream. Here, indie is a listening path through self-directed communities, distinctive songwriting and artists who made room for alternatives to dominant pop and rock conventions.",
+  "origin_place": "United Kingdom and United States",
+  "origin_years": "Late 1970s–1980s",
+  "history": [
+    { "years": "Late 1970s", "heading": "Independent networks", "text": "Punk encouraged musicians to form bands, make records and organize shows without waiting for major institutions. Small labels, fanzines and local venues connected audiences across cities. Independence was both a practical route to release music and an attitude that valued personal expression over polish." },
+    { "years": "1980s", "heading": "A wider guitar language", "text": "College radio, UK independent labels and underground clubs supported jangling guitars, noisy textures and melodic songwriting. Scenes remained distinct, but touring and mail-order records created links between them. The category described how music circulated as much as how it sounded, leaving space for experimentation." },
+    { "years": "1990s", "heading": "Alternative becomes visible", "text": "Some independent guitar music found large audiences, bringing underground sounds into mainstream media. Shoegaze, Britpop and lo-fi songwriting each developed different responses to fame and production. The decade made indie more recognizable while prompting artists to keep building smaller, self-defined communities." },
+    { "years": "2000s–today", "heading": "A many-sided home", "text": "Digital distribution and online communities made independent releases easier to discover across borders. Indie came to include electronic pop, folk, bedroom recordings and hybrid scenes, sometimes as a sound and sometimes as a production identity. Spanish and Catalan scenes added local voices to this international exchange." }
+  ],
+  "related_slugs": ["rock", "pop", "folk_acoustic", "electronic"],
+  "wikipedia_title": "Indie music",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "The Velvet Underground", "why": "Their adventurous arrangements and downtown sensibility became a reference point for artists working outside conventional pop formulas." },
+    { "name": "Sonic Youth", "why": "The band brought experimental guitar tunings and underground practice into a durable independent career, influencing alternative scenes internationally." },
+    { "name": "Pixies", "why": "Their quiet-loud dynamics and compact, surprising songs became a widely heard template for independent guitar bands." }
+  ],
+  "examples": [
+    { "name": "The Smiths" }, { "name": "R.E.M." }, { "name": "The Cure" }, { "name": "Belle and Sebastian" },
+    { "name": "Pavement" }, { "name": "My Bloody Valentine" }, { "name": "The Breeders" }, { "name": "Modest Mouse" },
+    { "name": "The Strokes" }, { "name": "Yeah Yeah Yeahs" }, { "name": "Arcade Fire" }, { "name": "Vampire Weekend" },
+    { "name": "Los Planetas" }, { "name": "La Casa Azul" }, { "name": "Love of Lesbian" }, { "name": "Dorian" },
+    { "name": "Antònia Font" }, { "name": "Mishima" }, { "name": "Vetusta Morla" }, { "name": "Carolina Durante" }
+  ],
+  "sources_to_verify": ["Indie music", "Independent record label", "The Velvet Underground", "Sonic Youth", "Pixies"]
+}

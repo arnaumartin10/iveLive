@@ -1,0 +1,75 @@
+{
+  "slug": "southern-rock",
+  "parent_slug": "rock",
+  "title": "Southern Rock",
+  "tagline": "A rough-hewn sound built from blues, gospel and open roads.",
+  "summary": "Southern rock keeps the heat of blues, gospel and boogie but gives it a louder, harder edge. It emerged in a region with deep roots in live performance, working-class culture and studio experimentation. The style often leans into big riffs, slide guitar and a sense of movement that feels more like a road than a room.",
+  "origin_place": "United States",
+  "origin_years": "1960s and 1970s",
+  "history": [],
+  "related_slugs": [
+    "rock",
+    "folk_acoustic"
+  ],
+  "wikipedia_title": "Southern rock",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    {
+      "name": "Lynyrd Skynyrd",
+      "why": "Skynyrd made the style legible through unforgettable riffs, harmonies and a strong sense of place."
+    },
+    {
+      "name": "The Allman Brothers Band",
+      "why": "The Allman Brothers turned instrumental chemistry and improvisation into a defining Southern rock identity."
+    },
+    {
+      "name": "ZZ Top",
+      "why": "ZZ Top carried the sound into a bluesier, more streamlined form with swagger and rhythm at the front."
+    }
+  ],
+  "examples": [
+    {
+      "name": "Blackfoot"
+    },
+    {
+      "name": "The Marshall Tucker Band"
+    },
+    {
+      "name": "Molly Hatchet"
+    },
+    {
+      "name": "38 Special"
+    },
+    {
+      "name": "The Outlaws"
+    },
+    {
+      "name": "Dr. Hook"
+    },
+    {
+      "name": "The Nitty Gritty Dirt Band"
+    },
+    {
+      "name": "Little Feat"
+    },
+    {
+      "name": "The Charlie Daniels Band"
+    },
+    {
+      "name": "Creedence Clearwater Revival"
+    },
+    {
+      "name": "The Black Crowes"
+    },
+    {
+      "name": "The Georgia Satellites"
+    }
+  ],
+  "sources_to_verify": [
+    "Southern rock",
+    "Lynyrd Skynyrd",
+    "The Allman Brothers Band",
+    "ZZ Top"
+  ]
+}

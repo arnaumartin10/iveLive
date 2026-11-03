@@ -1,0 +1,31 @@
+{
+  "slug": "punk",
+  "title": "Punk",
+  "tagline": "Make it yourself. Say it plainly. Begin again.",
+  "summary": "Punk is a musical and cultural movement associated with direct songwriting, self-made networks and resistance to polished convention. Its sound can be fast and spare, but its history includes art, fashion, politics and independent publishing. Punk scenes developed in several cities, each with its own character. This page traces some connecting threads while recognizing the people and local communities who made the movement more than a single style.",
+  "origin_place": "United States and United Kingdom",
+  "origin_years": "Mid-1970s",
+  "history": [
+    { "years": "1960s–early 1970s", "heading": "Precedents and provocation", "text": "Garage rock, art scenes and restless club bands questioned the distance between performers and audiences. In New York, intimate venues supported stripped-down songs and experimental presentation. These strands helped form a setting where musicians could reject elaborate expectations and return to urgent, compact performance." },
+    { "years": "Mid–late 1970s", "heading": "A visible movement", "text": "Bands in New York and London turned speed, brevity and attitude into a public statement. Independent records, flyers and small clubs built direct ties between artists and listeners. Punk's visual style and do-it-yourself ethic spread quickly, though its scenes remained diverse and sometimes in tension." },
+    { "years": "1980s", "heading": "Hardcore and independent paths", "text": "Hardcore punk intensified the music and developed local circuits across North America and beyond. Other artists connected punk to ska, politics and experimental sounds. Independent labels and community venues gave younger musicians a way to organize concerts, release records and sustain their own standards." },
+    { "years": "1990s–today", "heading": "An enduring method", "text": "Punk influenced alternative rock and continued in underground scenes, zines and independent festivals. New generations adapted its directness to local languages and concerns, including Spanish and Catalan communities. Its legacy remains as much about self-organization and participation as about a particular guitar sound." }
+  ],
+  "related_slugs": ["rock", "indie", "metal", "hip_hop"],
+  "wikipedia_title": "Punk rock",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "The Ramones", "why": "Their short, fast songs offered an enduring model for punk's concise sound and accessible band format." },
+    { "name": "Sex Pistols", "why": "The group brought punk into a highly visible British cultural moment and provoked debate about music and authority." },
+    { "name": "The Clash", "why": "The Clash connected punk's directness with reggae, politics and wider musical curiosity, expanding what the movement could hold." }
+  ],
+  "examples": [
+    { "name": "Patti Smith" }, { "name": "Television" }, { "name": "Buzzcocks" }, { "name": "Siouxsie and the Banshees" },
+    { "name": "Bad Brains" }, { "name": "Black Flag" }, { "name": "Dead Kennedys" }, { "name": "X" },
+    { "name": "Fugazi" }, { "name": "Green Day" }, { "name": "Rancid" }, { "name": "Sleater-Kinney" },
+    { "name": "Eskorbuto" }, { "name": "La Polla Records" }, { "name": "Kortatu" }, { "name": "Cerebros Exprimidos" },
+    { "name": "Berri Txarrak" }, { "name": "Crim" }, { "name": "Biznaga" }, { "name": "Las Vulpess" }
+  ],
+  "sources_to_verify": ["Punk rock", "The Ramones", "Sex Pistols", "The Clash", "Do it yourself"]
+}

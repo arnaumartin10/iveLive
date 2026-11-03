@@ -1,0 +1,75 @@
+{
+  "slug": "deep-house",
+  "parent_slug": "electronic",
+  "title": "Deep House",
+  "tagline": "Soulful drums, patient grooves and a warm low-end glow.",
+  "summary": "Deep house centers on slow-burn rhythm and warm, layered textures rather than spectacle. It often carries the feel of a club after midnight: subtle percussion, warm synth pads and enough space for the groove to breathe. The style is as much atmosphere as it is movement.",
+  "origin_place": "United States and United Kingdom",
+  "origin_years": "1980s and 1990s",
+  "history": [],
+  "related_slugs": [
+    "electronic",
+    "rnb_soul"
+  ],
+  "wikipedia_title": "Deep house",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    {
+      "name": "Frankie Knuckles",
+      "why": "Frankie Knuckles helped define the style’s warm, soulful direction and its role in the club."
+    },
+    {
+      "name": "Kerri Chandler",
+      "why": "Kerri Chandler made deep house feel more intimate and rhythmically rich without losing its grounding."
+    },
+    {
+      "name": "Masters At Work",
+      "why": "Masters At Work gave the form a more rhythmic and melodic edge while keeping its club focus."
+    }
+  ],
+  "examples": [
+    {
+      "name": "Mr. Fingers"
+    },
+    {
+      "name": "Chez Damier"
+    },
+    {
+      "name": "Gwen McCrae"
+    },
+    {
+      "name": "Mousse T."
+    },
+    {
+      "name": "Dennis Ferrer"
+    },
+    {
+      "name": "Bicep"
+    },
+    {
+      "name": "Catz ’N Dogz"
+    },
+    {
+      "name": "The Rapture"
+    },
+    {
+      "name": "DJ Sprinkles"
+    },
+    {
+      "name": "Bobby Konders"
+    },
+    {
+      "name": "M.A.N.D.Y."
+    },
+    {
+      "name": "Eats Everything"
+    }
+  ],
+  "sources_to_verify": [
+    "Deep house",
+    "Frankie Knuckles",
+    "Kerri Chandler",
+    "Masters At Work"
+  ]
+}

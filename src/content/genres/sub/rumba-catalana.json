@@ -1,0 +1,28 @@
+{
+  "slug": "rumba-catalana",
+  "parent_slug": "latin",
+  "title": "Rumba Catalana",
+  "tagline": "Barcelona-born rumba with a handclap pulse, rhythmic guitar, and lively vocals.",
+  "summary": "Rumba catalana developed in Barcelona's Romani communities through a meeting of Cuban rumba, flamenco, and local popular music. Its rhythmic guitar strumming, handclaps, and buoyant vocals give it a distinctive dance feel. Artists have carried the sound from neighborhood gatherings into recordings and international performances.",
+  "origin_place": "Barcelona, Catalonia, Spain",
+  "origin_years": "1950s",
+  "history": [],
+  "related_slugs": ["latin", "flamenco", "rumba"],
+  "wikipedia_title": "Rumba catalana",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Peret", "why": "Peret is widely recognized as a foundational figure in the development and popularization of rumba catalana." },
+    { "name": "El Pescaílla", "why": "El Pescaílla helped develop the guitar style and repertoire associated with Barcelona's rumba tradition." },
+    { "name": "Chacho", "why": "Chacho was an early rumba catalana performer whose recordings helped establish the genre's popular sound." }
+  ],
+  "examples": [
+    { "name": "Gato Pérez" }, { "name": "Los Amaya" },
+    { "name": "Rumba Tres" }, { "name": "Sabor de Gràcia" },
+    { "name": "Dusminguet" }, { "name": "La Troba Kung-Fú" },
+    { "name": "Estopa" }, { "name": "Muchachito Bombo Infierno" },
+    { "name": "Ojos de Brujo" }, { "name": "Marina Rossell" },
+    { "name": "Los Manolos" }, { "name": "Rumba del Raval" }
+  ],
+  "sources_to_verify": ["Rumba catalana", "Peret", "El Pescaílla", "Chacho"]
+}

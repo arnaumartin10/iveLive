@@ -1,0 +1,28 @@
+{
+  "slug": "cumbia",
+  "parent_slug": "latin",
+  "title": "Cumbia",
+  "tagline": "A Colombian-rooted dance rhythm that keeps changing across the Americas.",
+  "summary": "Cumbia originated on Colombia's Caribbean coast through the meeting of Indigenous, African, and European musical traditions. Its dance rhythm and instrumentation traveled widely, inspiring distinct regional versions across Latin America. Modern cumbia continues to absorb local sounds, from orchestral and tropical arrangements to electronic production.",
+  "origin_place": "Caribbean coast of Colombia",
+  "origin_years": "19th century",
+  "history": [],
+  "related_slugs": ["latin", "salsa", "urbano-latino"],
+  "wikipedia_title": "Cumbia",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Andrés Landero", "why": "Landero helped popularize accordion-led cumbia and is widely associated with the genre's Colombian tradition." },
+    { "name": "Lucho Bermúdez", "why": "Bermúdez arranged Colombian Caribbean music for large orchestras and helped bring cumbia to wider audiences." },
+    { "name": "Los Corraleros de Majagual", "why": "The group brought together prominent coastal musicians in a celebrated, influential tropical-cumbia ensemble." }
+  ],
+  "examples": [
+    { "name": "La Sonora Dinamita" }, { "name": "Aniceto Molina" },
+    { "name": "Celso Piña" }, { "name": "Los Ángeles Azules" },
+    { "name": "Totó la Momposina" }, { "name": "Chico Trujillo" },
+    { "name": "Damas Gratis" }, { "name": "Los Mirlos" },
+    { "name": "Bomba Estéreo" }, { "name": "Amar Azul" },
+    { "name": "Grupo Niche" }, { "name": "La Delio Valdez" }
+  ],
+  "sources_to_verify": ["Cumbia", "Andrés Landero", "Lucho Bermúdez", "Los Corraleros de Majagual"]
+}

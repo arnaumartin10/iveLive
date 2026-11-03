@@ -1,0 +1,28 @@
+{
+  "slug": "hard-rock",
+  "parent_slug": "rock",
+  "title": "Hard Rock",
+  "tagline": "Loud guitars, powerful drums, and riffs made to fill a room.",
+  "summary": "Hard rock amplifies rock and blues traditions with distorted guitar riffs, assertive vocals, and driving rhythms. It became a major force in album-oriented music and live performance, influencing metal as well as later alternative styles. The sound can be bluesy, theatrical, or highly polished, but it keeps electric guitar at its center.",
+  "origin_place": "United Kingdom and United States",
+  "origin_years": "late 1960s",
+  "history": [],
+  "related_slugs": ["rock", "heavy-metal", "southern-rock"],
+  "wikipedia_title": "Hard rock",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Led Zeppelin", "why": "Led Zeppelin combined blues-derived riffs, powerful performance, and dynamic arrangements in a highly influential hard-rock sound." },
+    { "name": "The Who", "why": "The Who brought explosive volume and dramatic stage performance to the development of hard rock." },
+    { "name": "Deep Purple", "why": "Deep Purple paired heavy guitar and organ with virtuoso playing and forceful songwriting." }
+  ],
+  "examples": [
+    { "name": "AC/DC" }, { "name": "Aerosmith" },
+    { "name": "Van Halen" }, { "name": "Guns N' Roses" },
+    { "name": "Heart" }, { "name": "Thin Lizzy" },
+    { "name": "Queens of the Stone Age" }, { "name": "The Black Crowes" },
+    { "name": "Whitesnake" }, { "name": "Free" },
+    { "name": "Bad Company" }, { "name": "The Cult" }
+  ],
+  "sources_to_verify": ["Hard rock", "Led Zeppelin", "The Who", "Deep Purple"]
+}

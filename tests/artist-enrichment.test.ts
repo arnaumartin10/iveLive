@@ -22,8 +22,12 @@ import {
   createIveLiveUserAgent,
   safeRequestEndpoint,
 } from '../supabase/functions/enrich-artist/src/providers/http';
-import { parseWikipediaSummary } from '../supabase/functions/enrich-artist/src/providers/wikipedia';
+import {
+  parseWikipediaSummary,
+  resolveTitle,
+} from '../supabase/functions/enrich-artist/src/providers/wikipedia';
 import { parseTheAudioDbArtist } from '../supabase/functions/enrich-artist/src/providers/theaudiodb';
+import { selectEnglishBio } from '../supabase/functions/enrich-artist/src/providers/bio';
 import type { ProviderContext } from '../supabase/functions/enrich-artist/src/providers/types';
 import {
   coverArtArchiveFixture,
@@ -33,6 +37,7 @@ import {
   musicBrainzSearchFixture,
   genreClassificationFixtures,
   wikipediaSummaryFixture,
+  wikidataEnglishSitelinkFixture,
 } from './fixtures/artist-enrichment';
 
 describe('artist enrichment provider parsers', () => {
@@ -89,6 +94,86 @@ describe('artist enrichment provider parsers', () => {
       cover_thumb_url:
         'https://coverartarchive.org/release-group/example/front-250.jpg',
     });
+  });
+
+  it('resolves the English Wikidata sitelink and ignores other language sitelinks', async () => {
+    const fetchSpy = jest.spyOn(globalThis, 'fetch').mockResolvedValue(
+      new Response(JSON.stringify(wikidataEnglishSitelinkFixture), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      }),
+    );
+    try {
+      await expect(
+        resolveTitle('Q123456789', 'IveLive/test (test@example.test)'),
+      ).resolves.toBe('Example Artist');
+      expect(String(fetchSpy.mock.calls[0]?.[0])).toContain('wikidata.org');
+      expect(String(fetchSpy.mock.calls[0]?.[0])).toContain('ids=Q123456789');
+    } finally {
+      fetchSpy.mockRestore();
+    }
+  });
+
+  it('rejects disambiguation pages and foreign-language summaries', () => {
+    expect(
+      parseWikipediaSummary({
+        ...wikipediaSummaryFixture,
+        type: 'disambiguation',
+      }),
+    ).toBeNull();
+    expect(
+      parseWikipediaSummary({
+        ...wikipediaSummaryFixture,
+        extract:
+          'El grupo musical se formó en Barcelona y publicó varios discos.',
+      }),
+    ).toBeNull();
+  });
+
+  it('falls back to an English Last.fm bio when Wikipedia has no accepted article', () => {
+    const lastFm = parseLastFmBio(lastFmInfoFixture);
+    expect(
+      selectEnglishBio({}, [
+        { provider: 'wikipedia', patch: {} },
+        {
+          provider: 'lastfm',
+          patch: {
+            ...lastFm,
+            bio_source: 'lastfm',
+            bio_lang: 'en',
+          },
+        },
+      ]),
+    ).toMatchObject({
+      bio: 'An English rock band.',
+      bio_source: 'lastfm',
+      bio_lang: 'en',
+      bio_url: 'https://www.last.fm/music/Arctic+Monkeys/+wiki',
+    });
+    expect(
+      parseLastFmBio({
+        artist: {
+          bio: {
+            content:
+              'El grupo musical se formó en Barcelona y publicó varios discos.',
+          },
+        },
+      }),
+    ).toBeNull();
+  });
+
+  it('never replaces a manual bio', () => {
+    expect(
+      selectEnglishBio({ bio_source: 'manual' }, [
+        {
+          provider: 'wikipedia',
+          patch: {
+            bio: wikipediaSummaryFixture.extract,
+            bio_url: 'https://en.wikipedia.org/wiki/Arctic_Monkeys',
+          },
+        },
+      ]),
+    ).toBeNull();
   });
 
   it('collects and deduplicates available TheAudioDB artist images by use', () => {
@@ -209,7 +294,6 @@ describe('provider merging and failure isolation', () => {
     wikidataId: null,
     wikipediaTitle: null,
     lastfmApiKey: null,
-    language: 'en',
   };
 
   it('sums equivalent weighted tags across sources', () => {

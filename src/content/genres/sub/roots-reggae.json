@@ -1,0 +1,75 @@
+{
+  "slug": "roots-reggae",
+  "parent_slug": "world",
+  "title": "Roots Reggae",
+  "tagline": "Righteous rhythm, spoken lyric and a deep sense of place.",
+  "summary": "Roots reggae grows from Jamaican folk, church and rhythm traditions and gives them a strong political and spiritual frame. It foregrounds the drum, the bass and the voice in a way that is both rhythmic and reflective. The sound can feel relaxed and steady, but it carries a direct sense of intent.",
+  "origin_place": "Jamaica",
+  "origin_years": "1970s",
+  "history": [],
+  "related_slugs": [
+    "world",
+    "hip_hop"
+  ],
+  "wikipedia_title": "Roots reggae",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    {
+      "name": "Bob Marley",
+      "why": "Bob Marley made roots reggae widely legible, pairing deep lyrical intent with irresistible rhythm."
+    },
+    {
+      "name": "Peter Tosh",
+      "why": "Peter Tosh gave the form a fiercer political edge and a strong, open-hearted sense of conviction."
+    },
+    {
+      "name": "Burning Spear",
+      "why": "Burning Spear brought a devotional, rhythmic gravity to roots reggae that still feels foundational."
+    }
+  ],
+  "examples": [
+    {
+      "name": "The Wailers"
+    },
+    {
+      "name": "Jimmy Cliff"
+    },
+    {
+      "name": "Dennis Brown"
+    },
+    {
+      "name": "Black Uhuru"
+    },
+    {
+      "name": "Sly & Robbie"
+    },
+    {
+      "name": "Inner Circle"
+    },
+    {
+      "name": "Toots and the Maytals"
+    },
+    {
+      "name": "Culture"
+    },
+    {
+      "name": "Big Youth"
+    },
+    {
+      "name": "Steel Pulse"
+    },
+    {
+      "name": "UB40"
+    },
+    {
+      "name": "Bunny Wailer"
+    }
+  ],
+  "sources_to_verify": [
+    "Roots reggae",
+    "Bob Marley",
+    "Peter Tosh",
+    "Burning Spear"
+  ]
+}
