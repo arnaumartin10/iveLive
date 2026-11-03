@@ -302,19 +302,23 @@ export default function WelcomeScreen() {
             variant="label"
             style={[styles.sectionLabel, { color: colors.ink }]}
           >
-            {emailSent ? 'VERIFY YOUR EMAIL' : 'KEEP EVERY NIGHT'}
+            {emailSent ? 'CHECK YOUR EMAIL' : 'KEEP EVERY NIGHT'}
           </Text>
 
           {emailSent ? (
             <>
+              <Text variant="caption" color="secondary">
+                We sent a sign-in email to {email.trim()}. Open its link to sign
+                in, or enter the 6-digit code below.
+              </Text>
               <TextInput
-                accessibilityLabel="Email verification code"
+                accessibilityLabel="Email sign-in code"
                 autoComplete="one-time-code"
                 autoCorrect={false}
                 keyboardType="number-pad"
                 maxLength={8}
                 onChangeText={setCode}
-                placeholder="Enter your email code"
+                placeholder="Enter the 6-digit code"
                 placeholderTextColor={colors.inkMuted}
                 style={[
                   styles.input,
@@ -326,7 +330,21 @@ export default function WelcomeScreen() {
                 ]}
                 value={code}
               />
-              <Button label="Verify code" loading={busy} onPress={handleCode} />
+              <Button
+                label="Sign in with code"
+                loading={busy}
+                onPress={handleCode}
+              />
+              <Pressable
+                accessibilityRole="button"
+                disabled={busy}
+                onPress={handleEmail}
+                style={styles.backLink}
+              >
+                <Text variant="caption" color="secondary">
+                  Resend sign-in email
+                </Text>
+              </Pressable>
               <Pressable
                 onPress={() => setEmailSent(false)}
                 style={styles.backLink}
@@ -386,6 +404,10 @@ export default function WelcomeScreen() {
                 loading={busy}
                 onPress={() => runProvider(signInWithGoogle)}
               />
+              <Text variant="caption" color="secondary">
+                Google signs you in directly; it does not send a separate email
+                link.
+              </Text>
               {appleAvailable ? (
                 <AppleAuthenticationButton
                   buttonStyle={AppleAuthenticationButtonStyle.WHITE}

@@ -915,6 +915,27 @@ exports[`Welcome poster brand renders and matches the welcome layout on iPhone S
             </Text>
           </View>
         </View>
+        <Text
+          style={
+            [
+              {
+                "includeFontPadding": false,
+              },
+              {
+                "color": "#614755",
+                "fontFamily": "SchibstedGrotesk_500Medium",
+                "fontSize": 13,
+                "letterSpacing": undefined,
+                "lineHeight": 18,
+                "textAlign": undefined,
+                "textTransform": undefined,
+              },
+              undefined,
+            ]
+          }
+        >
+          Google signs you in directly; it does not send a separate email link.
+        </Text>
         <View
           style={
             {
@@ -1983,6 +2004,27 @@ exports[`Welcome poster brand renders and matches the welcome layout on large ph
             </Text>
           </View>
         </View>
+        <Text
+          style={
+            [
+              {
+                "includeFontPadding": false,
+              },
+              {
+                "color": "#614755",
+                "fontFamily": "SchibstedGrotesk_500Medium",
+                "fontSize": 13,
+                "letterSpacing": undefined,
+                "lineHeight": 18,
+                "textAlign": undefined,
+                "textTransform": undefined,
+              },
+              undefined,
+            ]
+          }
+        >
+          Google signs you in directly; it does not send a separate email link.
+        </Text>
         <View
           style={
             {

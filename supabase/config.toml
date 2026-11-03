@@ -30,6 +30,8 @@ enabled = true
 site_url = "http://127.0.0.1:8081"
 additional_redirect_urls = [
 	"ivelive://callback",
+	"ivelive-preview://callback",
+	"ivelive-development://callback",
 	"http://localhost:8081/**",
 	"http://127.0.0.1:8081/**",
 	"http://localhost:8082/**",
