@@ -5,15 +5,12 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { deleteLocalFiles, uploadMediaItem } from './api';
 import type { MediaQueueItem, ProcessedKeepsake } from './types';
+import { KeepsakeMediaError, keepsakeError } from './errors';
 
 type QueueState = {
   items: MediaQueueItem[];
   isOffline: boolean;
-  enqueue: (
-    userId: string,
-    logId: string,
-    keepsake: ProcessedKeepsake,
-  ) => void;
+  enqueue: (userId: string, logId: string, keepsake: ProcessedKeepsake) => void;
   update: (id: string, patch: Partial<MediaQueueItem>) => void;
   cancel: (id: string) => void;
   retry: (id: string) => void;
@@ -68,7 +65,9 @@ export const useMediaQueueStore = create<QueueState>()(
         const item = get().items.find((entry) => entry.id === id);
         controllers.get(id)?.abort();
         controllers.delete(id);
-        set((state) => ({ items: state.items.filter((item) => item.id !== id) }));
+        set((state) => ({
+          items: state.items.filter((item) => item.id !== id),
+        }));
         if (item) {
           void deleteLocalFiles([
             item.localPath,
@@ -81,7 +80,14 @@ export const useMediaQueueStore = create<QueueState>()(
         set((state) => ({
           items: state.items.map((item) =>
             item.id === id
-              ? { ...item, status: 'queued', attempts: 0, progress: 0, error: undefined }
+              ? {
+                  ...item,
+                  status: 'queued',
+                  attempts: 0,
+                  progress: 0,
+                  error: undefined,
+                  errorCode: undefined,
+                }
               : item,
           ),
         }));
@@ -112,8 +118,9 @@ export const useMediaQueueStore = create<QueueState>()(
 const controllers = new Map<string, AbortController>();
 const activeUploads = new Map<string, Promise<void>>();
 let workerRunning = false;
-let networkSubscription: ReturnType<typeof Network.addNetworkStateListener> | null =
-  null;
+let networkSubscription: ReturnType<
+  typeof Network.addNetworkStateListener
+> | null = null;
 
 export function ensureMediaQueueNetworkListener(): void {
   if (networkSubscription) return;
@@ -173,6 +180,21 @@ export async function runQueue(): Promise<void> {
           items: state.items.filter((candidate) => candidate.id !== item.id),
         }));
       } catch (error) {
+        const mediaError =
+          error instanceof KeepsakeMediaError
+            ? error
+            : keepsakeError(
+                'upload',
+                'Could not upload this keepsake. Check your connection and retry.',
+                {
+                  mimeType: item.mime,
+                  extension: item.kind === 'image' ? 'jpg' : null,
+                  sizeBytes: item.sizeBytes,
+                  width: item.width,
+                  height: item.height,
+                },
+                error,
+              );
         const stillQueued = useMediaQueueStore
           .getState()
           .items.some((candidate) => candidate.id === item.id);
@@ -183,8 +205,8 @@ export async function runQueue(): Promise<void> {
               status: 'queued',
               progress: 0,
               attempts,
-              error:
-                error instanceof Error ? error.message : 'Upload failed. Try again.',
+              error: mediaError.message,
+              errorCode: mediaError.code,
             });
             await delay(Math.min(60_000, 1000 * 2 ** (attempts - 1)));
           } else {
@@ -192,8 +214,8 @@ export async function runQueue(): Promise<void> {
               status: 'failed',
               progress: 0,
               attempts,
-              error:
-                error instanceof Error ? error.message : 'Upload failed. Try again.',
+              error: mediaError.message,
+              errorCode: mediaError.code,
             });
           }
         }
@@ -204,9 +226,16 @@ export async function runQueue(): Promise<void> {
     }
   } finally {
     workerRunning = false;
-    if (useMediaQueueStore.getState().items.some((item) => item.status === 'queued')) {
+    if (
+      useMediaQueueStore
+        .getState()
+        .items.some((item) => item.status === 'queued')
+    ) {
       const network = await Network.getNetworkStateAsync();
-      if (network.isConnected !== false && network.isInternetReachable !== false) {
+      if (
+        network.isConnected !== false &&
+        network.isInternetReachable !== false
+      ) {
         void runQueue();
       }
     }
@@ -225,7 +254,10 @@ export async function cancelQueuedMediaForLog(logId: string): Promise<void> {
     items.map((item) =>
       activeUploads.get(item.id)?.catch((error: unknown) => {
         if (!(error instanceof Error) || error.message !== 'Upload canceled.') {
-          console.warn('[keepsake-queue] Upload cleanup after log deletion failed.', error);
+          console.warn(
+            '[keepsake-queue] Upload cleanup after log deletion failed.',
+            error,
+          );
         }
       }),
     ),

@@ -1,7 +1,11 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Network from 'expo-network';
-import { dimensionsForLongEdge, containsExifGps, videoRejectionMessage } from '../src/features/media/processing';
+import {
+  dimensionsForLongEdge,
+  containsGpsExif,
+  videoRejectionMessage,
+} from '../src/features/media/processing';
 import {
   invalidateSignedMediaUrls,
   resolveSignedMediaUrls,
@@ -36,8 +40,9 @@ const mockGetNetworkStateAsync =
   Network.getNetworkStateAsync as jest.MockedFunction<
     typeof Network.getNetworkStateAsync
   >;
-const mockUploadMediaItem =
-  uploadMediaItem as jest.MockedFunction<typeof uploadMediaItem>;
+const mockUploadMediaItem = uploadMediaItem as jest.MockedFunction<
+  typeof uploadMediaItem
+>;
 const createSignedUrls = jest.fn(async (paths: string[]) => ({
   data: paths.map((path) => ({
     path,
@@ -61,6 +66,7 @@ const queuedKeepsake: MediaQueueItem = {
   durationMs: null,
   sizeBytes: 1200,
   mime: 'image/jpeg',
+  codec: null,
   caption: null,
   createdAt: 1,
   status: 'queued',
@@ -85,25 +91,29 @@ describe('keepsake processing and layouts', () => {
       0xff, 0xd8, 0xff, 0xe1, 0x00, 0x08, 0x45, 0x78, 0x69, 0x66, 0x00, 0x00,
       0xff, 0xd9,
     ]);
-    expect(containsExifGps(withExif)).toBe(true);
-    expect(containsExifGps(new Uint8Array([0xff, 0xd8, 0xff, 0xd9]))).toBe(false);
+    expect(containsGpsExif(withExif)).toBe(false);
+    expect(containsGpsExif(new Uint8Array([0xff, 0xd8, 0xff, 0xd9]))).toBe(
+      false,
+    );
   });
 
   it('rejects reels exceeding duration or bucket size with a clear message', () => {
-    expect(videoRejectionMessage(1024, 60_001)).toMatch(/under 60 seconds/i);
-    expect(videoRejectionMessage(50 * 1024 * 1024 + 1, 10_000)).toMatch(
-      /over 50 MB/i,
+    expect(videoRejectionMessage(1024, 60_001)).toMatch(
+      /longer than 60 seconds/i,
+    );
+    expect(videoRejectionMessage(74_000_000, 10_000)).toBe(
+      'This video is 74MB; the limit is 50MB. Trim it or record at a lower quality.',
     );
     expect(videoRejectionMessage(1024, 60_000)).toBeNull();
   });
 
   it('uses the owner row and 0/1/2/3-item visitor layouts', () => {
-    expect([0, 1, 2, 3].map((count) => getKeepsakeFrameLayout(count, 'edit'))).toEqual(
-      ['edit_row', 'edit_row', 'edit_row', 'edit_row'],
-    );
-    expect([0, 1, 2, 3].map((count) => getKeepsakeFrameLayout(count, 'view'))).toEqual(
-      ['hidden', 'single', 'pair', 'hero_stack'],
-    );
+    expect(
+      [0, 1, 2, 3].map((count) => getKeepsakeFrameLayout(count, 'edit')),
+    ).toEqual(['edit_row', 'edit_row', 'edit_row', 'edit_row']);
+    expect(
+      [0, 1, 2, 3].map((count) => getKeepsakeFrameLayout(count, 'view')),
+    ).toEqual(['hidden', 'single', 'pair', 'hero_stack']);
   });
 });
 
@@ -156,11 +166,15 @@ describe('keepsake upload queue', () => {
   it('persists queue entries and resets a failed item when retried', async () => {
     useMediaQueueStore.setState({ items: [queuedKeepsake] });
     await new Promise((resolve) => setTimeout(resolve, 0));
-    const persisted = await AsyncStorage.getItem('ivelive-keepsake-upload-queue');
+    const persisted = await AsyncStorage.getItem(
+      'ivelive-keepsake-upload-queue',
+    );
     expect(persisted).toContain('queue-item');
 
     useMediaQueueStore.setState({
-      items: [{ ...queuedKeepsake, status: 'failed', attempts: 5, error: 'offline' }],
+      items: [
+        { ...queuedKeepsake, status: 'failed', attempts: 5, error: 'offline' },
+      ],
     });
     useMediaQueueStore.getState().retry('queue-item');
     expect(useMediaQueueStore.getState().items[0]).toMatchObject({

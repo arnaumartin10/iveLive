@@ -1,3 +1,5 @@
+import type { KeepsakeMime, SupportedVideoMime } from './inspection';
+
 export type MediaSlot = 'concert_photo' | 'companions_photo' | 'concert_video';
 
 export type LogMedia = {
@@ -14,6 +16,7 @@ export type LogMedia = {
   duration_ms: number | null;
   size_bytes: number;
   mime: string;
+  codec?: string | null;
   caption: string | null;
   created_at: string;
 };
@@ -49,8 +52,21 @@ export type ProcessedKeepsake = {
   height: number;
   durationMs: number | null;
   sizeBytes: number;
-  mime: 'image/jpeg' | 'video/mp4' | 'video/quicktime';
+  mime: 'image/jpeg' | SupportedVideoMime;
+  codec: string | null;
   caption: string | null;
+};
+
+export type KeepsakeSelection = {
+  kind: 'image' | 'video';
+  sourcePath: string;
+  sourceMime: KeepsakeMime | null;
+  extension: string | null;
+  sizeBytes: number;
+  width: number | null;
+  height: number | null;
+  durationMs: number | null;
+  codec: string | null;
 };
 
 export type MediaQueueItem = ProcessedKeepsake & {
@@ -62,6 +78,7 @@ export type MediaQueueItem = ProcessedKeepsake & {
   progress: number;
   attempts: number;
   error?: string;
+  errorCode?: string;
 };
 
 export const MEDIA_BUCKET_LIMIT_BYTES = 50 * 1024 * 1024;

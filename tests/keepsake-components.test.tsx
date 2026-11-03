@@ -1,11 +1,24 @@
 import React from 'react';
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from '@testing-library/react-native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from '../src/theme/ThemeProvider';
 import { KeepsakeFrames } from '../src/components/media/KeepsakeFrames';
-import type { FeedMedia, MediaQueueItem } from '../src/features/media/types';
-import { pickKeepsakePhoto, pickKeepsakeVideo } from '../src/features/media/picker';
+import type {
+  FeedMedia,
+  KeepsakeSelection,
+  MediaQueueItem,
+} from '../src/features/media/types';
+import {
+  pickKeepsakePhoto,
+  pickKeepsakeVideo,
+} from '../src/features/media/picker';
+import { KeepsakeMediaError } from '../src/features/media/errors';
 
 const mockQueue: {
   items: MediaQueueItem[];
@@ -97,8 +110,48 @@ describe('KeepsakeFrames', () => {
   beforeEach(() => {
     mockQueue.items = [];
     mockQueue.isOffline = false;
+    (pickKeepsakePhoto as jest.Mock).mockClear();
+    (pickKeepsakeVideo as jest.Mock).mockClear();
   });
 
+  it('shows a coded preparation error and offers retry from the same file', async () => {
+    const selection: KeepsakeSelection = {
+      kind: 'image',
+      sourcePath: '/cached/photo.jpg',
+      sourceMime: 'image/jpeg',
+      extension: 'jpg',
+      sizeBytes: 1200,
+      width: 1600,
+      height: 1200,
+      durationMs: null,
+      codec: null,
+    };
+    const error = new KeepsakeMediaError(
+      'decode',
+      'This device could not open this photo format.',
+      { mimeType: 'image/jpeg', extension: 'jpg', sizeBytes: 1200 },
+    );
+    error.selection = selection;
+    (
+      pickKeepsakePhoto as jest.MockedFunction<typeof pickKeepsakePhoto>
+    ).mockRejectedValueOnce(error);
+    renderFrames('edit');
+
+    fireEvent.press(
+      screen.getByRole('button', { name: 'Add the show from library' }),
+    );
+
+    expect(
+      await screen.findByText(
+        'This device could not open this photo format. · KEEPSAKE_DECODE_FAILED',
+      ),
+    ).toBeTruthy();
+    expect(
+      screen.getByRole('button', {
+        name: 'Retry preparing the show from the same file',
+      }),
+    ).toBeTruthy();
+  });
 
   it('shows all three labelled empty frames in edit mode', () => {
     renderFrames('edit');
@@ -125,26 +178,31 @@ describe('KeepsakeFrames', () => {
         1,
         'concert_photo',
         'library',
+        expect.any(Function),
       );
       expect(pickKeepsakePhoto).toHaveBeenNthCalledWith(
         2,
         'companions_photo',
         'camera',
+        expect.any(Function),
       );
       expect(pickKeepsakeVideo).toHaveBeenCalledTimes(1);
     });
   });
 
-  it.each([0, 1, 2, 3])('renders the view layout for %i uploaded keepsakes', (count) => {
-    renderFrames('view', sampleMedia.slice(0, count));
-    expect(screen.queryByText('THE SHOW') !== null).toBe(count >= 1);
-    expect(screen.queryByText('THE CREW') !== null).toBe(count >= 2);
-    expect(screen.queryByText(/THE REEL/)! !== null).toBe(count >= 3);
-    if (count === 2) {
-      expect(screen.getByText('Friends from the front row')).toBeTruthy();
-    }
-    if (count === 3) expect(screen.getByText(/17s/)).toBeTruthy();
-  });
+  it.each([0, 1, 2, 3])(
+    'renders the view layout for %i uploaded keepsakes',
+    (count) => {
+      renderFrames('view', sampleMedia.slice(0, count));
+      expect(screen.queryByText('THE SHOW') !== null).toBe(count >= 1);
+      expect(screen.queryByText('THE CREW') !== null).toBe(count >= 2);
+      expect(screen.queryByText(/THE REEL/)! !== null).toBe(count >= 3);
+      if (count === 2) {
+        expect(screen.getByText('Friends from the front row')).toBeTruthy();
+      }
+      if (count === 3) expect(screen.getByText(/17s/)).toBeTruthy();
+    },
+  );
 
   it('shows an offline pause stamp while uploads wait', () => {
     mockQueue.items = [
@@ -163,6 +221,7 @@ describe('KeepsakeFrames', () => {
           durationMs: null,
           sizeBytes: 1200,
           mime: 'image/jpeg',
+          codec: null,
           caption: null,
           createdAt: 1,
           progress: 0,

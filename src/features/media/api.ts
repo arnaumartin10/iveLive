@@ -4,6 +4,12 @@ import { env } from '../../lib/env';
 import { deleteLocalFile, getLocalBlob } from './localFiles';
 import type { LogMedia, MediaQueueItem } from './types';
 import { resolveSignedMediaUrls } from './signedUrls';
+import { type SupportedVideoMime } from './inspection';
+import {
+  KeepsakeMediaError,
+  keepsakeError,
+  type KeepsakeFailureContext,
+} from './errors';
 
 export async function fetchLogMedia(logId: string): Promise<LogMedia[]> {
   const { data, error } = await supabase
@@ -41,22 +47,47 @@ export async function uploadMediaItem(
   signal: AbortSignal,
   onProgress: (progress: number) => void,
 ): Promise<void> {
+  const extension =
+    item.kind === 'image'
+      ? 'jpg'
+      : extensionFromVideoMime(item.mime as SupportedVideoMime);
+  const failureContext: KeepsakeFailureContext = {
+    mimeType: item.mime,
+    extension,
+    sizeBytes: item.sizeBytes,
+    width: item.width,
+    height: item.height,
+  };
   const { data: userData, error: userError } = await supabase.auth.getUser();
-  if (userError) throw new Error(userError.message);
+  if (userError) {
+    throw keepsakeError(
+      'upload',
+      'Could not verify your account before uploading.',
+      failureContext,
+      userError,
+    );
+  }
   const user = userData.user;
   if (!user || user.id !== item.userId) {
-    throw new Error('Sign in again to finish uploading this keepsake.');
+    throw keepsakeError(
+      'upload',
+      'Sign in again to finish uploading this keepsake.',
+      failureContext,
+    );
   }
 
   const root = `${user.id}/${item.logId}`;
   const id = Crypto.randomUUID();
-  const extension = item.mime === 'video/quicktime' ? 'mov' : item.kind === 'video' ? 'mp4' : 'jpg';
   const storagePath = `${root}/${item.slot}-${id}.${extension}`;
   const thumbPath = `${root}/${item.slot}-${id}-thumb.jpg`;
   const posterPath = item.posterLocalPath
     ? `${root}/${item.slot}-${id}-poster.jpg`
     : null;
-  const newPaths = [storagePath, thumbPath, ...(posterPath ? [posterPath] : [])];
+  const newPaths = [
+    storagePath,
+    thumbPath,
+    ...(posterPath ? [posterPath] : []),
+  ];
 
   const { data: existing, error: existingError } = await supabase
     .from('log_media')
@@ -64,26 +95,40 @@ export async function uploadMediaItem(
     .eq('log_id', item.logId)
     .eq('slot', item.slot)
     .maybeSingle();
-  if (existingError) throw new Error(existingError.message);
+  if (existingError) {
+    throw keepsakeError(
+      'db-insert',
+      'Could not check the existing keepsake. Try uploading again.',
+      failureContext,
+      existingError,
+    );
+  }
 
   try {
-    await uploadObject(storagePath, item.localPath, item.mime, signal, (value) =>
-      onProgress(Math.round(value * 0.7)),
+    await uploadWithCode(
+      storagePath,
+      item.localPath,
+      item.mime,
+      signal,
+      (value) => onProgress(Math.round(value * 0.7)),
+      failureContext,
     );
-    await uploadObject(
+    await uploadWithCode(
       thumbPath,
       item.thumbLocalPath,
       'image/jpeg',
       signal,
       (value) => onProgress(70 + Math.round(value * 0.15)),
+      { ...failureContext, mimeType: 'image/jpeg', extension: 'jpg' },
     );
     if (posterPath && item.posterLocalPath) {
-      await uploadObject(
+      await uploadWithCode(
         posterPath,
         item.posterLocalPath,
         'image/jpeg',
         signal,
         (value) => onProgress(85 + Math.round(value * 0.15)),
+        { ...failureContext, mimeType: 'image/jpeg', extension: 'jpg' },
       );
     } else {
       onProgress(100);
@@ -103,14 +148,76 @@ export async function uploadMediaItem(
         duration_ms: item.durationMs,
         size_bytes: item.sizeBytes,
         mime: item.mime,
+        codec: item.codec,
         caption: item.caption,
       },
       { onConflict: 'log_id,slot' },
     );
-    if (saveError) throw new Error(saveError.message);
+    if (saveError) {
+      throw keepsakeError(
+        'db-insert',
+        'The media uploaded, but its log entry could not be saved.',
+        failureContext,
+        saveError,
+      );
+    }
   } catch (error) {
-    await removeStoragePaths(newPaths);
-    throw error;
+    try {
+      await removeStoragePaths(newPaths);
+    } catch (cleanupError) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.warn('[keepsake-media] Partial upload cleanup failed.', {
+          code: 'KEEPSAKE_UPLOAD_FAILED',
+          step: 'upload',
+          ...failureContext,
+        });
+      }
+      if (!(error instanceof KeepsakeMediaError)) throw cleanupError;
+    }
+    if (error instanceof KeepsakeMediaError) throw error;
+    throw keepsakeError(
+      'upload',
+      'Could not upload this keepsake. Check your connection and retry.',
+      failureContext,
+      error,
+    );
+  }
+
+  async function uploadWithCode(
+    path: string,
+    localPath: string,
+    mime: string,
+    signal: AbortSignal,
+    onProgress: (progress: number) => void,
+    context: KeepsakeFailureContext,
+  ): Promise<void> {
+    try {
+      await uploadObject(path, localPath, mime, signal, onProgress);
+    } catch (error) {
+      throw keepsakeError(
+        'upload',
+        error instanceof Error
+          ? error.message
+          : 'Could not upload this keepsake. Check your connection and retry.',
+        context,
+        error,
+      );
+    }
+  }
+
+  function extensionFromVideoMime(mime: SupportedVideoMime): string {
+    switch (mime) {
+      case 'video/quicktime':
+        return 'mov';
+      case 'video/x-m4v':
+        return 'm4v';
+      case 'video/webm':
+        return 'webm';
+      case 'video/3gpp':
+        return '3gp';
+      default:
+        return 'mp4';
+    }
   }
 
   if (existing) {
@@ -120,7 +227,11 @@ export async function uploadMediaItem(
       ),
     );
   }
-  await deleteLocalFiles([item.localPath, item.thumbLocalPath, item.posterLocalPath]);
+  await deleteLocalFiles([
+    item.localPath,
+    item.thumbLocalPath,
+    item.posterLocalPath,
+  ]);
 }
 
 export async function removeLogMedia(media: LogMedia): Promise<void> {
@@ -129,7 +240,10 @@ export async function removeLogMedia(media: LogMedia): Promise<void> {
       (path): path is string => path !== null,
     ),
   );
-  const { error } = await supabase.from('log_media').delete().eq('id', media.id);
+  const { error } = await supabase
+    .from('log_media')
+    .delete()
+    .eq('id', media.id);
   if (error) throw new Error(error.message);
 }
 
@@ -150,7 +264,9 @@ export async function removeStoragePaths(paths: string[]): Promise<void> {
   if (error) throw new Error(error.message);
 }
 
-export async function deleteLocalFiles(paths: (string | null)[]): Promise<void> {
+export async function deleteLocalFiles(
+  paths: (string | null)[],
+): Promise<void> {
   for (const path of paths) {
     await deleteLocalFile(path);
   }
@@ -188,15 +304,19 @@ function uploadObject(
         xhr.setRequestHeader('x-upsert', 'false');
         xhr.upload.onprogress = (event) => {
           if (event.lengthComputable) {
-            onProgress(Math.min(100, Math.round((event.loaded / event.total) * 100)));
+            onProgress(
+              Math.min(100, Math.round((event.loaded / event.total) * 100)),
+            );
           }
         };
         xhr.onload = () => {
           if (xhr.status >= 200 && xhr.status < 300) resolve();
           else reject(new Error(readUploadError(xhr.responseText, xhr.status)));
         };
-        xhr.onerror = () => reject(new Error('Network trouble interrupted the upload.'));
-        xhr.ontimeout = () => reject(new Error('The upload timed out. Try again on Wi-Fi.'));
+        xhr.onerror = () =>
+          reject(new Error('Network trouble interrupted the upload.'));
+        xhr.ontimeout = () =>
+          reject(new Error('The upload timed out. Try again on Wi-Fi.'));
         xhr.onabort = () => reject(new Error('Upload canceled.'));
         const abort = () => xhr.abort();
         signal.addEventListener('abort', abort, { once: true });
@@ -210,7 +330,10 @@ function uploadObject(
 
 function readUploadError(responseText: string, status: number): string {
   try {
-    const result = JSON.parse(responseText) as { message?: string; error?: string };
+    const result = JSON.parse(responseText) as {
+      message?: string;
+      error?: string;
+    };
     return result.message ?? result.error ?? `Upload failed (${status}).`;
   } catch {
     return `Upload failed (${status}).`;

@@ -15,7 +15,7 @@ import type {
 export async function fetchStatsOverview(userId: string, year: StatsScope) {
   const { data, error } = await supabase.rpc('user_stats_overview', {
     p_user: userId,
-    p_year: year,
+    p_year: year ?? undefined,
   });
   if (error) throw new Error(error.message);
   return data as unknown as StatsOverview;
@@ -24,7 +24,7 @@ export async function fetchStatsOverview(userId: string, year: StatsScope) {
 export async function fetchGenreStats(userId: string, year: StatsScope) {
   const { data, error } = await supabase.rpc('user_genre_stats', {
     p_user: userId,
-    p_year: year,
+    p_year: year ?? undefined,
   });
   if (error) throw new Error(error.message);
   return data as GenreStat[];
@@ -33,7 +33,7 @@ export async function fetchGenreStats(userId: string, year: StatsScope) {
 export async function fetchVenueStats(userId: string, year: StatsScope) {
   const { data, error } = await supabase.rpc('user_venue_stats', {
     p_user: userId,
-    p_year: year,
+    p_year: year ?? undefined,
   });
   if (error) throw new Error(error.message);
   return data as VenueStat[];
@@ -49,7 +49,7 @@ export async function fetchExclusiveArtists(
     {
       p_user: userId,
       p_type: type,
-      p_year: year,
+      p_year: year ?? undefined,
     },
   );
   if (error) throw new Error(error.message);
@@ -59,7 +59,7 @@ export async function fetchExclusiveArtists(
 export async function fetchHeatmap(userId: string, year: StatsScope) {
   const { data, error } = await supabase.rpc('user_calendar_heatmap', {
     p_user: userId,
-    p_year: year,
+    p_year: year ?? undefined,
   });
   if (error) throw new Error(error.message);
   return data as unknown as HeatmapDay[];
@@ -68,7 +68,7 @@ export async function fetchHeatmap(userId: string, year: StatsScope) {
 export async function fetchDiversity(userId: string, year: StatsScope) {
   const { data, error } = await supabase.rpc('user_taste_diversity', {
     p_user: userId,
-    p_year: year,
+    p_year: year ?? undefined,
   });
   if (error) throw new Error(error.message);
   return data as unknown as DiversityStats;
@@ -76,7 +76,7 @@ export async function fetchDiversity(userId: string, year: StatsScope) {
 
 export async function fetchLeaderboard(year: StatsScope) {
   const { data, error } = await supabase.rpc('friends_leaderboard', {
-    p_year: year,
+    p_year: year ?? undefined,
   });
   if (error) throw new Error(error.message);
   return data as LeaderboardRow[];
@@ -90,7 +90,7 @@ export async function fetchArtistsByGenre(
   const { data, error } = await supabase.rpc('user_artists_by_genre', {
     p_user: userId,
     p_genre: genre,
-    p_year: year,
+    p_year: year ?? undefined,
   });
   if (error) throw new Error(error.message);
   return data as StatsArtist[];
@@ -104,7 +104,7 @@ export async function fetchArtistsByVenue(
   const { data, error } = await supabase.rpc('user_artists_by_venue_type', {
     p_user: userId,
     p_type: venue,
-    p_year: year,
+    p_year: year ?? undefined,
   });
   if (error) throw new Error(error.message);
   return data as StatsArtist[];

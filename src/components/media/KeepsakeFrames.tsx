@@ -19,18 +19,33 @@ import { RAW } from '../../theme/palette';
 import { getSeededRotation } from '../paper/hash';
 import { useAuthStore } from '../../features/auth/store';
 import {
+  deleteLocalFiles,
   removeLogMedia,
   updateMediaCaption,
 } from '../../features/media/api';
-import { useLogMedia, useMediaQueue, mediaKeys } from '../../features/media/hooks';
+import {
+  useLogMedia,
+  useMediaQueue,
+  mediaKeys,
+} from '../../features/media/hooks';
 import { useSignedMediaUrls } from '../../features/media/signedUrls';
-import { pickKeepsakePhoto, pickKeepsakeVideo } from '../../features/media/picker';
+import {
+  pickKeepsakePhoto,
+  pickKeepsakeVideo,
+  releaseKeepsakeSelection,
+  retryKeepsakeSelection,
+} from '../../features/media/picker';
 import type {
   FeedMedia,
+  KeepsakeSelection,
   LogMedia,
   MediaSlot,
   SignedLogMedia,
 } from '../../features/media/types';
+import {
+  KeepsakeMediaError,
+  keepsakeErrorMessage,
+} from '../../features/media/errors';
 import { MediaViewer } from './MediaViewer';
 import { getKeepsakeFrameLayout } from './framesLayout';
 
@@ -43,6 +58,7 @@ const SLOTS = [
 type FrameMedia = (SignedLogMedia | FeedMedia) & {
   thumb_url?: string;
   poster_url?: string | null;
+  mime?: string;
 };
 
 export function KeepsakeFrames({
@@ -60,14 +76,29 @@ export function KeepsakeFrames({
   const { width } = useWindowDimensions();
   const userId = useAuthStore((state) => state.user?.id ?? '');
   const client = useQueryClient();
-  const { data: fromQueryData = [], refetch: refetchLogMedia } = useLogMedia(logId);
+  const { data: fromQueryData = [], refetch: refetchLogMedia } =
+    useLogMedia(logId);
   const queue = useMediaQueue(logId);
   const fromQuery = fromQueryData;
   const media: FrameMedia[] = mediaProp ?? fromQuery;
   const queuedCount = queue.items.length;
   const [viewerIndex, setViewerIndex] = useState<number | null>(null);
   const [pendingDelete, setPendingDelete] = useState<LogMedia | null>(null);
-  const [captionDrafts, setCaptionDrafts] = useState<Record<string, string>>({});
+  const [captionDrafts, setCaptionDrafts] = useState<Record<string, string>>(
+    {},
+  );
+  const [preparing, setPreparing] = useState<{
+    slot: MediaSlot;
+    label: string;
+  } | null>(null);
+  const [preparationFailures, setPreparationFailures] = useState<
+    Partial<
+      Record<
+        MediaSlot,
+        { error: KeepsakeMediaError; selection?: KeepsakeSelection }
+      >
+    >
+  >({});
   const deleteTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const previousQueueCount = useRef(queuedCount);
   const mediaPaths = media.flatMap((item) =>
@@ -124,26 +155,104 @@ export function KeepsakeFrames({
     [],
   );
 
-  async function choose(slot: MediaSlot, source: 'library' | 'camera' = 'library') {
+  async function choose(
+    slot: MediaSlot,
+    source: 'library' | 'camera' = 'library',
+  ) {
+    setPreparing({
+      slot,
+      label: slot === 'concert_video' ? 'Preparing video' : 'Preparing photo',
+    });
     try {
       const processed =
         slot === 'concert_video'
-          ? await pickKeepsakeVideo()
-          : await pickKeepsakePhoto(slot, source);
+          ? await pickKeepsakeVideo((label) => setPreparing({ slot, label }))
+          : await pickKeepsakePhoto(slot, source, (label) =>
+              setPreparing({ slot, label }),
+            );
       if (!processed) return;
       if (!userId) {
-        Alert.alert('Sign in to save keepsakes', 'Your concert log is safe; sign in to add media.');
+        await deleteLocalFiles([
+          processed.localPath,
+          processed.thumbLocalPath,
+          processed.posterLocalPath,
+        ]);
+        Alert.alert(
+          'Sign in to save keepsakes',
+          'Your concert log is safe; sign in to add media.',
+        );
         return;
       }
       queue.enqueue(userId, logId, processed);
+      setPreparationFailures((current) => ({ ...current, [slot]: undefined }));
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : 'Try a different photo or reel.';
+      const message = keepsakeErrorMessage(error);
+      if (error instanceof KeepsakeMediaError) {
+        setPreparationFailures((current) => ({
+          ...current,
+          [slot]: { error, selection: error.selection },
+        }));
+      }
       if (Platform.OS === 'web' && typeof window !== 'undefined') {
         window.alert(`Could not prepare that keepsake\n\n${message}`);
       } else {
         Alert.alert('Could not prepare that keepsake', message);
       }
+    } finally {
+      setPreparing(null);
+    }
+  }
+
+  async function retryPreparation(slot: MediaSlot) {
+    const failure = preparationFailures[slot];
+    if (!failure?.selection) return;
+    setPreparing({
+      slot,
+      label: slot === 'concert_video' ? 'Preparing video' : 'Preparing photo',
+    });
+    try {
+      const processed = await retryKeepsakeSelection(failure.selection, slot);
+      if (!userId) {
+        await deleteLocalFiles([
+          processed.localPath,
+          processed.thumbLocalPath,
+          processed.posterLocalPath,
+        ]);
+        Alert.alert(
+          'Sign in to save keepsakes',
+          'Your concert log is safe; sign in to add media.',
+        );
+        return;
+      }
+      queue.enqueue(userId, logId, processed);
+      await releaseKeepsakeSelection(failure.selection);
+      setPreparationFailures((current) => ({ ...current, [slot]: undefined }));
+    } catch (error) {
+      const mediaError =
+        error instanceof KeepsakeMediaError
+          ? error
+          : new KeepsakeMediaError(
+              slot === 'concert_video' ? 'poster' : 'decode',
+              'Could not prepare this keepsake.',
+              failure.error.context,
+            );
+      mediaError.selection = failure.selection;
+      setPreparationFailures((current) => ({
+        ...current,
+        [slot]: { error: mediaError, selection: failure.selection },
+      }));
+      if (Platform.OS === 'web' && typeof window !== 'undefined') {
+        window.alert(
+          `Could not prepare that keepsake\n\n${keepsakeErrorMessage(mediaError)}`,
+        );
+      } else {
+        Alert.alert(
+          'Could not prepare that keepsake',
+          keepsakeErrorMessage(mediaError),
+        );
+      }
+    } finally {
+      setPreparing(null);
     }
   }
 
@@ -207,7 +316,10 @@ export function KeepsakeFrames({
     }
   }
 
-  const frameWidth = Math.min(112, (width - spacing.xl * 2 - spacing.md * 2) / 3);
+  const frameWidth = Math.min(
+    112,
+    (width - spacing.xl * 2 - spacing.md * 2) / 3,
+  );
   const ownerMode = mode === 'edit';
   const [first, second, third] = orderedMedia;
 
@@ -218,6 +330,7 @@ export function KeepsakeFrames({
           {SLOTS.map(({ slot, label }) => {
             const item = displayedMedia.find((entry) => entry.slot === slot);
             const pending = queue.items.find((entry) => entry.slot === slot);
+            const preparationFailure = preparationFailures[slot];
             return (
               <View key={slot} style={{ width: frameWidth }}>
                 {item ? (
@@ -239,7 +352,10 @@ export function KeepsakeFrames({
                   >
                     <Plus size={18} color={colors.inkMuted} />
                     <SlotIcon slot={slot} size={16} color={colors.inkMuted} />
-                    <Text variant="mono" style={{ color: colors.inkMuted, fontSize: 9 }}>
+                    <Text
+                      variant="mono"
+                      style={{ color: colors.inkMuted, fontSize: 9 }}
+                    >
                       {label}
                     </Text>
                   </Pressable>
@@ -252,7 +368,10 @@ export function KeepsakeFrames({
                         accessibilityLabel="Choose a concert video"
                         onPress={() => void choose(slot)}
                       >
-                        <Text variant="mono" style={[styles.actionText, { color: colors.accent }]}>
+                        <Text
+                          variant="mono"
+                          style={[styles.actionText, { color: colors.accent }]}
+                        >
                           {item ? 'REPLACE' : 'CHOOSE VIDEO'}
                         </Text>
                       </Pressable>
@@ -263,7 +382,13 @@ export function KeepsakeFrames({
                           accessibilityLabel={`${item ? 'Replace' : 'Add'} ${label.toLowerCase()} from library`}
                           onPress={() => void choose(slot, 'library')}
                         >
-                          <Text variant="mono" style={[styles.actionText, { color: colors.accent }]}>
+                          <Text
+                            variant="mono"
+                            style={[
+                              styles.actionText,
+                              { color: colors.accent },
+                            ]}
+                          >
                             {item ? 'REPLACE' : 'LIBRARY'}
                           </Text>
                         </Pressable>
@@ -273,7 +398,13 @@ export function KeepsakeFrames({
                             accessibilityLabel={`Take ${label.toLowerCase()} with camera`}
                             onPress={() => void choose(slot, 'camera')}
                           >
-                            <Text variant="mono" style={[styles.actionText, { color: colors.accent }]}>
+                            <Text
+                              variant="mono"
+                              style={[
+                                styles.actionText,
+                                { color: colors.accent },
+                              ]}
+                            >
                               CAMERA
                             </Text>
                           </Pressable>
@@ -286,7 +417,10 @@ export function KeepsakeFrames({
                         accessibilityLabel={`Remove ${label.toLowerCase()}`}
                         onPress={() => scheduleDelete(item)}
                       >
-                        <Text variant="mono" style={[styles.actionText, { color: colors.accent }]}>
+                        <Text
+                          variant="mono"
+                          style={[styles.actionText, { color: colors.accent }]}
+                        >
                           REMOVE
                         </Text>
                       </Pressable>
@@ -294,20 +428,60 @@ export function KeepsakeFrames({
                   </View>
                 ) : null}
                 {pending ? (
-                  <Text variant="mono" style={[styles.uploadStamp, { color: colors.accent }]}>
+                  <Text
+                    variant="mono"
+                    style={[styles.uploadStamp, { color: colors.accent }]}
+                  >
                     {pending.status === 'failed'
                       ? 'UPLOAD FAILED'
                       : queue.isOffline
                         ? 'PAUSED · OFFLINE'
-                      : `${pending.status === 'uploading' ? 'UPLOADING' : 'WAITING'} ${pending.progress}%`}
+                        : `${pending.status === 'uploading' ? 'UPLOADING' : 'WAITING'} ${pending.progress}%`}
                   </Text>
+                ) : null}
+                {preparing?.slot === slot ? (
+                  <Text
+                    accessibilityLiveRegion="polite"
+                    variant="mono"
+                    style={[styles.uploadStamp, { color: colors.accent }]}
+                  >
+                    {preparing.label}
+                  </Text>
+                ) : null}
+                {preparationFailure ? (
+                  <View>
+                    <Text
+                      variant="caption"
+                      style={[styles.failureText, { color: colors.dangerText }]}
+                    >
+                      {preparationFailure.error.message} ·{' '}
+                      {preparationFailure.error.code}
+                    </Text>
+                    {preparationFailure.selection ? (
+                      <Pressable
+                        accessibilityRole="button"
+                        accessibilityLabel={`Retry preparing ${label.toLowerCase()} from the same file`}
+                        onPress={() => void retryPreparation(slot)}
+                      >
+                        <Text
+                          variant="mono"
+                          style={[styles.retryText, { color: colors.accent }]}
+                        >
+                          RETRY SAME FILE
+                        </Text>
+                      </Pressable>
+                    ) : null}
+                  </View>
                 ) : null}
                 {item ? (
                   <TextInput
                     accessibilityLabel={`Caption for ${label.toLowerCase()}`}
                     value={captionDrafts[slot] ?? item.caption ?? ''}
                     onChangeText={(value) =>
-                      setCaptionDrafts((drafts) => ({ ...drafts, [slot]: value }))
+                      setCaptionDrafts((drafts) => ({
+                        ...drafts,
+                        [slot]: value,
+                      }))
                     }
                     onEndEditing={(event) =>
                       saveCaption(slot, item, event.nativeEvent.text)
@@ -326,13 +500,37 @@ export function KeepsakeFrames({
                   />
                 ) : null}
                 {pending?.status === 'failed' ? (
-                  <Pressable onPress={() => queue.retry(pending.id)}>
-                    <Text variant="mono" style={[styles.retryText, { color: colors.accent }]}>RETRY</Text>
-                  </Pressable>
+                  <View>
+                    {pending.error ? (
+                      <Text
+                        variant="caption"
+                        style={[
+                          styles.failureText,
+                          { color: colors.dangerText },
+                        ]}
+                      >
+                        {pending.error}
+                        {pending.errorCode ? ` · ${pending.errorCode}` : ''}
+                      </Text>
+                    ) : null}
+                    <Pressable onPress={() => queue.retry(pending.id)}>
+                      <Text
+                        variant="mono"
+                        style={[styles.retryText, { color: colors.accent }]}
+                      >
+                        RETRY
+                      </Text>
+                    </Pressable>
+                  </View>
                 ) : null}
                 {pending && pending.status !== 'failed' ? (
                   <Pressable onPress={() => queue.cancel(pending.id)}>
-                    <Text variant="mono" style={[styles.retryText, { color: colors.accent }]}>CANCEL</Text>
+                    <Text
+                      variant="mono"
+                      style={[styles.retryText, { color: colors.accent }]}
+                    >
+                      CANCEL
+                    </Text>
                   </Pressable>
                 ) : null}
               </View>
@@ -396,9 +594,13 @@ export function KeepsakeFrames({
 
       {pendingDelete ? (
         <View style={[styles.undoToast, { backgroundColor: colors.ink }]}>
-          <Text variant="mono" style={{ color: colors.surface }}>Keepsake removed soon</Text>
+          <Text variant="mono" style={{ color: colors.surface }}>
+            Keepsake removed soon
+          </Text>
           <Pressable onPress={undoDelete}>
-            <Text variant="mono" style={{ color: colors.accentInk }}>UNDO</Text>
+            <Text variant="mono" style={{ color: colors.accentInk }}>
+              UNDO
+            </Text>
           </Pressable>
         </View>
       ) : null}
@@ -411,6 +613,7 @@ export function KeepsakeFrames({
           slot: item.slot,
           kind: item.kind,
           storage_path: item.storage_path,
+          poster_url: item.poster_url ?? null,
           width: item.width,
           height: item.height,
           duration_ms: item.duration_ms,
@@ -420,7 +623,9 @@ export function KeepsakeFrames({
         isOwner={ownerMode}
         onDismiss={() => setViewerIndex(null)}
         onDelete={(mediaId) => {
-          const item = media.find((entry) => 'id' in entry && entry.id === mediaId);
+          const item = media.find(
+            (entry) => 'id' in entry && entry.id === mediaId,
+          );
           if (item) scheduleDelete(item);
           setViewerIndex(null);
         }}
@@ -449,10 +654,14 @@ function Print({
   const { colors } = useTheme();
   const source =
     item.kind === 'video'
-      ? item.poster_url ?? item.thumb_url
+      ? (item.poster_url ?? item.thumb_url)
       : item.thumb_url;
-  const aspect = item.width > 0 && item.height > 0 ? item.width / item.height : 1;
-  const height = Math.max(large ? 210 : 100, Math.min(width * 1.25, width / aspect));
+  const aspect =
+    item.width > 0 && item.height > 0 ? item.width / item.height : 1;
+  const height = Math.max(
+    large ? 210 : 100,
+    Math.min(width * 1.25, width / aspect),
+  );
   return (
     <Pressable
       accessibilityRole="button"
@@ -498,7 +707,11 @@ function Print({
         </View>
       </View>
       <View style={styles.printCaption}>
-        <Text variant="mono" style={{ color: colors.ink, fontSize: 9 }} numberOfLines={1}>
+        <Text
+          variant="mono"
+          style={{ color: colors.ink, fontSize: 9 }}
+          numberOfLines={1}
+        >
           {SLOTS.find((slot) => slot.slot === item.slot)?.label}
           {item.kind === 'video' && item.duration_ms
             ? ` · ${Math.floor(item.duration_ms / 1000)}s`
@@ -529,7 +742,11 @@ function SlotIcon({
 
 const styles = StyleSheet.create({
   root: { gap: spacing.sm },
-  editRow: { flexDirection: 'row', justifyContent: 'space-between', gap: spacing.sm },
+  editRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: spacing.sm,
+  },
   emptyFrame: {
     alignItems: 'center',
     borderStyle: 'dashed',
@@ -584,11 +801,16 @@ const styles = StyleSheet.create({
   },
   viewLayout: { alignItems: 'center', gap: spacing.sm },
   pairRow: { flexDirection: 'row', gap: spacing.md },
-  threeLayout: { alignItems: 'flex-start', flexDirection: 'row', gap: spacing.md },
+  threeLayout: {
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    gap: spacing.md,
+  },
   smallStack: { flex: 1, gap: spacing.sm },
   caption: { fontSize: 9, marginTop: 3, textAlign: 'center' },
   uploadStamp: { fontSize: 10, textAlign: 'center' },
   retryText: { fontSize: 10, textAlign: 'center' },
+  failureText: { fontSize: 9, lineHeight: 12, textAlign: 'center' },
   undoToast: {
     alignItems: 'center',
     flexDirection: 'row',

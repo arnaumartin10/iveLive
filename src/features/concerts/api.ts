@@ -71,11 +71,11 @@ export async function fetchMyLogs({
   if (cursor) {
     if (isAscending) {
       query = query.or(
-        `event_date.gt.${cursor.event_date},and(event_date.eq.${cursor.event_date},id.gt.${cursor.id})`
+        `event_date.gt.${cursor.event_date},and(event_date.eq.${cursor.event_date},id.gt.${cursor.id})`,
       );
     } else {
       query = query.or(
-        `event_date.lt.${cursor.event_date},and(event_date.eq.${cursor.event_date},id.lt.${cursor.id})`
+        `event_date.lt.${cursor.event_date},and(event_date.eq.${cursor.event_date},id.lt.${cursor.id})`,
       );
     }
   }
@@ -127,7 +127,9 @@ export async function fetchArtistConcertHistory(
   return signConcertMedia(data ?? []);
 }
 
-export async function fetchConcertById(id: string): Promise<ConcertWithRelations> {
+export async function fetchConcertById(
+  id: string,
+): Promise<ConcertWithRelations> {
   const { data, error } = await supabase
     .from('concert_logs')
     .select('*, artist:artists(*), media:log_media(*)')
@@ -141,18 +143,27 @@ export async function fetchConcertById(id: string): Promise<ConcertWithRelations
 }
 
 async function signConcertMedia(
-  concerts: (ConcertWithRelations & { media?: LogMedia[] })[],
+  concerts: (Omit<ConcertWithRelations, 'media'> & {
+    media?: (Omit<LogMedia, 'kind'> & { kind: string })[];
+  })[],
 ): Promise<ConcertWithRelations[]> {
-  const allMedia = concerts.flatMap((concert) => concert.media ?? []);
+  const normalizedConcerts = concerts.map((concert) => ({
+    ...concert,
+    media: (concert.media ?? []).map((media): LogMedia => {
+      if (media.kind !== 'image' && media.kind !== 'video') {
+        throw new Error(`Unsupported keepsake media kind: ${media.kind}`);
+      }
+      return { ...media, kind: media.kind };
+    }),
+  }));
+  const allMedia = normalizedConcerts.flatMap((concert) => concert.media);
   const signedRows = await signMediaRows(allMedia);
   const byId = new Map<string, SignedLogMedia>(
     signedRows.map((media) => [media.id, media]),
   );
-  return concerts.map((concert) => ({
+  return normalizedConcerts.map((concert) => ({
     ...concert,
-    media: (concert.media ?? []).map(
-      (media) => byId.get(media.id) ?? media,
-    ),
+    media: (concert.media ?? []).map((media) => byId.get(media.id) ?? media),
   }));
 }
 
@@ -164,8 +175,10 @@ export async function updateConcert(
     updated_at: new Date().toISOString(),
   };
 
-  if (formData.concert_date !== undefined) updatePayload.event_date = formData.concert_date;
-  if (formData.venue_type !== undefined) updatePayload.venue_type = formData.venue_type;
+  if (formData.concert_date !== undefined)
+    updatePayload.event_date = formData.concert_date;
+  if (formData.venue_type !== undefined)
+    updatePayload.venue_type = formData.venue_type;
   if (formData.venue_name !== undefined) {
     updatePayload.venue_name = formData.venue_name.trim() || null;
   }
@@ -221,9 +234,12 @@ export async function logConcert(
   selectedArtist: Artist,
 ): Promise<ConcertWithRelations> {
   const { data: authData, error: authError } = await supabase.auth.getUser();
-  if (authError) throw new Error(`Could not verify your session: ${authError.message}`);
+  if (authError)
+    throw new Error(`Could not verify your session: ${authError.message}`);
   if (!authData.user) {
-    throw new Error('Your session has expired. Sign in again before saving this show.');
+    throw new Error(
+      'Your session has expired. Sign in again before saving this show.',
+    );
   }
   const userId = authData.user.id;
   let artistId = formData.artist_id;
@@ -262,18 +278,16 @@ export async function logConcert(
 
   const id = Crypto.randomUUID();
   const now = new Date().toISOString();
-  const { error } = await supabase
-    .from('concert_logs')
-    .insert({
-      id,
-      user_id: userId,
-      artist_id: artistId,
-      event_date: formData.concert_date,
-      venue_type: formData.venue_type,
-      venue_name: formData.venue_name || null,
-      review: formData.notes || null,
-      rating: formData.rating ?? null,
-    });
+  const { error } = await supabase.from('concert_logs').insert({
+    id,
+    user_id: userId,
+    artist_id: artistId,
+    event_date: formData.concert_date,
+    venue_type: formData.venue_type,
+    venue_name: formData.venue_name || null,
+    review: formData.notes || null,
+    rating: formData.rating ?? null,
+  });
 
   if (error) throw new Error(error.message);
   return {
@@ -316,7 +330,9 @@ export async function deleteConcert(id: string): Promise<void> {
     .eq('id', id);
   if (error) throw new Error(error.message);
   if (count !== 1) {
-    throw new Error('Could not delete this log. Check that you are signed in as its owner and try again.');
+    throw new Error(
+      'Could not delete this log. Check that you are signed in as its owner and try again.',
+    );
   }
 }
 
@@ -335,7 +351,7 @@ export async function fetchUserGenreStats(
 ): Promise<UserGenreStats[]> {
   const { data, error } = await supabase.rpc('user_genre_stats', {
     p_user: userId,
-    p_year: null,
+    p_year: undefined,
   });
   if (error) throw new Error(error.message);
   return data;
@@ -346,7 +362,7 @@ export async function fetchUserVenueStats(
 ): Promise<UserVenueStats[]> {
   const { data, error } = await supabase.rpc('user_venue_stats', {
     p_user: userId,
-    p_year: null,
+    p_year: undefined,
   });
   if (error) throw new Error(error.message);
   return data;

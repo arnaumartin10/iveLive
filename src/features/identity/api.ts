@@ -15,7 +15,11 @@ type RawRpcResponse = {
   genre_distribution?: Record<string, { count: number; share: number }>;
   // SQL returns era_distribution as a keyed object { "70s": {count, share}, ... }
   era_distribution?: Record<string, { count: number; share: number }>;
-  era_coverage?: { known_artists: number; total_artists: number; percentage: number };
+  era_coverage?: {
+    known_artists: number;
+    total_artists: number;
+    percentage: number;
+  };
   musical_age?: number | null;
   weighted_median_begin_year?: number | null;
   share_of_new_artists?: number;
@@ -32,14 +36,14 @@ type RawRpcResponse = {
 function normalizeResponse(raw: RawRpcResponse): MusicIdentityData {
   // era_distribution: JSONB object → EraDecade array
   const eraObj = raw.era_distribution ?? {};
-  const eraDistribution: MusicIdentityData['era_distribution'] = Object.entries(eraObj).map(
-    ([bucket, entry]) => ({
-      bucket: bucket as MusicIdentityData['era_distribution'][number]['bucket'],
-      decade: null,
-      count: entry.count ?? 0,
-      share: Number(entry.share ?? 0),
-    }),
-  );
+  const eraDistribution: MusicIdentityData['era_distribution'] = Object.entries(
+    eraObj,
+  ).map(([bucket, entry]) => ({
+    bucket: bucket as MusicIdentityData['era_distribution'][number]['bucket'],
+    decade: null,
+    count: entry.count ?? 0,
+    share: Number(entry.share ?? 0),
+  }));
 
   // Derive era_coverage from the distribution if the RPC didn't return it
   const knownEraCount = eraDistribution
@@ -54,17 +58,22 @@ function normalizeResponse(raw: RawRpcResponse): MusicIdentityData {
   };
 
   // genre_distribution: SQL may return it as macro_genre_distribution
-  const genreRaw =
-    raw.genre_distribution ?? raw.macro_genre_distribution ?? {};
-  const genreDistribution: Record<string, { count: number; share: number }> = {};
+  const genreRaw = raw.genre_distribution ?? raw.macro_genre_distribution ?? {};
+  const genreDistribution: Record<string, { count: number; share: number }> =
+    {};
   for (const [key, val] of Object.entries(genreRaw)) {
-    genreDistribution[key] = { count: val.count ?? 0, share: Number(val.share ?? 0) };
+    genreDistribution[key] = {
+      count: val.count ?? 0,
+      share: Number(val.share ?? 0),
+    };
   }
 
   // venue_distribution: normalise share values (SQL returns numeric)
   const venueDistribution: MusicIdentityData['venue_distribution'] = {};
   for (const [key, val] of Object.entries(raw.venue_distribution ?? {})) {
-    (venueDistribution as Record<string, { count: number; share: number }>)[key] = {
+    (venueDistribution as Record<string, { count: number; share: number }>)[
+      key
+    ] = {
       count: val.count ?? 0,
       share: Number(val.share ?? 0),
     };
@@ -102,7 +111,7 @@ export async function fetchMusicIdentity(
 ): Promise<MusicIdentityData> {
   const { data, error } = await supabase.rpc('user_music_identity', {
     p_user: userId,
-    p_year: year ?? null,
+    p_year: year ?? undefined,
   });
   if (error) throw new Error(error.message);
   return normalizeResponse((data ?? {}) as RawRpcResponse);

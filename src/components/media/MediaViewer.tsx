@@ -2,8 +2,10 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Alert,
   FlatList,
+  Linking,
   Modal,
   Pressable,
+  Platform,
   StyleSheet,
   View,
   useWindowDimensions,
@@ -46,6 +48,7 @@ type ViewerMedia = Pick<
   | 'caption'
 > & {
   id?: string;
+  poster_url?: string | null;
 };
 
 const SLOT_NAMES: Record<MediaSlot, string> = {
@@ -89,19 +92,31 @@ export function MediaViewer({
   async function shareCurrent() {
     const item = media[activeIndex];
     if (!item) {
-      Alert.alert('Still getting your keepsake', 'Try sharing again in a moment.');
+      Alert.alert(
+        'Still getting your keepsake',
+        'Try sharing again in a moment.',
+      );
       return;
     }
     const url = signedUrls.data?.[item.storage_path];
     if (!url) {
-      Alert.alert('Still getting your keepsake', 'Try sharing again in a moment.');
+      Alert.alert(
+        'Still getting your keepsake',
+        'Try sharing again in a moment.',
+      );
       return;
     }
     if (!(await Sharing.isAvailableAsync())) {
-      Alert.alert('Sharing is unavailable', 'This device cannot share files right now.');
+      Alert.alert(
+        'Sharing is unavailable',
+        'This device cannot share files right now.',
+      );
       return;
     }
-    const extension = item.kind === 'video' ? 'mp4' : 'jpg';
+    const extension =
+      item.kind === 'video'
+        ? item.storage_path.split('.').pop() || 'mp4'
+        : 'jpg';
     const localFile = new File(
       Paths.cache,
       `keepsake-share-${Crypto.randomUUID()}.${extension}`,
@@ -123,37 +138,45 @@ export function MediaViewer({
   function reportCurrent() {
     const item = media[activeIndex];
     if (!item) return;
-    Alert.alert('Report this keepsake?', 'Let us know if this media should be reviewed.', [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Report',
-        onPress: () => {
-          void submitReport({
-            reportedLog: item.log_id,
-            reason: 'inappropriate',
-            details: `Keepsake slot: ${item.slot}`,
-          }).catch((error: unknown) => {
-            Alert.alert(
-              'Could not send report',
-              error instanceof Error ? error.message : 'Try again.',
-            );
-          });
+    Alert.alert(
+      'Report this keepsake?',
+      'Let us know if this media should be reviewed.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Report',
+          onPress: () => {
+            void submitReport({
+              reportedLog: item.log_id,
+              reason: 'inappropriate',
+              details: `Keepsake slot: ${item.slot}`,
+            }).catch((error: unknown) => {
+              Alert.alert(
+                'Could not send report',
+                error instanceof Error ? error.message : 'Try again.',
+              );
+            });
+          },
         },
-      },
-    ]);
+      ],
+    );
   }
 
   function confirmDelete() {
     const item = media[activeIndex];
     if (!item?.id || !onDelete) return;
-    Alert.alert('Remove this keepsake?', 'The media will be removed from this log.', [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Remove',
-        style: 'destructive',
-        onPress: () => onDelete(item.id!),
-      },
-    ]);
+    Alert.alert(
+      'Remove this keepsake?',
+      'The media will be removed from this log.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Remove',
+          style: 'destructive',
+          onPress: () => onDelete(item.id!),
+        },
+      ],
+    );
   }
 
   return (
@@ -167,7 +190,10 @@ export function MediaViewer({
         setActiveIndex(index);
         if (media.length > 0) {
           requestAnimationFrame(() =>
-            listRef.current?.scrollToOffset({ offset: width * index, animated: false }),
+            listRef.current?.scrollToOffset({
+              offset: width * index,
+              animated: false,
+            }),
           );
         }
       }}
@@ -223,7 +249,10 @@ export function MediaViewer({
           data={media}
           horizontal
           pagingEnabled
-          initialScrollIndex={Math.min(initialIndex, Math.max(media.length - 1, 0))}
+          initialScrollIndex={Math.min(
+            initialIndex,
+            Math.max(media.length - 1, 0),
+          )}
           getItemLayout={(_, index) => ({
             length: width,
             offset: width * index,
@@ -231,7 +260,9 @@ export function MediaViewer({
           })}
           keyExtractor={(item) => `${item.log_id}:${item.slot}`}
           onMomentumScrollEnd={(event) => {
-            setActiveIndex(Math.round(event.nativeEvent.contentOffset.x / width));
+            setActiveIndex(
+              Math.round(event.nativeEvent.contentOffset.x / width),
+            );
           }}
           renderItem={({ item, index }) => (
             <ViewerSlide
@@ -245,7 +276,10 @@ export function MediaViewer({
           )}
         />
         {media[activeIndex]?.caption ? (
-          <Text variant="mono" style={[styles.caption, { color: colors.surface }]}>
+          <Text
+            variant="mono"
+            style={[styles.caption, { color: colors.surface }]}
+          >
             {media[activeIndex]?.caption}
           </Text>
         ) : null}
@@ -274,7 +308,7 @@ function ViewerSlide({
     return (
       <VideoSlide
         url={url}
-        onExpired={onExpired}
+        posterUrl={item.poster_url}
         active={active}
         width={width}
         height={height}
@@ -329,13 +363,13 @@ function ZoomablePhoto({
 
 function VideoSlide({
   url,
-  onExpired,
+  posterUrl,
   active,
   width,
   height,
 }: {
   url?: string;
-  onExpired: () => void;
+  posterUrl?: string | null;
   active: boolean;
   width: number;
   height: number;
@@ -345,21 +379,65 @@ function VideoSlide({
     videoPlayer.muted = true;
   });
   const [muted, setMuted] = useState(true);
+  const [unplayableUrl, setUnplayableUrl] = useState<string | null>(null);
+  const unplayable = Boolean(url) && unplayableUrl === url;
 
   useEffect(() => {
     const subscription = player.addListener('statusChange', ({ status }) => {
-      if (status === 'error') onExpired();
+      if (status === 'error' && url) setUnplayableUrl(url);
     });
     if (!active) player.pause();
     return () => {
       subscription.remove();
       player.pause();
     };
-  }, [active, onExpired, player]);
+  }, [active, player, url]);
+
+  function openOriginal() {
+    if (!url) return;
+    if (Platform.OS === 'web' && typeof window !== 'undefined') {
+      window.open(url, '_blank', 'noopener,noreferrer');
+      return;
+    }
+    void Linking.openURL(url).catch((error: unknown) => {
+      Alert.alert(
+        'Could not open this video',
+        error instanceof Error ? error.message : 'Try downloading it instead.',
+      );
+    });
+  }
 
   return (
     <View style={[styles.slide, { width, height }]}>
-      {url ? (
+      {unplayable ? (
+        <View
+          accessibilityRole="alert"
+          style={[styles.unplayable, { backgroundColor: colors.bgSunken }]}
+        >
+          {posterUrl ? (
+            <Image
+              source={{ uri: posterUrl }}
+              style={styles.fullImage}
+              contentFit="contain"
+            />
+          ) : null}
+          <Text variant="body" weight="semibold" center>
+            This video cannot be played in this browser
+          </Text>
+          <Pressable
+            accessibilityRole="button"
+            onPress={openOriginal}
+            style={[
+              styles.openOriginalButton,
+              { backgroundColor: colors.surface },
+            ]}
+          >
+            <Text variant="label" weight="semibold">
+              Open original / Download
+            </Text>
+          </Pressable>
+        </View>
+      ) : url ? (
         <VideoView
           player={player}
           style={styles.fullImage}
@@ -413,6 +491,20 @@ const styles = StyleSheet.create({
   slide: { alignItems: 'center', justifyContent: 'center' },
   zoomImage: { width: '100%', height: '100%' },
   fullImage: { width: '100%', height: '100%' },
+  unplayable: {
+    alignItems: 'center',
+    flex: 1,
+    gap: spacing.md,
+    justifyContent: 'center',
+    padding: spacing.lg,
+    width: '100%',
+  },
+  openOriginalButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 44,
+    paddingHorizontal: spacing.md,
+  },
   unmuteButton: {
     alignItems: 'center',
     borderWidth: 2,

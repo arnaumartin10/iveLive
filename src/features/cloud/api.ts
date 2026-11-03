@@ -10,9 +10,11 @@ function isCloudLayoutTableUnavailable(error: {
   code?: string;
   message: string;
 }): boolean {
-  return error.code === 'PGRST205' ||
+  return (
+    error.code === 'PGRST205' ||
     (error.code === '42P01' &&
-      error.message.toLowerCase().includes('cloud_layouts'));
+      error.message.toLowerCase().includes('cloud_layouts'))
+  );
 }
 
 function warnCloudLayoutTableUnavailable(): void {
@@ -29,7 +31,7 @@ export async function fetchUserCloudData(
 ) {
   const { data, error } = await supabase.rpc('user_cloud_data', {
     p_user: userId,
-    p_year: year,
+    p_year: year ?? undefined,
   });
   if (error) throw new Error(error.message);
   const normalized = normalizeUserCloudData(data);
