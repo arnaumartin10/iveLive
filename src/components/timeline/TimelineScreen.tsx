@@ -31,6 +31,7 @@ import { Button } from '../../components/ui/Button';
 import { EmptyState } from '../../components/ui/EmptyState';
 import { SegmentedControl } from '../../components/ui/SegmentedControl';
 import { Text } from '../../components/ui/Text';
+import { GenreLabel, VenueLabel } from '../../components/paper/GenreLabel';
 import { Toast } from '../../components/ui/Toast';
 import {
   buildTimelineItems,
@@ -46,6 +47,10 @@ import {
 } from '../../components/timeline';
 import type { ConcertWithRelations } from '../../features/concerts/types';
 import type { VenueType } from '../../features/venues/venueTypes';
+import {
+  MACRO_GENRES,
+  type MacroGenre,
+} from '../../features/genres/macroGenres';
 
 const ORDER_OPTIONS = [
   { label: 'Newest first', value: 'newest' },
@@ -141,8 +146,8 @@ export function TimelineScreen({
       minRating ||
       maxRating ||
       year ||
-      date
-      || onlyMedia
+      date ||
+      onlyMedia
     ) {
       const updates: Partial<TimelineFilterState> = {};
       if (genre || macro) updates.genres = [genre ?? macro!];
@@ -348,7 +353,9 @@ export function TimelineScreen({
             PHOTOS · {mediaCountQuery.data ?? '…'}
           </Text>
           {mediaCountQuery.isError ? (
-            <Text variant="caption" color="danger">Photo count unavailable.</Text>
+            <Text variant="caption" color="danger">
+              Photo count unavailable.
+            </Text>
           ) : null}
         </View>
       </View>
@@ -367,7 +374,11 @@ export function TimelineScreen({
 
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel={filters.onlyMedia ? 'Show all diary entries' : 'Filter diary with media'}
+        accessibilityLabel={
+          filters.onlyMedia
+            ? 'Show all diary entries'
+            : 'Filter diary with media'
+        }
         onPress={() => setFilters({ onlyMedia: !filters.onlyMedia })}
         style={[
           styles.mediaFilterChip,
@@ -405,13 +416,12 @@ export function TimelineScreen({
                 },
               ]}
             >
-              <Text
-                variant="caption"
-                weight="semibold"
-                style={{ color: colors.accent }}
-              >
-                {vt.replace('_', ' ')}
-              </Text>
+              <VenueLabel
+                venue={vt}
+                label={vt.replaceAll('_', ' ')}
+                size="xs"
+                variant="outline"
+              />
               <X size={12} color={colors.accent} />
             </Pressable>
           ))}
@@ -429,13 +439,12 @@ export function TimelineScreen({
                 },
               ]}
             >
-              <Text
-                variant="caption"
-                weight="semibold"
-                style={{ color: colors.accent }}
-              >
-                {g}
-              </Text>
+              <GenreLabel
+                genre={g in MACRO_GENRES ? (g as MacroGenre) : 'other'}
+                label={g.replaceAll('_', ' ')}
+                size="xs"
+                variant="outline"
+              />
               <X size={12} color={colors.accent} />
             </Pressable>
           ))}
@@ -449,7 +458,11 @@ export function TimelineScreen({
                 { backgroundColor: colors.accent, borderColor: colors.accent },
               ]}
             >
-              <Text variant="caption" weight="semibold" style={{ color: colors.accentInk }}>
+              <Text
+                variant="caption"
+                weight="semibold"
+                style={{ color: colors.accentInk }}
+              >
                 with media
               </Text>
               <X size={12} color={colors.accentInk} />

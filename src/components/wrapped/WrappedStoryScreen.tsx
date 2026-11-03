@@ -34,7 +34,7 @@ import {
 import { Avatar } from '../ui/Avatar';
 import { Skeleton } from '../ui/Skeleton';
 import { Text } from '../ui/Text';
-import { Grain, PatternFill } from '../paper';
+import { Grain, GenreLabel, VenueLabel } from '../paper';
 import { useMe } from '../../features/auth/hooks';
 import { useMyLogs } from '../../features/concerts/hooks';
 import {
@@ -52,6 +52,7 @@ import { useTheme } from '../../theme/ThemeProvider';
 import { spacing } from '../../theme/tokens';
 import type { StatsScope } from '../../features/stats/types';
 import type { ConcertWithRelations } from '../../features/concerts/types';
+import type { MacroGenre } from '../../features/genres/macroGenres';
 
 const SLIDE_MS = 6000;
 const WEEKDAYS = [
@@ -130,7 +131,10 @@ function WrappedSlide({
 }) {
   const { colors } = useTheme();
   const { width } = useWindowDimensions();
-  const headingStyle = { color: colors.accentInk, textAlign: 'center' as const };
+  const headingStyle = {
+    color: colors.accentInk,
+    textAlign: 'center' as const,
+  };
   const secondaryStyle = {
     color: colors.inkMuted,
     textAlign: 'center' as const,
@@ -322,23 +326,13 @@ function WrappedSlide({
                 reducedMotion={reducedMotion}
                 style={styles.genreRow}
               >
-                <View
-                  style={[styles.colorDot, { backgroundColor: genre.color }]}
+                <GenreLabel
+                  genre={genre.slug as MacroGenre}
+                  label={`${genre.label} · ${genre.percentage}%`}
+                  size="md"
+                  variant="stamp"
+                  surface="sunken"
                 />
-                <Text
-                  variant="body"
-                  weight="bold"
-                  style={{ color: colors.accentInk, flex: 1 }}
-                >
-                  {genre.label}
-                </Text>
-                <Text
-                  variant="label"
-                  weight="bold"
-                  style={{ color: colors.accentInk }}
-                >
-                  {genre.percentage}%
-                </Text>
               </Entrance>
             ))}
           </View>
@@ -360,7 +354,6 @@ function WrappedSlide({
             />
           </Entrance>
           {data.venueMix.map((venue, index) => {
-            const Icon = venue.icon;
             return (
               <Entrance
                 key={venue.type}
@@ -368,15 +361,14 @@ function WrappedSlide({
                 reducedMotion={reducedMotion}
                 style={styles.venueLine}
               >
-                <Icon size={19} color={venue.color} />
-                <Text
-                  variant="body"
-                  weight="semibold"
-                  style={{ flex: 1, color: colors.accentInk }}
-                >
-                  {venue.label}
-                </Text>
-                <Text variant="caption" style={{ color: colors.accentInk }}>
+                <VenueLabel
+                  venue={venue.type}
+                  label={venue.label}
+                  size="xs"
+                  surface="sunken"
+                  style={{ flex: 1 }}
+                />
+                <Text variant="caption" style={{ color: colors.ink }}>
                   {venue.count} · {venue.percentage}%
                 </Text>
               </Entrance>
@@ -384,9 +376,17 @@ function WrappedSlide({
           })}
           {data.mostVisitedVenue ? (
             <Entrance delay={380} reducedMotion={reducedMotion}>
-              <Text variant="title" style={headingStyle}>
-                Most visited: {data.mostVisitedVenue.name}
-              </Text>
+              <View style={styles.venueLine}>
+                <Text variant="title" style={headingStyle}>
+                  Most visited:
+                </Text>
+                <VenueLabel
+                  venue={data.mostVisitedVenue.type ?? 'other'}
+                  label={data.mostVisitedVenue.name}
+                  size="sm"
+                  surface="sunken"
+                />
+              </View>
             </Entrance>
           ) : null}
         </View>
@@ -488,10 +488,12 @@ function WrappedSlide({
           </Entrance>
           {data.dominantGenre ? (
             <Entrance delay={320} reducedMotion={reducedMotion}>
-              <Text variant="caption" style={secondaryStyle}>
-                {data.dominantGenre.percentage}% of your shows were{' '}
-                {data.dominantGenre.label}.
-              </Text>
+              <GenreLabel
+                genre={data.dominantGenre.slug as MacroGenre}
+                label={`${data.dominantGenre.percentage}% · ${data.dominantGenre.label}`}
+                size="sm"
+                surface="sunken"
+              />
             </Entrance>
           ) : null}
         </View>
@@ -585,7 +587,11 @@ function WrappedSlide({
                 style={styles.badgeChip}
               >
                 <Sparkles size={16} color={colors.accent} />
-                <Text variant="body" weight="bold" style={{ color: colors.accentInk }}>
+                <Text
+                  variant="body"
+                  weight="bold"
+                  style={{ color: colors.accentInk }}
+                >
                   {badge}
                 </Text>
               </Entrance>
@@ -614,11 +620,6 @@ function WrappedSlide({
           <Entrance delay={240} reducedMotion={reducedMotion}>
             <Text variant="title" weight="bold" style={headingStyle}>
               {data.personality.title}
-            </Text>
-          </Entrance>
-          <Entrance delay={320} reducedMotion={reducedMotion}>
-            <Text variant="caption" style={secondaryStyle}>
-              {data.topGenres.map((genre) => genre.label).join('  ·  ')}
             </Text>
           </Entrance>
         </View>
@@ -787,9 +788,6 @@ export function WrappedStoryScreen() {
     !imagesReady;
   const slides = data?.slides ?? [];
   const slide = slides[slideIndex] ?? 'intro';
-  const posterPattern = (['dots', 'stripes', 'checker', 'crosshatch'] as const)[
-    slideIndex % 4
-  ]!;
 
   useEffect(() => {
     let active = true;
@@ -959,14 +957,6 @@ export function WrappedStoryScreen() {
               { backgroundColor: colors.bgSunken },
             ]}
           />
-          <PatternFill
-            pattern={posterPattern}
-            colorA={colors.inkMuted}
-            colorB={colors.bgSunken}
-            width={width}
-            height={height}
-            style={styles.posterPattern}
-          />
           <Grain />
         </Animated.View>
         <View style={[styles.progressRow, { top: insets.top + 10 }]}>
@@ -992,7 +982,10 @@ export function WrappedStoryScreen() {
           >
             <X color={colors.accentInk} size={23} />
           </Pressable>
-          <Text variant="overline"           style={[styles.slideCounter, { color: colors.accentInk }]}>
+          <Text
+            variant="overline"
+            style={[styles.slideCounter, { color: colors.accentInk }]}
+          >
             {String(slideIndex + 1).padStart(2, '0')} /{' '}
             {String(slideCount).padStart(2, '0')}
           </Text>
@@ -1077,7 +1070,11 @@ export function WrappedStoryScreen() {
             ]}
           >
             <Share2 size={17} color={colors.accentInk} />
-            <Text variant="label" weight="bold" style={{ color: colors.accentInk }}>
+            <Text
+              variant="label"
+              weight="bold"
+              style={{ color: colors.accentInk }}
+            >
               {isSharing
                 ? 'Preparing…'
                 : slide === 'outro'
@@ -1101,7 +1098,6 @@ export function WrappedStoryScreen() {
 
 const styles = StyleSheet.create({
   root: { flex: 1, overflow: 'hidden' },
-  posterPattern: { position: 'absolute', top: 0, left: 0, opacity: 0.22 },
   loadingScreen: {
     flex: 1,
     justifyContent: 'center',
@@ -1210,7 +1206,6 @@ const styles = StyleSheet.create({
     minHeight: 34,
     gap: 8,
   },
-  colorDot: { width: 10, height: 10, borderRadius: 5 },
   venueLine: {
     flexDirection: 'row',
     alignItems: 'center',

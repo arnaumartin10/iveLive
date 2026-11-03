@@ -1,24 +1,16 @@
 import { useState } from 'react';
-import {
-  Pressable,
-  StyleSheet,
-  Switch,
-  TextInput,
-  View,
-} from 'react-native';
+import { Pressable, StyleSheet, Switch, TextInput, View } from 'react-native';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { CalendarDays, X } from 'lucide-react-native';
 import { Sheet } from '../ui/Sheet';
 import { Button } from '../ui/Button';
 import { Text } from '../ui/Text';
+import { VenueLabel } from '../paper/GenreLabel';
 import { Toast } from '../ui/Toast';
 import { ArtistSearch } from '../../features/artists/ArtistSearch';
 import { useEnsureArtist } from '../../features/artists/hooks';
 import { CustomArtistForm } from '../../features/artists/CustomArtistForm';
-import {
-  VENUE_TYPE_ORDER,
-  VENUE_TYPES,
-} from '../../features/venues/venueTypes';
+import { VENUE_TYPE_ORDER } from '../../features/venues/venueTypes';
 import { useTheme } from '../../theme/ThemeProvider';
 import { radius, spacing } from '../../theme/tokens';
 import { wishlistEditorSchema } from '../../features/profile/logic';
@@ -237,9 +229,7 @@ export function WishlistEditorSheet({
             <Text variant="caption" color="secondary">
               Date TBD
             </Text>
-            {draft.target_date ? (
-              <X size={15} color={colors.inkMuted} />
-            ) : null}
+            {draft.target_date ? <X size={15} color={colors.inkMuted} /> : null}
           </Pressable>
         )}
 
@@ -265,15 +255,11 @@ export function WishlistEditorSheet({
                   },
                 ]}
               >
-                <Text
-                  variant="caption"
-                  weight={selected ? 'bold' : 'regular'}
-                  style={{
-                    color: selected ? colors.accent : colors.inkMuted,
-                  }}
-                >
-                  {VENUE_TYPES[type].shortLabel}
-                </Text>
+                <VenueLabel
+                  venue={type}
+                  size="xs"
+                  variant={selected ? 'solid' : 'outline'}
+                />
               </Pressable>
             );
           })}
@@ -293,9 +279,7 @@ export function WishlistEditorSheet({
                 styles.option,
                 {
                   borderColor:
-                    draft.priority === priority
-                      ? colors.warning
-                      : colors.line,
+                    draft.priority === priority ? colors.warning : colors.line,
                   backgroundColor:
                     draft.priority === priority
                       ? `${colors.warning}18`

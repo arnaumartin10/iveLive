@@ -48,6 +48,7 @@ describe('Cloud experience components', () => {
     const onClose = jest.fn();
     renderWithTheme(
       <CloudTerritoryCard
+        genre="jazz_blues"
         label="Jazz / Blues"
         unexplored
         discoveries={['Artist A', 'Artist B']}
@@ -66,6 +67,7 @@ describe('Cloud experience components', () => {
   it('shows explored territory details and artist stickers', () => {
     renderWithTheme(
       <CloudTerritoryCard
+        genre="rock"
         label="Rock"
         unexplored={false}
         sharePercent={42}
@@ -73,7 +75,7 @@ describe('Cloud experience components', () => {
         firstSeen="2018-05-01"
         lastSeen="2024-06-02"
         artists={[{ id: 'a1', name: 'Artist One' }]}
-        venues={[{ id: 'festival', label: 'Festival 3' }]}
+        venues={[{ id: 'festival', label: 'Festival 3', venue: 'festival' }]}
         onLogShow={jest.fn()}
         onClose={jest.fn()}
       />,

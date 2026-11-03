@@ -28,7 +28,13 @@ import { EmptyState } from '../../components/ui/EmptyState';
 import { SegmentedControl } from '../../components/ui/SegmentedControl';
 import { Skeleton } from '../../components/ui/Skeleton';
 import { Text } from '../../components/ui/Text';
-import { PatternFill, Stamp, Stub, Ticket } from '../../components/paper';
+import {
+  GenreLabel,
+  Stamp,
+  Stub,
+  Ticket,
+  VenueLabel,
+} from '../../components/paper';
 import { useHomeLocation } from './useHomeLocation';
 import { LocationPreferenceSheet } from './LocationPreferenceSheet';
 import {
@@ -509,13 +515,19 @@ export function HomeHub() {
               All venues
             </Chip>
             {VENUE_TYPE_ORDER.map((type) => (
-              <Chip
+              <Pressable
                 key={type}
-                selected={venueType === type}
+                accessibilityRole="checkbox"
+                accessibilityState={{ checked: venueType === type }}
                 onPress={() => setVenueType(type)}
               >
-                {VENUE_LABELS[type]}
-              </Chip>
+                <VenueLabel
+                  venue={type}
+                  label={VENUE_LABELS[type]}
+                  size="xs"
+                  variant={venueType === type ? 'solid' : 'outline'}
+                />
+              </Pressable>
             ))}
           </ScrollView>
           <ScrollView
@@ -526,14 +538,19 @@ export function HomeHub() {
             <Chip selected={genre === null} onPress={() => setGenre(null)}>
               All genres
             </Chip>
-            {Object.entries(MACRO_GENRES).map(([key, config]) => (
-              <Chip
+            {Object.keys(MACRO_GENRES).map((key) => (
+              <Pressable
                 key={key}
-                selected={genre === key}
+                accessibilityRole="checkbox"
+                accessibilityState={{ checked: genre === key }}
                 onPress={() => setGenre(genre === key ? null : key)}
               >
-                {config.label}
-              </Chip>
+                <GenreLabel
+                  genre={key as keyof typeof MACRO_GENRES}
+                  size="xs"
+                  variant={genre === key ? 'solid' : 'outline'}
+                />
+              </Pressable>
             ))}
           </ScrollView>
           {ratedQuery.isLoading ? <SectionSkeleton /> : null}
@@ -730,14 +747,6 @@ function PosterCard({
         { backgroundColor: colors.surface, borderColor: colors.ink },
       ]}
     >
-      <PatternFill
-        pattern={genre.pattern}
-        colorA={colors.line}
-        colorB={colors.surface}
-        width={138}
-        height={42}
-        style={styles.posterPattern}
-      />
       <Text variant="display" style={styles.posterRank}>
         {String(rank).padStart(2, '0')}
       </Text>
@@ -755,13 +764,11 @@ function PosterCard({
         {artist.name}
       </Text>
       <View style={styles.posterFooter}>
-        <Text
-          variant="overline"
-          numberOfLines={1}
-          style={{ color: colors.inkMuted }}
-        >
-          {genre.label}
-        </Text>
+        <GenreLabel
+          genre={macro as keyof typeof MACRO_GENRES}
+          label={genre.label}
+          size="xs"
+        />
         {delta !== undefined ? (
           <Text variant="caption" weight="bold" color="accent">
             {delta > 0
@@ -925,13 +932,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     padding: spacing.sm,
     width: 148,
-  },
-  posterPattern: {
-    bottom: 0,
-    left: 0,
-    opacity: 0.18,
-    position: 'absolute',
-    right: 0,
   },
   posterRank: { lineHeight: 48 },
   posterName: { marginTop: spacing.xs, minHeight: 34 },

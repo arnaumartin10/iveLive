@@ -26,7 +26,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Mascot, Wordmark } from '../../components/brand';
-import { Grain } from '../../components/paper';
+import { GenreLabel, Grain } from '../../components/paper';
 import { Button } from '../../components/ui/Button';
 import { Text } from '../../components/ui/Text';
 import { MACRO_GENRES } from '../../features/genres/macroGenres';
@@ -264,13 +264,12 @@ export default function WelcomeScreen() {
               />
             </Pressable>
           </AnimatedView>
-          <Text
+          <View
             accessibilityLiveRegion={captionIsLive ? 'polite' : 'none'}
-            variant="mono"
-            style={[styles.caption, { color: colors.accent }]}
+            style={styles.caption}
           >
-            {caption}
-          </Text>
+            <GenreLabel genre={genre} label={caption} size="sm" />
+          </View>
           <Text
             variant="headline"
             center

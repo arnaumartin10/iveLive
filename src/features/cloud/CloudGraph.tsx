@@ -74,12 +74,16 @@ import {
 import { useUserArtistSummary, useUserConcerts } from '../concerts/hooks';
 import { useArtistCard } from '../artists/ArtistCardProvider';
 import { useMe } from '../auth/hooks';
-import { MACRO_GENRES, MACRO_GENRE_ORDER } from '../genres/macroGenres';
+import {
+  MACRO_GENRES,
+  MACRO_GENRE_ORDER,
+  type MacroGenre,
+} from '../genres/macroGenres';
 import { VENUE_TYPES } from '../venues/venueTypes';
 import { useAuthStore } from '../auth/store';
 import { useTheme } from '../../theme/ThemeProvider';
 import { fontFamily } from '../../theme/tokens';
-import { Grain, Stamp } from '../../components/paper';
+import { GenreLabel, Grain, Stamp, VenueLabel } from '../../components/paper';
 import {
   buildAtlasTerritories,
   buildTerritoryOutline,
@@ -3188,12 +3192,31 @@ export function CloudGraph({ userId: propUserId }: { userId?: string } = {}) {
         <View style={styles.legend}>
           {visibleLegends.map((item) => (
             <View key={item.slug} style={styles.legendItem}>
-              <View
-                style={[styles.legendSwatch, { backgroundColor: item.color }]}
-              />
-              <Text variant="caption" color="secondary">
-                {item.label}
-              </Text>
+              {mode === 'genre' && item.slug in MACRO_GENRES ? (
+                <GenreLabel
+                  genre={item.slug as MacroGenre}
+                  label={item.label}
+                  size="xs"
+                />
+              ) : mode === 'venue' && item.slug in VENUE_TYPES ? (
+                <VenueLabel
+                  venue={item.slug as keyof typeof VENUE_TYPES}
+                  label={item.label}
+                  size="xs"
+                />
+              ) : (
+                <>
+                  <View
+                    style={[
+                      styles.legendSwatch,
+                      { backgroundColor: item.color },
+                    ]}
+                  />
+                  <Text variant="caption" color="secondary">
+                    {item.label}
+                  </Text>
+                </>
+              )}
             </View>
           ))}
         </View>
@@ -3215,15 +3238,31 @@ export function CloudGraph({ userId: propUserId }: { userId?: string } = {}) {
           >
             <ArrowLeft color={colors.ink} size={18} />
           </Pressable>
-          <View
-            style={[
-              styles.clusterSwatch,
-              { backgroundColor: selectedHub.color },
-            ]}
-          />
-          <Text variant="caption" weight="semibold">
-            {selectedHub.label} · {selectedHub.count} artists
-          </Text>
+          {mode === 'genre' && selectedHub.slug in MACRO_GENRES ? (
+            <GenreLabel
+              genre={selectedHub.slug as MacroGenre}
+              label={`${selectedHub.label} · ${selectedHub.count} artists`}
+              size="xs"
+            />
+          ) : mode === 'venue' && selectedHub.slug in VENUE_TYPES ? (
+            <VenueLabel
+              venue={selectedHub.slug as keyof typeof VENUE_TYPES}
+              label={`${selectedHub.label} · ${selectedHub.count} artists`}
+              size="xs"
+            />
+          ) : (
+            <>
+              <View
+                style={[
+                  styles.clusterSwatch,
+                  { backgroundColor: selectedHub.color },
+                ]}
+              />
+              <Text variant="caption" weight="semibold">
+                {selectedHub.label} · {selectedHub.count} artists
+              </Text>
+            </>
+          )}
         </View>
       ) : null}
 
@@ -3412,6 +3451,11 @@ export function CloudGraph({ userId: propUserId }: { userId?: string } = {}) {
 
       {selectedTerritory ? (
         <CloudTerritoryCard
+          genre={
+            selectedTerritory.macro_slug in MACRO_GENRES
+              ? (selectedTerritory.macro_slug as MacroGenre)
+              : 'other'
+          }
           label={
             MACRO_GENRES[
               selectedTerritory.macro_slug as keyof typeof MACRO_GENRES
@@ -3434,10 +3478,17 @@ export function CloudGraph({ userId: propUserId }: { userId?: string } = {}) {
             .map(({ id, name }) => ({ id, name }))}
           venues={Object.entries(territoryVenueCounts)
             .filter(([, count]) => (count ?? 0) > 0)
-            .map(([type, count]) => ({
-              id: type,
-              label: `${VENUE_TYPES[type as keyof typeof VENUE_TYPES]?.shortLabel ?? type} ${count}`,
-            }))}
+            .map(([type, count]) => {
+              const venue =
+                type in VENUE_TYPES
+                  ? (type as keyof typeof VENUE_TYPES)
+                  : 'other';
+              return {
+                id: type,
+                venue,
+                label: `${VENUE_TYPES[venue].shortLabel} ${count}`,
+              };
+            })}
           discoveries={[
             ...new Set([
               ...(discoveriesQuery.data?.topRated.map(({ name }) => name) ??

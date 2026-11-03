@@ -14,7 +14,7 @@ import {
 import { MACRO_GENRES } from '../../features/genres/macroGenres';
 import { useTheme } from '../../theme/ThemeProvider';
 import { spacing } from '../../theme/tokens';
-import { PatternFill, Ticket } from '../../components/paper';
+import { GenreLabel, Ticket } from '../../components/paper';
 
 export default function WrappedScreen() {
   const { colors } = useTheme();
@@ -23,14 +23,6 @@ export default function WrappedScreen() {
   const diversityQuery = useDiversity();
   const overview = overviewQuery.data;
   const genres = genresQuery.data ?? [];
-  const heroColors = genres
-    .slice(0, 3)
-    .map(
-      (genre) =>
-        MACRO_GENRES[genre.macro_genre as keyof typeof MACRO_GENRES]?.color ??
-        colors.accent,
-    );
-
   return (
     <View style={[styles.root, { backgroundColor: colors.bg }]}>
       <Pressable
@@ -42,16 +34,12 @@ export default function WrappedScreen() {
         <ChevronLeft size={22} color={colors.ink} />
       </Pressable>
       <ScrollView contentContainerStyle={styles.content}>
-        <Ticket serialNumber="IL-WRAPPED" hasBarcode={false} style={styles.heroTicket}>
+        <Ticket
+          serialNumber="IL-WRAPPED"
+          hasBarcode={false}
+          style={styles.heroTicket}
+        >
           <View style={styles.hero}>
-            <PatternFill
-              pattern={genres[0] ? MACRO_GENRES[genres[0].macro_genre as keyof typeof MACRO_GENRES]?.pattern ?? 'dots' : 'dots'}
-              colorA={heroColors[0] ?? colors.accent}
-              colorB={colors.surface}
-              width={320}
-              height={280}
-              style={styles.heroPattern}
-            />
             <View style={styles.heroContent}>
               <Sparkles size={20} color={colors.accent} />
               <Text variant="caption" weight="bold" color="accent">
@@ -72,13 +60,17 @@ export default function WrappedScreen() {
               <Text variant="label" weight="bold">
                 YOUR SOUND
               </Text>
-              <Text variant="title" weight="bold">
-                {genres[0]
-                  ? (MACRO_GENRES[
-                      genres[0].macro_genre as keyof typeof MACRO_GENRES
-                    ]?.label ?? genres[0].macro_genre)
-                  : 'A sound all your own'}
-              </Text>
+              {genres[0] ? (
+                <GenreLabel
+                  genre={genres[0].macro_genre as keyof typeof MACRO_GENRES}
+                  size="md"
+                  variant="stamp"
+                />
+              ) : (
+                <Text variant="title" weight="bold">
+                  A sound all your own
+                </Text>
+              )}
               <Text variant="body" color="secondary">
                 {genres[0]?.log_count ?? 0} show moments across {genres.length}{' '}
                 genres.
@@ -197,7 +189,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     position: 'relative',
   },
-  heroPattern: { position: 'absolute', top: 0, left: 0, opacity: 0.14 },
   heroContent: { alignItems: 'flex-start', gap: 8, padding: spacing.lg },
   heroNumber: { fontSize: 72, lineHeight: 80 },
   storyCard: { padding: spacing.lg, gap: spacing.md },

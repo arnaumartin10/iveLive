@@ -23,7 +23,7 @@ import Animated, {
 import type { SharedValue } from 'react-native-reanimated';
 import { WizardStepView } from '../../components/log/WizardStepView';
 import { Text } from '../../components/ui/Text';
-import { PatternFill, Stamp } from '../../components/paper';
+import { VenueLabel } from '../../components/paper';
 import { useLogDraft } from '../../features/log/store';
 import {
   VENUE_TYPES,
@@ -38,7 +38,9 @@ const CARD_WIDTH = 220;
 const CARD_HEIGHT = 300;
 const CARD_GAP = 16;
 const CARD_INTERVAL = CARD_WIDTH + CARD_GAP;
-const AnimatedFlashList = Animated.createAnimatedComponent(FlashList<VenueType>);
+const AnimatedFlashList = Animated.createAnimatedComponent(
+  FlashList<VenueType>,
+);
 
 function VenueCard({
   config,
@@ -64,10 +66,20 @@ function VenueCard({
     }
     const distance = Math.abs(index * CARD_INTERVAL - scrollOffset.value);
     return {
-      opacity: interpolate(distance, [0, CARD_INTERVAL], [1, 0.56], Extrapolation.CLAMP),
+      opacity: interpolate(
+        distance,
+        [0, CARD_INTERVAL],
+        [1, 0.56],
+        Extrapolation.CLAMP,
+      ),
       transform: [
         {
-          scale: interpolate(distance, [0, CARD_INTERVAL], [1, 0.88], Extrapolation.CLAMP),
+          scale: interpolate(
+            distance,
+            [0, CARD_INTERVAL],
+            [1, 0.88],
+            Extrapolation.CLAMP,
+          ),
         },
       ],
     };
@@ -79,7 +91,10 @@ function VenueCard({
     <Animated.View
       style={[
         mode === 'reel' ? styles.reelCardWrap : styles.gridCardWrap,
-        { backgroundColor: colors.surface, borderColor: selected ? colors.accent : colors.ink },
+        {
+          backgroundColor: colors.surface,
+          borderColor: selected ? colors.accent : colors.ink,
+        },
         selected && { ...hardShadow.sm },
         animatedStyle,
       ]}
@@ -89,34 +104,39 @@ function VenueCard({
         accessibilityLabel={`${config.label}. ${config.description}`}
         accessibilityState={{ selected }}
         onPress={onPress}
-        style={({ pressed }) => [styles.cardPressable, pressed && styles.pressed]}
+        style={({ pressed }) => [
+          styles.cardPressable,
+          pressed && styles.pressed,
+        ]}
       >
-        <View style={[styles.cardSurface, mode === 'grid' && styles.gridSurface]}>
-          <PatternFill
-            pattern="dots"
-            colorA={config.primaryColor}
-            colorB={colors.surface}
-            width={CARD_WIDTH}
-            height={CARD_HEIGHT}
-            style={styles.cardPattern}
-          />
+        <View
+          style={[styles.cardSurface, mode === 'grid' && styles.gridSurface]}
+        >
           <View style={styles.cardTopRow}>
             <View
               style={[
                 styles.iconDisc,
-                { backgroundColor: colors.surfaceRaised, borderColor: colors.ink },
+                {
+                  backgroundColor: colors.surfaceRaised,
+                  borderColor: colors.ink,
+                },
               ]}
             >
-              <Icon color={config.primaryColor} size={mode === 'reel' ? 48 : 30} strokeWidth={1.7} />
+              <Icon
+                color={config.primaryColor}
+                size={mode === 'reel' ? 48 : 30}
+                strokeWidth={1.7}
+              />
             </View>
-            <Stamp
-              id={`venue-${config.key}`}
-              label={config.shortLabel.toUpperCase()}
-              variant={selected ? 'orange' : 'mauve'}
-              tilt={false}
+            <VenueLabel
+              venue={config.key as VenueType}
+              size={mode === 'reel' ? 'sm' : 'xs'}
+              variant={selected ? 'solid' : 'outline'}
             />
             {selected ? (
-              <View style={[styles.checkMark, { backgroundColor: colors.accent }]}>
+              <View
+                style={[styles.checkMark, { backgroundColor: colors.accent }]}
+              >
                 <Check color={colors.accentInk} size={17} strokeWidth={3} />
               </View>
             ) : null}
@@ -137,8 +157,15 @@ function VenueCard({
               {config.description}
             </Text>
             {mode === 'reel' ? (
-              <Text variant="caption" color="secondary" numberOfLines={2} style={styles.examples}>
-                {config.examples.length ? `e.g. ${config.examples.join(' / ')}` : 'e.g. A unique live music spot'}
+              <Text
+                variant="caption"
+                color="secondary"
+                numberOfLines={2}
+                style={styles.examples}
+              >
+                {config.examples.length
+                  ? `e.g. ${config.examples.join(' / ')}`
+                  : 'e.g. A unique live music spot'}
               </Text>
             ) : null}
           </View>
@@ -192,7 +219,10 @@ export default function StepVenue() {
     const index = VENUE_TYPE_ORDER.indexOf(type);
     selectVenue(type, true);
     if (viewMode === 'reel') {
-      listRef.current?.scrollToOffset({ offset: index * CARD_INTERVAL, animated: !reduceMotion });
+      listRef.current?.scrollToOffset({
+        offset: index * CARD_INTERVAL,
+        animated: !reduceMotion,
+      });
     }
   }
 
@@ -233,7 +263,9 @@ export default function StepVenue() {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.heading}>
-          <Text variant="title" weight="bold">Choose a venue type</Text>
+          <Text variant="title" weight="bold">
+            Choose a venue type
+          </Text>
           <Text color="secondary">Pick the setting that fits the show.</Text>
         </View>
 
@@ -257,26 +289,52 @@ export default function StepVenue() {
           </View>
         )}
 
-        <View style={[styles.viewToggle, { backgroundColor: colors.surfaceRaised }]}>
+        <View
+          style={[styles.viewToggle, { backgroundColor: colors.surfaceRaised }]}
+        >
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Reel view"
             accessibilityState={{ selected: viewMode === 'reel' }}
             onPress={() => setViewMode('reel')}
-            style={[styles.toggleOption, viewMode === 'reel' && { backgroundColor: colors.surface }]}
+            style={[
+              styles.toggleOption,
+              viewMode === 'reel' && { backgroundColor: colors.surface },
+            ]}
           >
-            <GalleryHorizontal color={viewMode === 'reel' ? colors.accent : colors.inkMuted} size={17} />
-            <Text variant="caption" weight="semibold" color={viewMode === 'reel' ? 'primary' : 'secondary'}>Reel</Text>
+            <GalleryHorizontal
+              color={viewMode === 'reel' ? colors.accent : colors.inkMuted}
+              size={17}
+            />
+            <Text
+              variant="caption"
+              weight="semibold"
+              color={viewMode === 'reel' ? 'primary' : 'secondary'}
+            >
+              Reel
+            </Text>
           </Pressable>
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Grid view"
             accessibilityState={{ selected: viewMode === 'grid' }}
             onPress={() => setViewMode('grid')}
-            style={[styles.toggleOption, viewMode === 'grid' && { backgroundColor: colors.surface }]}
+            style={[
+              styles.toggleOption,
+              viewMode === 'grid' && { backgroundColor: colors.surface },
+            ]}
           >
-            <Grid2X2 color={viewMode === 'grid' ? colors.accent : colors.inkMuted} size={17} />
-            <Text variant="caption" weight="semibold" color={viewMode === 'grid' ? 'primary' : 'secondary'}>Grid</Text>
+            <Grid2X2
+              color={viewMode === 'grid' ? colors.accent : colors.inkMuted}
+              size={17}
+            />
+            <Text
+              variant="caption"
+              weight="semibold"
+              color={viewMode === 'grid' ? 'primary' : 'secondary'}
+            >
+              Grid
+            </Text>
           </Pressable>
         </View>
       </ScrollView>
@@ -296,9 +354,17 @@ const styles = StyleSheet.create({
     overflow: 'visible',
   },
   cardPressable: { flex: 1, overflow: 'hidden' },
-  cardSurface: { flex: 1, justifyContent: 'space-between', padding: spacing[5], position: 'relative' },
-  cardPattern: { position: 'absolute', top: 0, left: 0, opacity: 0.12 },
-  cardTopRow: { alignItems: 'flex-start', flexDirection: 'row', justifyContent: 'space-between' },
+  cardSurface: {
+    flex: 1,
+    justifyContent: 'space-between',
+    padding: spacing[5],
+    position: 'relative',
+  },
+  cardTopRow: {
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   iconDisc: {
     alignItems: 'center',
     borderWidth: 1,
@@ -315,7 +381,13 @@ const styles = StyleSheet.create({
   cardCopy: { gap: spacing[2] },
   examples: { paddingTop: spacing[1] },
   separator: { width: CARD_GAP },
-  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing[3], justifyContent: 'center', paddingHorizontal: spacing[4] },
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing[3],
+    justifyContent: 'center',
+    paddingHorizontal: spacing[4],
+  },
   gridCardWrap: {
     borderWidth: 1.5,
     height: 158,

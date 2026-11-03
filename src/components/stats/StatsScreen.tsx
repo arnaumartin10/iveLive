@@ -50,7 +50,7 @@ import { VENUE_TYPES, type VenueType } from '../../features/venues/venueTypes';
 import { useAuthStore } from '../../features/auth/store';
 import { useTheme } from '../../theme/ThemeProvider';
 import { hardShadow, radius, spacing } from '../../theme/tokens';
-import { PatternFill } from '../paper';
+import { GenreLabel, VenueLabel } from '../paper';
 import { useMusicIdentity, IdentitySheet } from '../../features/identity';
 import { useOptionalArtistCard } from '../../features/artists/ArtistCardProvider';
 
@@ -187,18 +187,6 @@ export function StatsScreen() {
     [artistMode, overview],
   );
   const mostSeenArtistId = overview?.top_artists_by_count?.[0]?.artist_id;
-  const heroGenreColors = genres
-    .slice(0, 3)
-    .map(
-      (genre) =>
-        MACRO_GENRES[genre.macro_genre as keyof typeof MACRO_GENRES]?.color ??
-        colors.accent,
-    );
-  const heroColors: [string, string, ...string[]] = [
-    heroGenreColors[0] ?? colors.accent,
-    heroGenreColors[1] ?? colors.accent,
-    heroGenreColors[2] ?? colors.positive,
-  ];
   const genreValues = genres.map((genre) =>
     genreMetric === 'shows' ? genre.log_count : genre.artist_count,
   );
@@ -321,20 +309,6 @@ export function StatsScreen() {
             { backgroundColor: colors.surface, borderColor: colors.ink },
           ]}
         >
-          <PatternFill
-            pattern={
-              genres[0]
-                ? (MACRO_GENRES[
-                    genres[0].macro_genre as keyof typeof MACRO_GENRES
-                  ]?.pattern ?? 'dots')
-                : 'dots'
-            }
-            colorA={heroColors[0] ?? colors.accent}
-            colorB={colors.surface}
-            width={300}
-            height={148}
-            style={styles.heroPattern}
-          />
           <View style={styles.wrappedTopline}>
             <Sparkles size={18} color={colors.accent} />
             <Text variant="caption" weight="bold" color="primary">
@@ -640,16 +614,28 @@ export function StatsScreen() {
                 5★
               </Text>
             </View>
-            <Text variant="caption" color="secondary">
-              Best venue:{' '}
-              {overview.best_rated_venue_type
-                ? `${VENUE_TYPES[overview.best_rated_venue_type.venue_type].shortLabel} · ${overview.best_rated_venue_type.avg_rating}★`
-                : 'Not enough ratings'}{' '}
-              · Best year:{' '}
-              {overview.best_rated_year
-                ? `${overview.best_rated_year.year} · ${overview.best_rated_year.avg_rating}★`
-                : '—'}
-            </Text>
+            <View style={styles.bestStats}>
+              <Text variant="caption" color="secondary">
+                Best venue:
+              </Text>
+              {overview.best_rated_venue_type ? (
+                <VenueLabel
+                  venue={overview.best_rated_venue_type.venue_type}
+                  label={`${VENUE_TYPES[overview.best_rated_venue_type.venue_type].shortLabel} · ${overview.best_rated_venue_type.avg_rating}★`}
+                  size="xs"
+                />
+              ) : (
+                <Text variant="caption" color="secondary">
+                  Not enough ratings
+                </Text>
+              )}
+              <Text variant="caption" color="secondary">
+                · Best year:{' '}
+                {overview.best_rated_year
+                  ? `${overview.best_rated_year.year} · ${overview.best_rated_year.avg_rating}★`
+                  : '—'}
+              </Text>
+            </View>
           </Card>
           <Card style={styles.chartCard}>
             <View style={styles.artistHeader}>
@@ -1018,11 +1004,15 @@ export function StatsScreen() {
                         },
                       ]}
                     />
-                    <Text variant="caption" weight="semibold" numberOfLines={1}>
-                      {MACRO_GENRES[
-                        genre.macro_genre as keyof typeof MACRO_GENRES
-                      ]?.label ?? genre.macro_genre}
-                    </Text>
+                    <GenreLabel
+                      genre={genre.macro_genre as keyof typeof MACRO_GENRES}
+                      label={
+                        MACRO_GENRES[
+                          genre.macro_genre as keyof typeof MACRO_GENRES
+                        ]?.label ?? genre.macro_genre
+                      }
+                      size="xs"
+                    />
                   </View>
                 ))}
               </View>
@@ -1040,11 +1030,15 @@ export function StatsScreen() {
                   <Text variant="label" weight="bold">
                     {String(index + 1).padStart(2, '0')}
                   </Text>
-                  <Text variant="body" weight="semibold" style={styles.flexOne}>
-                    {MACRO_GENRES[
-                      genre.macro_genre as keyof typeof MACRO_GENRES
-                    ]?.label ?? genre.macro_genre}
-                  </Text>
+                  <GenreLabel
+                    genre={genre.macro_genre as keyof typeof MACRO_GENRES}
+                    label={
+                      MACRO_GENRES[
+                        genre.macro_genre as keyof typeof MACRO_GENRES
+                      ]?.label ?? genre.macro_genre
+                    }
+                    size="xs"
+                  />
                   <Text variant="caption" weight="bold">
                     {genrePercentages[index] ?? 0}%
                   </Text>
@@ -1097,20 +1091,13 @@ export function StatsScreen() {
               )}
             />
             {venues.map((venue, index) => {
-              const Icon = VENUE_TYPES[venue.venue_type].icon;
               return (
                 <Pressable
                   key={venue.venue_type}
                   onPress={() => setSelectedVenue(venue.venue_type)}
                   style={styles.venueRow}
                 >
-                  <Icon
-                    size={17}
-                    color={VENUE_TYPES[venue.venue_type].primaryColor}
-                  />
-                  <Text variant="body" weight="semibold" style={styles.flexOne}>
-                    {VENUE_TYPES[venue.venue_type].label}
-                  </Text>
+                  <VenueLabel venue={venue.venue_type} size="xs" />
                   <Text variant="caption" color="secondary">
                     {venue.log_count} · {venuePercentages[index] ?? 0}% ·{' '}
                     {venue.avg_rating == null ? '—' : `${venue.avg_rating}★`}
@@ -1199,14 +1186,7 @@ export function StatsScreen() {
                   <Text variant="caption" color="secondary">
                     {venue.count} shows
                   </Text>
-                  <Text
-                    variant="caption"
-                    style={{
-                      color: VENUE_TYPES[venue.venue_type].primaryColor,
-                    }}
-                  >
-                    {VENUE_TYPES[venue.venue_type].shortLabel}
-                  </Text>
+                  <VenueLabel venue={venue.venue_type} size="xs" />
                 </View>
               ))
             ) : (
@@ -1297,6 +1277,12 @@ export function StatsScreen() {
 }
 
 const styles = StyleSheet.create({
+  bestStats: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+  },
   content: { gap: spacing.lg },
   scopeRow: { gap: 8, paddingVertical: 2 },
   scopeChip: {
@@ -1312,14 +1298,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     overflow: 'hidden',
     gap: 7,
-  },
-  heroPattern: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-    opacity: 0.14,
   },
   wrappedTopline: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   newBadge: {

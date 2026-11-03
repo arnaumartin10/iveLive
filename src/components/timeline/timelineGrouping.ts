@@ -1,4 +1,7 @@
-import { MACRO_GENRES, type MacroGenre } from '../../features/genres/macroGenres';
+import {
+  MACRO_GENRES,
+  type MacroGenre,
+} from '../../features/genres/macroGenres';
 import type { ConcertWithRelations } from '../../features/concerts/types';
 
 export type YearHeaderItem = {
@@ -27,9 +30,7 @@ export type LogTimelineItem = {
 };
 
 export type TimelineItem =
-  | YearHeaderItem
-  | MonthSubheaderItem
-  | LogTimelineItem;
+  YearHeaderItem | MonthSubheaderItem | LogTimelineItem;
 
 const MONTH_NAMES = [
   'January',
@@ -51,7 +52,7 @@ const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 export function getPrimaryGenreInfo(concert: ConcertWithRelations): {
   color: string;
   label: string;
-  slug: string;
+  slug: MacroGenre;
 } {
   const artist = concert.artist;
   const slug =
@@ -61,8 +62,7 @@ export function getPrimaryGenreInfo(concert: ConcertWithRelations): {
       : 'other') ||
     'other';
 
-  const config =
-    MACRO_GENRES[slug as MacroGenre] ?? MACRO_GENRES.other;
+  const config = MACRO_GENRES[slug as MacroGenre] ?? MACRO_GENRES.other;
 
   return {
     color: config.color,

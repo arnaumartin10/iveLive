@@ -4,6 +4,7 @@ import { Button } from '../../components/ui/Button';
 import { Text } from '../../components/ui/Text';
 import { useTheme } from '../../theme/ThemeProvider';
 import { MACRO_GENRES, MACRO_GENRE_ORDER } from '../genres/macroGenres';
+import { GenreLabel } from '../../components/paper/GenreLabel';
 
 export function CloudEmptyWorld({ onStart }: { onStart: () => void }) {
   const { colors } = useTheme();
@@ -39,9 +40,7 @@ export function CloudEmptyWorld({ onStart }: { onStart: () => void }) {
                 { backgroundColor: MACRO_GENRES[slug].color },
               ]}
             />
-            <Text variant="caption" numberOfLines={1}>
-              {MACRO_GENRES[slug].label}
-            </Text>
+            <GenreLabel genre={slug} size="xs" />
             <Text variant="mono" color="secondary">
               UNEXPLORED · {MACRO_GENRES[slug].pattern.toUpperCase()}
             </Text>

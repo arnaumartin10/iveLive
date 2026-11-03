@@ -36,6 +36,7 @@ import { EmptyState } from '../ui/EmptyState';
 import { Skeleton } from '../ui/Skeleton';
 import { SegmentedControl } from '../ui/SegmentedControl';
 import { Text } from '../ui/Text';
+import { GenreLabel } from '../paper/GenreLabel';
 import { useArtistCard } from '../../features/artists/ArtistCardProvider';
 import { fetchArtistById } from '../../features/artists/api';
 import { useAuthStore } from '../../features/auth/store';
@@ -754,22 +755,16 @@ export function ProfileScreen({
                           genre.macro_genre as keyof typeof MACRO_GENRES
                         ];
                       return (
-                        <View
-                          key={genre.macro_genre}
-                          style={[
-                            styles.genreChip,
-                            {
-                              backgroundColor: `${config?.color ?? colors.accent}20`,
-                            },
-                          ]}
-                        >
-                          <Text
-                            variant="caption"
-                            weight="semibold"
-                            style={{ color: config?.color ?? colors.accent }}
-                          >
-                            {config?.label ?? genre.macro_genre}
-                          </Text>
+                        <View key={genre.macro_genre} style={styles.genreChip}>
+                          <GenreLabel
+                            genre={
+                              genre.macro_genre in MACRO_GENRES
+                                ? (genre.macro_genre as keyof typeof MACRO_GENRES)
+                                : 'other'
+                            }
+                            label={config?.label ?? genre.macro_genre}
+                            size="xs"
+                          />
                           <Text variant="caption" color="secondary">
                             {genre.percentage}%
                           </Text>

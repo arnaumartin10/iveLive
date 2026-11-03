@@ -1,6 +1,11 @@
 import { File, Paths } from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
-import { FontWeight, ImageFormat, Skia } from '@shopify/react-native-skia';
+import {
+  FontWeight,
+  ImageFormat,
+  PaintStyle,
+  Skia,
+} from '@shopify/react-native-skia';
 import type { SkCanvas } from '@shopify/react-native-skia';
 import type { WrappedData, WrappedSlideId } from './buildWrappedData';
 import { WRAPPED_SHARE_SIZES } from './shareDimensions';
@@ -9,6 +14,7 @@ import {
   loadMascotStamp,
 } from '../../components/brand/mascotStamp';
 import { RAW } from '../../theme/palette';
+import { drawGenreSwatch } from '../genres/drawGenreSwatch';
 
 export { WRAPPED_SHARE_SIZES } from './shareDimensions';
 
@@ -32,7 +38,11 @@ function fillRect(
   const paint = Skia.Paint();
   paint.setColor(Skia.Color(color));
   paint.setAlphaf(alpha);
-  canvas.drawRect(Skia.XYWHRect(x, y, width, height), paint);
+  try {
+    canvas.drawRect(Skia.XYWHRect(x, y, width, height), paint);
+  } finally {
+    paint.dispose();
+  }
 }
 
 function drawText(
@@ -101,6 +111,101 @@ function drawBar(
   color: string,
 ) {
   fillRect(canvas, x, y, Math.max(3, width), height, color);
+}
+
+function strokeRect(
+  canvas: SkCanvas,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  color: string,
+) {
+  const paint = Skia.Paint();
+  paint.setAntiAlias(true);
+  paint.setColor(Skia.Color(color));
+  paint.setStyle(PaintStyle.Stroke);
+  paint.setStrokeWidth(1.5);
+  try {
+    canvas.drawRect(Skia.XYWHRect(x, y, width, height), paint);
+  } finally {
+    paint.dispose();
+  }
+}
+
+function drawTextPlate(
+  canvas: SkCanvas,
+  label: string,
+  x: number,
+  baseline: number,
+  fontSize: number,
+  maxWidth: number,
+): number {
+  const padding = 12;
+  const labelWidth = Math.min(
+    maxWidth - padding * 2,
+    label.length * fontSize * 0.66,
+  );
+  const plateWidth = labelWidth + padding * 2;
+  const plateHeight = fontSize + 18;
+  const top = baseline - fontSize - 9;
+  fillRect(canvas, x + 3, top + 3, plateWidth, plateHeight, RAW.slate);
+  fillRect(canvas, x, top, plateWidth, plateHeight, RAW.violet);
+  strokeRect(canvas, x, top, plateWidth, plateHeight, RAW.wheat);
+  drawText(
+    canvas,
+    label.toUpperCase(),
+    x + padding,
+    baseline,
+    fontSize,
+    RAW.wheat,
+    FontWeight.Bold,
+    labelWidth,
+  );
+  return plateWidth;
+}
+
+function drawGenrePlate(
+  canvas: SkCanvas,
+  slug: string,
+  label: string,
+  x: number,
+  baseline: number,
+  fontSize: number,
+  maxWidth: number,
+): number {
+  const padding = 12;
+  const swatchSize = Math.min(28, fontSize * 0.6);
+  const labelWidth = Math.min(
+    maxWidth - swatchSize - padding * 3,
+    label.length * fontSize * 0.66,
+  );
+  const plateWidth = labelWidth + swatchSize + padding * 3;
+  const plateHeight = fontSize + 18;
+  const top = baseline - fontSize - 9;
+  fillRect(canvas, x + 3, top + 3, plateWidth, plateHeight, RAW.slate);
+  fillRect(canvas, x, top, plateWidth, plateHeight, RAW.violet);
+  strokeRect(canvas, x, top, plateWidth, plateHeight, RAW.wheat);
+  drawGenreSwatch(
+    canvas,
+    slug,
+    x + padding,
+    baseline - swatchSize - 2,
+    swatchSize,
+    RAW.violet,
+    RAW.wheat,
+  );
+  drawText(
+    canvas,
+    label.toUpperCase(),
+    x + padding * 2 + swatchSize,
+    baseline,
+    fontSize,
+    RAW.wheat,
+    FontWeight.Bold,
+    labelWidth,
+  );
+  return plateWidth;
 }
 
 export async function createWrappedImage(
@@ -206,15 +311,17 @@ export async function createWrappedImage(
       titleColor,
       FontWeight.Normal,
     );
-    drawText(
-      canvas,
-      `Your sound: ${data.topGenres.map((genre) => genre.label).join(' / ') || 'live music'}`,
-      82,
-      1050,
-      30,
-      titleColor,
-      FontWeight.SemiBold,
-    );
+    if (data.topGenres.length) {
+      drawText(canvas, 'YOUR SOUND', 82, 1010, 20, titleColor);
+      let x = 82;
+      data.topGenres.slice(0, 3).forEach((genre) => {
+        x +=
+          drawGenrePlate(canvas, genre.slug, genre.label, x, 1060, 18, 260) +
+          12;
+      });
+    } else {
+      drawText(canvas, 'Live music', 82, 1050, 30, titleColor);
+    }
     drawText(
       canvas,
       data.personality.title,
@@ -379,7 +486,7 @@ export async function createWrappedImage(
         );
         data.topGenres.forEach((genre, index) => {
           const y = 460 + index * 250;
-          drawText(canvas, genre.label, 82, y, 46, titleColor, FontWeight.Bold);
+          drawGenrePlate(canvas, genre.slug, genre.label, 82, y, 46, 850);
           drawText(
             canvas,
             `${genre.percentage}%`,
@@ -411,14 +518,13 @@ export async function createWrappedImage(
         );
         data.venueMix.forEach((venue, index) => {
           const y = 430 + index * 120;
-          drawText(
+          drawTextPlate(
             canvas,
             `${venue.label}  ·  ${venue.count} shows`,
             82,
             y,
             36,
-            titleColor,
-            FontWeight.SemiBold,
+            850,
           );
           drawBar(
             canvas,

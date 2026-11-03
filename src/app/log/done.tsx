@@ -28,7 +28,7 @@ import { Text } from '../../components/ui/Text';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { ShareConcertButton } from '../../components/log/ShareConcertButton';
-import { Stamp, Sticker } from '../../components/paper';
+import { GenreLabel, Stamp, Sticker } from '../../components/paper';
 import { Mascot } from '../../components/brand/Mascot';
 import { isMacroGenre } from '../../components/brand/mascotColors';
 import { useAuthStore } from '../../features/auth/store';
@@ -434,12 +434,20 @@ export default function LogDoneScreen() {
                 />
               </Animated.View>
               <View style={styles.territoryCopy}>
-                <Text variant="label">
-                  {MACRO_GENRES[
-                    discoveredTerritory.macro_slug as keyof typeof MACRO_GENRES
-                  ]?.label ??
-                    discoveredTerritory.macro_slug.replaceAll('_', ' ')}
-                </Text>
+                <GenreLabel
+                  genre={
+                    discoveredTerritory.macro_slug in MACRO_GENRES
+                      ? (discoveredTerritory.macro_slug as keyof typeof MACRO_GENRES)
+                      : 'other'
+                  }
+                  label={
+                    MACRO_GENRES[
+                      discoveredTerritory.macro_slug as keyof typeof MACRO_GENRES
+                    ]?.label ??
+                    discoveredTerritory.macro_slug.replaceAll('_', ' ')
+                  }
+                  size="sm"
+                />
                 <Text variant="caption" color="secondary">
                   Another part of your musical map, printed in.
                 </Text>

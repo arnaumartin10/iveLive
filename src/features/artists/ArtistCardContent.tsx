@@ -43,7 +43,7 @@ import { Avatar } from '../../components/ui/Avatar';
 import { Pill } from '../../components/ui/Pill';
 import { Sheet } from '../../components/ui/Sheet';
 import { Skeleton } from '../../components/ui/Skeleton';
-import { PatternFill } from '../../components/paper';
+import { GenreLabel, VenueLabel } from '../../components/paper';
 import { Mascot } from '../../components/brand/Mascot';
 import { isMacroGenre } from '../../components/brand/mascotColors';
 import type { MacroGenre } from '../genres/macroGenres';
@@ -51,7 +51,7 @@ import { useAuthStore } from '../auth/store';
 import type { ConcertWithRelations } from '../concerts/types';
 import { useLogDraft } from '../log/store';
 import { MACRO_GENRES } from '../genres/macroGenres';
-import { VENUE_TYPES, type VenueType } from '../venues/venueTypes';
+import type { VenueType } from '../venues/venueTypes';
 import {
   useArtist,
   useArtistFriends,
@@ -276,7 +276,6 @@ export function ArtistCardContent({
   const [reportSheetVisible, setReportSheetVisible] = useState(false);
   const [reportDetails, setReportDetails] = useState('');
   const [draftGenres, setDraftGenres] = useState<string[]>([]);
-  const [showHeroOriginal, setShowHeroOriginal] = useState(false);
   const [imageTarget, setImageTarget] = useState<ArtistImageRole | null>(null);
 
   const macroGenres = overrideQuery.data ?? artist?.macro_genres ?? [];
@@ -543,38 +542,16 @@ export function ArtistCardContent({
       >
         <View style={styles.hero}>
           {heroImage ? (
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel={`Press and hold to see the original ${artist.name} photo`}
-              onPressIn={() => setShowHeroOriginal(true)}
-              onPressOut={() => setShowHeroOriginal(false)}
+            <Image
+              accessibilityLabel={`${artist.name} artist banner`}
+              source={{ uri: heroImage }}
+              placeholder={{ blurhash }}
+              placeholderContentFit="cover"
+              cachePolicy="memory-disk"
+              contentFit="cover"
               style={StyleSheet.absoluteFill}
-            >
-              <Image
-                accessibilityLabel={`${artist.name} artist banner`}
-                source={{ uri: heroImage }}
-                placeholder={{ blurhash }}
-                placeholderContentFit="cover"
-                cachePolicy="memory-disk"
-                contentFit="cover"
-                style={StyleSheet.absoluteFill}
-                transition={180}
-              />
-              <PatternFill
-                pattern={
-                  MACRO_GENRES[primaryMacro as keyof typeof MACRO_GENRES]
-                    ?.pattern ?? 'dots'
-                }
-                colorA={genreColor}
-                colorB={colors.surface}
-                width={360}
-                height={218}
-                style={StyleSheet.flatten([
-                  StyleSheet.absoluteFill,
-                  { opacity: showHeroOriginal ? 0 : 0.08 },
-                ])}
-              />
-            </Pressable>
+              transition={180}
+            />
           ) : (
             <View
               style={[
@@ -717,29 +694,14 @@ export function ArtistCardContent({
           <View style={styles.genreHeading}>
             <View style={styles.genrePills}>
               {macroGenres.map((macro) => {
-                const config = MACRO_GENRES[macro as keyof typeof MACRO_GENRES];
-                if (!config) return null;
+                if (!MACRO_GENRES[macro as keyof typeof MACRO_GENRES])
+                  return null;
                 return (
-                  <View
+                  <GenreLabel
                     key={macro}
-                    style={[
-                      styles.macroPill,
-                      { backgroundColor: `${config.color}24` },
-                    ]}
-                  >
-                    <Text
-                      variant="caption"
-                      weight="semibold"
-                      style={{
-                        color:
-                          macro === 'unclassified'
-                            ? colors.inkMuted
-                            : config.color,
-                      }}
-                    >
-                      {config.label}
-                    </Text>
-                  </View>
+                    genre={macro as keyof typeof MACRO_GENRES}
+                    size="md"
+                  />
                 );
               })}
               {!macroGenres.length ? (
@@ -766,17 +728,16 @@ export function ArtistCardContent({
           {artist.genres.length ? (
             <View style={styles.detailTagRow}>
               {artist.genres.slice(0, 4).map((genre) => (
-                <View
+                <GenreLabel
                   key={genre}
-                  style={[
-                    styles.detailTag,
-                    { backgroundColor: colors.surfaceRaised },
-                  ]}
-                >
-                  <Text variant="caption" color="secondary" numberOfLines={1}>
-                    {genre}
-                  </Text>
-                </View>
+                  genre={
+                    genre in MACRO_GENRES
+                      ? (genre as keyof typeof MACRO_GENRES)
+                      : 'other'
+                  }
+                  label={genre}
+                  size="xs"
+                />
               ))}
             </View>
           ) : null}
@@ -843,29 +804,7 @@ export function ArtistCardContent({
             {venueTypes.length ? (
               <View style={styles.venueTypes}>
                 {venueTypes.map((type) => {
-                  const config = VENUE_TYPES[type];
-                  const Icon = config.icon;
-                  return (
-                    <View
-                      key={type}
-                      style={[
-                        styles.venueTypeItem,
-                        { backgroundColor: `${config.primaryColor}20` },
-                      ]}
-                    >
-                      <Icon
-                        size={14}
-                        color={config.primaryColor}
-                        accessibilityLabel={config.label}
-                      />
-                      <Text
-                        variant="caption"
-                        style={{ color: config.primaryColor }}
-                      >
-                        {config.shortLabel}
-                      </Text>
-                    </View>
-                  );
+                  return <VenueLabel key={type} venue={type} size="xs" />;
                 })}
               </View>
             ) : null}
@@ -963,9 +902,7 @@ export function ArtistCardContent({
                           key={venue.venue_type}
                           style={styles.communityVenue}
                         >
-                          <Text variant="caption" weight="semibold">
-                            {VENUE_TYPES[venue.venue_type].shortLabel}
-                          </Text>
+                          <VenueLabel venue={venue.venue_type} size="xs" />
                           <Text variant="mono" color="secondary">
                             {venue.average.toFixed(1)} · {venue.count}
                           </Text>
@@ -1246,7 +1183,7 @@ export function ArtistCardContent({
             Choose up to three genres for your Cloud and Stats.
           </Text>
           {macroOrder.map((macro) => {
-            const config = MACRO_GENRES[macro as keyof typeof MACRO_GENRES];
+            if (!MACRO_GENRES[macro as keyof typeof MACRO_GENRES]) return null;
             const checked = draftGenres.includes(macro);
             return (
               <Pressable
@@ -1256,20 +1193,11 @@ export function ArtistCardContent({
                 onPress={() => toggleDraftGenre(macro)}
                 style={[styles.genreOption, { borderColor: colors.line }]}
               >
-                <View
-                  style={[
-                    styles.macroPill,
-                    { backgroundColor: `${config.color}24` },
-                  ]}
-                >
-                  <Text
-                    variant="caption"
-                    weight="semibold"
-                    style={{ color: config.color }}
-                  >
-                    {config.label}
-                  </Text>
-                </View>
+                <GenreLabel
+                  genre={macro as keyof typeof MACRO_GENRES}
+                  size="sm"
+                  variant={checked ? 'solid' : 'outline'}
+                />
                 {checked ? (
                   <Check size={18} color={colors.accent} />
                 ) : (

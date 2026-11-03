@@ -9,6 +9,7 @@ import { Avatar } from '../../components/ui/Avatar';
 import { MACRO_GENRES } from '../genres/macroGenres';
 import { useTheme } from '../../theme/ThemeProvider';
 import type { SimilarArtistMatch } from './types';
+import { GenreLabel } from '../../components/paper/GenreLabel';
 
 interface DuplicateArtistSheetProps {
   visible: boolean;
@@ -41,7 +42,9 @@ export function DuplicateArtistSheet({
       <View style={styles.container}>
         <View style={styles.headerNotice}>
           <Text variant="body" color="secondary">
-            We found {matches.length === 1 ? 'an artist' : `${matches.length} artists`} with a similar name to &ldquo;
+            We found{' '}
+            {matches.length === 1 ? 'an artist' : `${matches.length} artists`}{' '}
+            with a similar name to &ldquo;
             <Text variant="body" weight="bold">
               {searchedName}
             </Text>
@@ -118,20 +121,11 @@ export function DuplicateArtistSheet({
                           MACRO_GENRES[macro as keyof typeof MACRO_GENRES];
                         if (!config) return null;
                         return (
-                          <View
+                          <GenreLabel
                             key={macro}
-                            style={[
-                              styles.genreTag,
-                              { backgroundColor: `${config.color}22` },
-                            ]}
-                          >
-                            <Text
-                              variant="caption"
-                              style={{ color: config.color, fontSize: 11 }}
-                            >
-                              {config.label}
-                            </Text>
-                          </View>
+                            genre={macro as keyof typeof MACRO_GENRES}
+                            size="xs"
+                          />
                         );
                       })}
                     </View>
@@ -155,9 +149,7 @@ export function DuplicateArtistSheet({
           })}
         </ScrollView>
 
-        <View
-          style={[styles.footer, { borderTopColor: colors.line }]}
-        >
+        <View style={[styles.footer, { borderTopColor: colors.line }]}>
           <Button
             label="Create anyway"
             variant="secondary"
@@ -219,11 +211,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 4,
-  },
-  genreTag: {
-    borderRadius: 6,
-    paddingHorizontal: 6,
-    paddingVertical: 1,
   },
   selectIconWrap: {
     alignItems: 'center',

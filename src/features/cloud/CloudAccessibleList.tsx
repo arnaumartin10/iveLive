@@ -1,7 +1,8 @@
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Text } from '../../components/ui/Text';
-import { MACRO_GENRES, MACRO_GENRE_ORDER } from '../genres/macroGenres';
+import { MACRO_GENRE_ORDER } from '../genres/macroGenres';
 import type { CloudArtistData } from './types';
+import { GenreLabel } from '../../components/paper/GenreLabel';
 
 type CloudAccessibleListProps = {
   artists: CloudArtistData[];
@@ -26,19 +27,17 @@ export function CloudAccessibleList({ artists }: CloudAccessibleListProps) {
       contentContainerStyle={styles.content}
     >
       {MACRO_GENRE_ORDER.map((slug) => {
-        const territory = MACRO_GENRES[slug];
         const members = (groupedArtists.get(slug) ?? []).sort((a, b) =>
           a.name.localeCompare(b.name),
         );
         return (
-          <View
-            key={slug}
-            accessibilityRole="summary"
-            style={styles.territory}
-          >
-            <Text accessibilityRole="header" variant="label" weight="bold">
-              {territory.label} · {members.length} artists
-            </Text>
+          <View key={slug} accessibilityRole="summary" style={styles.territory}>
+            <View style={styles.territoryHeading}>
+              <GenreLabel genre={slug} size="sm" />
+              <Text variant="caption" color="secondary">
+                {members.length} artists
+              </Text>
+            </View>
             {members.length === 0 ? (
               <Text variant="caption" color="secondary">
                 Unexplored
@@ -75,6 +74,12 @@ const styles = StyleSheet.create({
   scroll: { maxHeight: 520 },
   content: { gap: 12, paddingVertical: 6 },
   territory: { gap: 7, padding: 12, borderWidth: 1 },
+  territoryHeading: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
   artist: {
     alignItems: 'center',
     flexDirection: 'row',

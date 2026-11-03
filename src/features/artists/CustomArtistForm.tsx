@@ -18,8 +18,8 @@ import { customArtistFormSchema, type CustomArtistFormData } from './schemas';
 import { MACRO_GENRES, MACRO_GENRE_ORDER } from '../genres/macroGenres';
 import { Avatar } from '../../components/ui/Avatar';
 import { Button } from '../../components/ui/Button';
-import { Chip } from '../../components/ui/Chip';
 import { Text } from '../../components/ui/Text';
+import { GenreLabel } from '../../components/paper/GenreLabel';
 import { DuplicateArtistSheet } from './DuplicateArtistSheet';
 import { findSimilarArtists } from './api';
 import { useAuthStore } from '../auth/store';
@@ -81,16 +81,18 @@ export function CustomArtistForm({
 
   const [tagInput, setTagInput] = useState('');
   const [tagError, setTagError] = useState('');
-  const [duplicateMatches, setDuplicateMatches] = useState<SimilarArtistMatch[]>([]);
+  const [duplicateMatches, setDuplicateMatches] = useState<
+    SimilarArtistMatch[]
+  >([]);
   const [showDuplicateSheet, setShowDuplicateSheet] = useState(false);
   const [isCheckingDuplicates, setIsCheckingDuplicates] = useState(false);
-  const [pendingFormData, setPendingFormData] = useState<CustomArtistFormData | null>(
-    null,
-  );
+  const [pendingFormData, setPendingFormData] =
+    useState<CustomArtistFormData | null>(null);
 
   async function handlePickPhoto() {
     try {
-      const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      const permission =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (!permission.granted) {
         Alert.alert(
           'Photo Library Access Required',
@@ -213,7 +215,9 @@ export function CustomArtistForm({
           },
           userId: user.id,
         });
-        void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        void Haptics.notificationAsync(
+          Haptics.NotificationFeedbackType.Success,
+        );
         onSuccess(updated);
       } else {
         const created = await createMutation.mutateAsync({
@@ -225,7 +229,9 @@ export function CustomArtistForm({
           },
           userId: user.id,
         });
-        void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        void Haptics.notificationAsync(
+          Haptics.NotificationFeedbackType.Success,
+        );
         onSuccess(created);
       }
     } catch (cause) {
@@ -244,7 +250,9 @@ export function CustomArtistForm({
   }
 
   const isSubmitting =
-    createMutation.isPending || updateMutation.isPending || isCheckingDuplicates;
+    createMutation.isPending ||
+    updateMutation.isPending ||
+    isCheckingDuplicates;
 
   return (
     <KeyboardAvoidingView
@@ -421,33 +429,22 @@ export function CustomArtistForm({
 
           <View style={styles.chipsWrap}>
             {MACRO_GENRE_ORDER.map((slug) => {
-              const genre = MACRO_GENRES[slug];
               const isSelected = watchedMacroGenres.includes(slug);
 
               return (
-                <Chip
+                <Pressable
                   key={slug}
-                  selected={isSelected}
+                  accessibilityRole="checkbox"
+                  accessibilityState={{ checked: isSelected }}
                   onPress={() => toggleMacroGenre(slug)}
-                  style={
-                    isSelected
-                      ? {
-                          borderColor: genre.color,
-                          backgroundColor: `${genre.color}28`,
-                        }
-                      : undefined
-                  }
+                  style={({ pressed }) => ({ opacity: pressed ? 0.75 : 1 })}
                 >
-                  <Text
-                    variant="caption"
-                    weight={isSelected ? 'bold' : 'regular'}
-                    style={{
-                      color: isSelected ? genre.color : colors.ink,
-                    }}
-                  >
-                    {genre.label}
-                  </Text>
-                </Chip>
+                  <GenreLabel
+                    genre={slug}
+                    size="xs"
+                    variant={isSelected ? 'solid' : 'outline'}
+                  />
+                </Pressable>
               );
             })}
           </View>
@@ -542,7 +539,8 @@ export function CustomArtistForm({
             </Text>
           ) : null}
           <Text variant="caption" color="secondary">
-            Free-text tags that match no macro rule will fall into &ldquo;other&rdquo;.
+            Free-text tags that match no macro rule will fall into
+            &ldquo;other&rdquo;.
           </Text>
         </View>
 

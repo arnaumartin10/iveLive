@@ -8,4 +8,5 @@ export * from './Sticker';
 export * from './Label';
 export * from './Marquee';
 export * from './PatternFill';
+export * from './GenreLabel';
 export * from './Grain';

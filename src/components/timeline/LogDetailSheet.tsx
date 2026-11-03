@@ -16,6 +16,7 @@ import { radius, spacing } from '../../theme/tokens';
 import { Avatar } from '../ui/Avatar';
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
+import { GenreLabel } from '../paper/GenreLabel';
 import { Pill } from '../ui/Pill';
 import { Sheet } from '../ui/Sheet';
 import { StarRating } from '../ui/StarRating';
@@ -170,23 +171,11 @@ export function LogDetailSheet({
               {artistName}
             </Text>
             <View style={styles.genreBadgeWrap}>
-              <View
-                style={[
-                  styles.genreBadge,
-                  {
-                    backgroundColor: `${genreInfo.color}20`,
-                    borderColor: `${genreInfo.color}60`,
-                  },
-                ]}
-              >
-                <Text
-                  variant="caption"
-                  weight="bold"
-                  style={{ color: genreInfo.color, fontSize: 11 }}
-                >
-                  {genreInfo.label}
-                </Text>
-              </View>
+              <GenreLabel
+                genre={genreInfo.slug}
+                label={genreInfo.label}
+                size="xs"
+              />
             </View>
           </View>
         </Pressable>
@@ -346,12 +335,6 @@ const styles = StyleSheet.create({
   },
   genreBadgeWrap: {
     flexDirection: 'row',
-  },
-  genreBadge: {
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: radius.pill,
-    borderWidth: 1,
   },
   infoCard: {
     padding: spacing.md,

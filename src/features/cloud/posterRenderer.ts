@@ -22,6 +22,8 @@ import {
 } from './poster';
 import type { AtlasTerritory } from './atlas';
 import type { CloudArtistNode } from './simulation';
+import { RAW } from '../../theme/palette';
+import { drawGenreSwatch } from '../genres/drawGenreSwatch';
 
 export type AtlasPosterStats = {
   shows: number;
@@ -117,6 +119,60 @@ function fitLabel(value: string, maxWidth: number, font: SkFont): string {
   while (label.length > 1 && font.measureText(`${label}…`).width > maxWidth)
     label = label.slice(0, -1);
   return `${label}…`;
+}
+
+function drawPlateLabel(
+  canvas: SkCanvas,
+  value: string,
+  slug: string,
+  x: number,
+  baseline: number,
+  font: SkFont,
+  fontSize: number,
+  centered = false,
+  maxWidth = Infinity,
+) {
+  const paddingX = Math.max(5, fontSize * 0.45);
+  const paddingY = Math.max(3, fontSize * 0.3);
+  const swatchSize = Math.max(8, fontSize * 0.9);
+  const gap = Math.max(3, fontSize * 0.25);
+  const textWidth = Math.max(1, maxWidth - paddingX * 2 - swatchSize - gap);
+  const label = fitLabel(value, textWidth, font);
+  const width = font.measureText(label).width + paddingX * 2 + swatchSize + gap;
+  const height = fontSize + paddingY * 2;
+  const left = centered ? x - width / 2 : x;
+  const top = baseline - fontSize - paddingY;
+  const shadow = makePaint(RAW.slate);
+  const plate = makePaint(RAW.violet);
+  const keyline = makePaint(RAW.wheat, 1, Math.max(1, fontSize * 0.06));
+  const labelInk = makePaint(RAW.wheat);
+  try {
+    canvas.drawRect(Skia.XYWHRect(left + 2, top + 2, width, height), shadow);
+    canvas.drawRect(Skia.XYWHRect(left, top, width, height), plate);
+    canvas.drawRect(Skia.XYWHRect(left, top, width, height), keyline);
+    drawGenreSwatch(
+      canvas,
+      slug,
+      left + paddingX,
+      top + (height - swatchSize) / 2,
+      swatchSize,
+      RAW.violet,
+      RAW.wheat,
+    );
+    text(
+      canvas,
+      label,
+      left + paddingX + swatchSize + gap,
+      baseline,
+      font,
+      labelInk,
+    );
+  } finally {
+    shadow.dispose();
+    plate.dispose();
+    keyline.dispose();
+    labelInk.dispose();
+  }
 }
 
 function posterBounds(request: AtlasPosterRequest) {
@@ -245,8 +301,10 @@ async function drawPoster(
   const layout = calculatePosterLayout(width, height);
   const titleFont = Skia.Font(titleTypeface, layout.titleSize);
   const subtitleFont = Skia.Font(monoTypeface, layout.subtitleSize);
-  const labelFont = Skia.Font(undefined, Math.max(12, width * 0.012));
-  const smallFont = Skia.Font(monoTypeface, Math.max(10, width * 0.009));
+  const labelFontSize = Math.max(12, width * 0.012);
+  const smallFontSize = Math.max(11, width * 0.009);
+  const labelFont = Skia.Font(undefined, labelFontSize);
+  const smallFont = Skia.Font(monoTypeface, smallFontSize);
   const ink = makePaint(INK);
   const subdued = makePaint(SECONDARY_INK);
   const paper = makePaint(PAPER);
@@ -348,13 +406,14 @@ async function drawPoster(
         hatch,
       );
     }
-    text(
+    drawPlateLabel(
       canvas,
       posterTerritoryLabel(territory.slug).toUpperCase(),
+      territory.slug,
       center.x,
       center.y,
       smallFont,
-      ink,
+      smallFontSize,
       true,
     );
   }
@@ -398,13 +457,14 @@ async function drawPoster(
   }
 
   if (request.variant === 'biggest-territory' && bounds.territory) {
-    text(
+    drawPlateLabel(
       canvas,
       posterTerritoryLabel(bounds.territory.slug).toUpperCase(),
+      bounds.territory.slug,
       map.x + map.width * 0.06,
       map.y + map.height * 0.09,
       labelFont,
-      ink,
+      labelFontSize,
     );
     territoryArtists.slice(0, 5).forEach((artist, index) => {
       text(
@@ -448,13 +508,16 @@ async function drawPoster(
       ? Math.round((shows / request.stats.shows) * 100)
       : 0;
     const label = `${posterTerritoryLabel(territory.slug)} · ${territory.pattern} · ${shows} shows · ${share}%`;
-    text(
+    drawPlateLabel(
       canvas,
-      fitLabel(label, itemWidth * 0.88, smallFont),
+      label,
+      territory.slug,
       itemX + marker * 2.4,
       y + legendRowHeight * 0.58,
       smallFont,
-      ink,
+      smallFontSize,
+      false,
+      itemWidth * 0.88,
     );
   });
 

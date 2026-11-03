@@ -5,6 +5,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { MACRO_GENRES } from '../genres/macroGenres';
 import { useTheme } from '../../theme/ThemeProvider';
 import { Text } from '../../components/ui/Text';
+import { GenreLabel } from '../../components/paper/GenreLabel';
 import type { ArtistSearchResult } from './types';
 
 const blurhash = 'L6PZfSi_.AyE_3t7t7R**0o#DgR4';
@@ -33,7 +34,10 @@ export function ArtistSearchResultRow({
           void Haptics.selectionAsync();
           onPress(result);
         }}
-        style={({ pressed }) => [styles.mainPressable, { opacity: pressed ? 0.72 : 1 }]}
+        style={({ pressed }) => [
+          styles.mainPressable,
+          { opacity: pressed ? 0.72 : 1 },
+        ]}
       >
         {imageUrl ? (
           <Image
@@ -60,11 +64,18 @@ export function ArtistSearchResultRow({
 
         <View style={styles.copy}>
           <View style={styles.nameRow}>
-            <Text numberOfLines={1} variant="label" weight="bold" style={styles.name}>
+            <Text
+              numberOfLines={1}
+              variant="label"
+              weight="bold"
+              style={styles.name}
+            >
               {result.name}
             </Text>
             {result.source === 'manual' ? (
-              <Text variant="caption" color="secondary">Custom</Text>
+              <Text variant="caption" color="secondary">
+                Custom
+              </Text>
             ) : null}
           </View>
           {genres.length ? (
@@ -73,9 +84,11 @@ export function ArtistSearchResultRow({
                 const config = MACRO_GENRES[genre as keyof typeof MACRO_GENRES];
                 if (!config) return null;
                 return (
-                  <View key={genre} style={[styles.genrePill, { backgroundColor: `${config.color}24` }]}>
-                    <Text variant="caption" style={{ color: config.color }}>{config.label}</Text>
-                  </View>
+                  <GenreLabel
+                    key={genre}
+                    genre={genre as keyof typeof MACRO_GENRES}
+                    size="xs"
+                  />
                 );
               })}
             </View>
@@ -106,13 +119,24 @@ const styles = StyleSheet.create({
     minHeight: 76,
     paddingVertical: 10,
   },
-  mainPressable: { alignItems: 'center', flex: 1, flexDirection: 'row', gap: 12, minWidth: 0, paddingVertical: 10 },
-  detailsButton: { alignItems: 'center', height: 40, justifyContent: 'center', width: 40 },
+  mainPressable: {
+    alignItems: 'center',
+    flex: 1,
+    flexDirection: 'row',
+    gap: 12,
+    minWidth: 0,
+    paddingVertical: 10,
+  },
+  detailsButton: {
+    alignItems: 'center',
+    height: 40,
+    justifyContent: 'center',
+    width: 40,
+  },
   image: { borderRadius: 28, height: 56, width: 56 },
   imageFallback: { alignItems: 'center', justifyContent: 'center' },
   copy: { flex: 1, gap: 6, minWidth: 0 },
   nameRow: { alignItems: 'center', flexDirection: 'row', gap: 8 },
   name: { flexShrink: 1 },
   genreRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 5 },
-  genrePill: { borderRadius: 10, paddingHorizontal: 8, paddingVertical: 3 },
 });

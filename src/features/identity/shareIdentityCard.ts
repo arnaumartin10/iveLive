@@ -7,6 +7,7 @@ import * as Sharing from 'expo-sharing';
 import {
   FontWeight,
   ImageFormat,
+  PaintStyle,
   Skia,
   type SkCanvas,
   type SkImage,
@@ -14,6 +15,7 @@ import {
 import type { ProfileBasics } from '../profile/types';
 import type { ComputedIdentity, MusicIdentityData } from './types';
 import { MACRO_GENRES } from '../genres/macroGenres';
+import { drawGenreSwatch } from '../genres/drawGenreSwatch';
 import {
   drawMascotStamp,
   loadMascotStamp,
@@ -98,6 +100,28 @@ function drawRoundRect(
   canvas.drawRRect(rrect, paint);
 }
 
+function drawRoundRectOutline(
+  canvas: SkCanvas,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  r: number,
+  color: string,
+  strokeWidth: number,
+) {
+  const paint = Skia.Paint();
+  paint.setColor(Skia.Color(color));
+  paint.setAntiAlias(true);
+  paint.setStyle(PaintStyle.Stroke);
+  paint.setStrokeWidth(strokeWidth);
+  try {
+    canvas.drawRRect(Skia.RRectXY(Skia.XYWHRect(x, y, w, h), r, r), paint);
+  } finally {
+    paint.dispose();
+  }
+}
+
 export async function shareIdentityCard(
   profile: ProfileBasics,
   rawData: MusicIdentityData,
@@ -118,8 +142,7 @@ export async function shareIdentityCard(
     .slice(0, 3)
     .map(([g]) => MACRO_GENRES[g as keyof typeof MACRO_GENRES]?.label ?? g);
 
-  const inkColors = [RAW.orange, RAW.slate, RAW.mauve];
-  const c1 = inkColors[0]!;
+  const c1 = RAW.orange;
 
   // Warm stock with a restrained halftone field instead of a gradient.
   const bgPaint = Skia.Paint();
@@ -259,29 +282,41 @@ export async function shareIdentityCard(
       .filter(([g]) => g !== 'unclassified' && g !== 'other')
       .sort((a, b) => b[1].count - a[1].count)[i];
     if (!genre) continue;
-    const label =
-      MACRO_GENRES[genre[0] as keyof typeof MACRO_GENRES]?.label ?? genre[0];
-    const color = inkColors[i]!;
-    drawRoundRect(
+    const config = MACRO_GENRES[genre[0] as keyof typeof MACRO_GENRES];
+    const label = config?.label ?? genre[0];
+    const fontSize = 18;
+    const pillWidth = label.length * 12 + 76;
+    drawRoundRect(canvas, pillX + 3, pillY + 3, pillWidth, 50, 4, RAW.slate);
+    drawRoundRect(canvas, pillX, pillY, pillWidth, 50, 4, RAW.violet);
+    drawRoundRectOutline(
       canvas,
       pillX,
       pillY,
-      label.length * 18 + 48,
-      56,
-      28,
-      color,
-      0.22,
+      pillWidth,
+      50,
+      4,
+      RAW.wheat,
+      1.5,
+    );
+    drawGenreSwatch(
+      canvas,
+      genre[0],
+      pillX + 12,
+      pillY + 14,
+      22,
+      RAW.violet,
+      RAW.wheat,
     );
     drawText(
       canvas,
       label.toUpperCase(),
-      pillX + 24,
-      pillY + 37,
-      22,
-      RAW.violet,
+      pillX + 44,
+      pillY + 32,
+      fontSize,
+      RAW.wheat,
       FontWeight.Bold,
     );
-    pillX += label.length * 18 + 64;
+    pillX += pillWidth + 16;
   }
 
   // ── Era label ──────────────────────────────────────────────────────────────

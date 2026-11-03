@@ -13,6 +13,7 @@ import { MACRO_GENRES } from '../../features/genres/macroGenres';
 import { useTheme } from '../../theme/ThemeProvider';
 import { hardShadow, radius } from '../../theme/tokens';
 import { Text } from '../ui/Text';
+import { GenreLabel } from '../paper/GenreLabel';
 import type { ProfilePick } from '../../features/profile/types';
 
 export function PickRow({
@@ -133,9 +134,23 @@ export function PickRow({
               <Text variant="caption" weight="bold" numberOfLines={2}>
                 {pick?.name ?? 'Add an artist'}
               </Text>
-              <Text variant="overline" color="secondary" numberOfLines={1}>
-                {pick ? macroLabel : 'Your list'}
-              </Text>
+              {pick ? (
+                <GenreLabel
+                  genre={
+                    macro in MACRO_GENRES
+                      ? (macro as keyof typeof MACRO_GENRES)
+                      : 'other'
+                  }
+                  label={macroLabel}
+                  size="xs"
+                  variant="outline"
+                  surface="surface"
+                />
+              ) : (
+                <Text variant="overline" color="secondary" numberOfLines={1}>
+                  Your list
+                </Text>
+              )}
             </View>
           </Pressable>
         </Animated.View>

@@ -37,13 +37,19 @@ import {
   MACRO_GENRE_ORDER,
   MACRO_GENRES,
 } from '../../features/genres/macroGenres';
+import type { LabelSurface } from '../../features/genres/labelColors';
 import {
   VENUE_TYPE_ORDER,
   VENUE_TYPES,
 } from '../../features/venues/venueTypes';
 import { useTheme } from '../../theme/ThemeProvider';
 import { RAW, mix } from '../../theme/palette';
-import { spacing, hardShadow } from '../../theme/tokens';
+import {
+  spacing,
+  hardShadow,
+  colors as themeColors,
+  type ColorScheme,
+} from '../../theme/tokens';
 import {
   Avatar,
   Button,
@@ -69,12 +75,23 @@ import {
   Label,
   Marquee,
   PatternFill,
+  GenreLabel,
   Grain,
 } from '../../components/paper';
 
 const themeOptions = [
   { label: 'Paper (Light)', value: 'light' },
   { label: 'Night Shift', value: 'dark' },
+];
+const labelThemeOptions = [
+  { label: 'Paper', value: 'light' },
+  { label: 'Night Shift', value: 'dark' },
+];
+const labelSurfaceOptions = [
+  { label: 'Page', value: 'bg' },
+  { label: 'Surface', value: 'surface' },
+  { label: 'Raised', value: 'surfaceRaised' },
+  { label: 'Sunken', value: 'sunken' },
 ];
 
 function BrandSection({
@@ -153,6 +170,11 @@ function ComponentsPreview() {
   const [toastVisible, setToastVisible] = useState(false);
   const [rating, setRating] = useState(4.5);
   const [selectedChip, setSelectedChip] = useState('Rock');
+  const [labelScheme, setLabelScheme] = useState<ColorScheme>(scheme);
+  const [labelSurface, setLabelSurface] = useState<LabelSurface>('surface');
+  const labelTheme = themeColors[labelScheme];
+  const labelSurfaceColor =
+    labelSurface === 'sunken' ? labelTheme.bgSunken : labelTheme[labelSurface];
 
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.bg }]}>
@@ -456,9 +478,60 @@ function ComponentsPreview() {
           </View>
         </BrandSection>
 
+        <BrandSection
+          title="05. Genre label contrast matrix"
+          subtitle="15 GENRES · 2 THEMES · 3 SIZES · 3 VARIANTS · 4 SURFACES"
+        >
+          <SegmentedControl
+            options={labelThemeOptions}
+            value={labelScheme}
+            onChange={(value) => setLabelScheme(value as ColorScheme)}
+          />
+          <SegmentedControl
+            options={labelSurfaceOptions}
+            value={labelSurface}
+            onChange={(value) => setLabelSurface(value as LabelSurface)}
+          />
+          <View
+            style={[
+              styles.labelMatrix,
+              {
+                backgroundColor: labelSurfaceColor,
+                borderColor: labelTheme.ink,
+              },
+            ]}
+          >
+            {([...MACRO_GENRE_ORDER, 'unclassified'] as const).map((slug) => (
+              <View key={slug} style={styles.labelMatrixRow}>
+                <Text
+                  variant="caption"
+                  weight="bold"
+                  style={[styles.labelMatrixName, { color: labelTheme.ink }]}
+                >
+                  {MACRO_GENRES[slug].label}
+                </Text>
+                <View style={styles.labelMatrixCells}>
+                  {(['xs', 'sm', 'md'] as const).flatMap((size) =>
+                    (['solid', 'outline', 'stamp'] as const).map((variant) => (
+                      <GenreLabel
+                        key={`${slug}-${size}-${variant}`}
+                        genre={slug}
+                        size={size}
+                        variant={variant}
+                        surface={labelSurface}
+                        schemeOverride={labelScheme}
+                      />
+                    )),
+                  )}
+                </View>
+              </View>
+            ))}
+          </View>
+        </BrandSection>
+
         {/* 5. VENUE STAMPS */}
         <BrandSection
-          title="05. Venue Stamps"
+          title="06. Venue Stamps"
           subtitle="6 PHYSICAL STAMP SHAPES & GLYPHS"
         >
           <View style={styles.venueGrid}>
@@ -485,7 +558,7 @@ function ComponentsPreview() {
 
         {/* 6. PRIMITIVES */}
         <BrandSection
-          title="06. Core Primitives"
+          title="07. Core Primitives"
           subtitle="BUTTONS ✦ INPUTS ✦ CHIPS ✦ RULES ✦ PANELS"
         >
           <View style={styles.primitiveStack}>
@@ -546,7 +619,7 @@ function ComponentsPreview() {
 
         {/* 7. CUSTOM ICON SET */}
         <BrandSection
-          title="07. Custom Icon Set"
+          title="08. Custom Icon Set"
           subtitle="2.5PX STROKES ✦ SQUARE CAPS ✦ PAPER-CUT GEOMETRY"
         >
           <View style={styles.iconGrid}>
@@ -594,7 +667,7 @@ function ComponentsPreview() {
 
         {/* 8. PHYSICAL MOTION DEMOS */}
         <BrandSection
-          title="08. Physical Motion"
+          title="09. Physical Motion"
           subtitle="TICKER ✦ STAMP IMPACT ✦ MECHANICAL ODOMETER"
         >
           {/* Marquee ticker */}
@@ -608,7 +681,7 @@ function ComponentsPreview() {
 
         {/* Empty state voice showcase */}
         <BrandSection
-          title="09. Voice & Empty State"
+          title="10. Voice & Empty State"
           subtitle="DRY GIG-FLAVORED MICROCOPY"
         >
           <EmptyState
@@ -761,6 +834,25 @@ const styles = StyleSheet.create({
     marginTop: 4,
     fontSize: 10,
     fontWeight: '700',
+  },
+  labelMatrix: {
+    borderWidth: 1.5,
+    gap: 8,
+    padding: 8,
+  },
+  labelMatrixRow: {
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    gap: 6,
+    paddingVertical: 6,
+  },
+  labelMatrixName: {
+    fontSize: 11,
+  },
+  labelMatrixCells: {
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
   },
   venueGrid: {
     flexDirection: 'row',

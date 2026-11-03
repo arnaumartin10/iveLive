@@ -1,10 +1,11 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import {
-  ActivityIndicator,
-  Pressable,
-  StyleSheet,
-  View,
-} from 'react-native';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native';
 import {
   BottomSheetModal,
   BottomSheetScrollView,
@@ -21,7 +22,6 @@ import Animated, {
 import { Text } from '../../components/ui/Text';
 import { useTheme } from '../../theme/ThemeProvider';
 import { radius, spacing, type ThemeColors } from '../../theme/tokens';
-import { PatternFill } from '../../components/paper';
 import { useMusicIdentity } from './hooks';
 import { shareIdentityCard } from './shareIdentityCard';
 import { MIN_SHOWS_FOR_PROTOTYPE } from './logic';
@@ -111,7 +111,10 @@ function TraitChip({ label, color }: { label: string; color: string }) {
         { backgroundColor: colors.surface, borderColor: color },
       ]}
     >
-      <Text style={[styles.traitLabel, { color: colors.ink }]} weight="semibold">
+      <Text
+        style={[styles.traitLabel, { color: colors.ink }]}
+        weight="semibold"
+      >
         {label}
       </Text>
     </View>
@@ -124,7 +127,8 @@ function VenueSplitBar({
   dist: Record<string, { count?: number; share: number }>;
 }) {
   const { colors } = useTheme();
-  const clubShare = (dist.concert_hall_club?.share ?? 0) + (dist.other?.share ?? 0);
+  const clubShare =
+    (dist.concert_hall_club?.share ?? 0) + (dist.other?.share ?? 0);
   const stadiumShare =
     (dist.stadium?.share ?? 0) +
     (dist.indoor_arena?.share ?? 0) +
@@ -146,9 +150,21 @@ function VenueSplitBar({
           Arena / Fest ({stadiumPct}%)
         </Text>
       </View>
-      <View style={[styles.splitBarBg, { backgroundColor: colors.surfaceRaised }]}>
-        <View style={[styles.splitBarFillLeft, { flex: clubPct || 1, backgroundColor: colors.accent }]} />
-        <View style={[styles.splitBarFillRight, { flex: stadiumPct || 1, backgroundColor: colors.positive }]} />
+      <View
+        style={[styles.splitBarBg, { backgroundColor: colors.surfaceRaised }]}
+      >
+        <View
+          style={[
+            styles.splitBarFillLeft,
+            { flex: clubPct || 1, backgroundColor: colors.accent },
+          ]}
+        />
+        <View
+          style={[
+            styles.splitBarFillRight,
+            { flex: stadiumPct || 1, backgroundColor: colors.positive },
+          ]}
+        />
       </View>
     </View>
   );
@@ -165,14 +181,23 @@ function ArtistExtremeCard({
 }) {
   const { colors } = useTheme();
   return (
-    <View style={[styles.extremeCard, { backgroundColor: colors.surfaceRaised, borderColor: colors.line }]}>
+    <View
+      style={[
+        styles.extremeCard,
+        { backgroundColor: colors.surfaceRaised, borderColor: colors.line },
+      ]}
+    >
       <Text variant="caption" color="secondary" style={styles.extremeLabel}>
         {label}
       </Text>
       <Text weight="bold" numberOfLines={1}>
         {name}
       </Text>
-      <Text variant="caption" style={{ color: colors.accent }} weight="semibold">
+      <Text
+        variant="caption"
+        style={{ color: colors.accent }}
+        weight="semibold"
+      >
         Debut: {year}
       </Text>
     </View>
@@ -207,7 +232,10 @@ export function IdentitySheet({
   const [sharing, setSharing] = useState(false);
   const snapPoints = useMemo(() => ['92%'], []);
 
-  const { rawData, computed, isLoading, isError } = useMusicIdentity(undefined, yearOverride);
+  const { rawData, computed, isLoading, isError } = useMusicIdentity(
+    undefined,
+    yearOverride,
+  );
 
   useEffect(() => {
     if (visible) {
@@ -261,18 +289,16 @@ export function IdentitySheet({
             { backgroundColor: colors.surface, borderColor: colors.ink },
           ]}
         >
-          <PatternFill
-            pattern="dots"
-            colorA={prototype?.accentColor ?? colors.accent}
-            colorB={colors.surface}
-            width={380}
-            height={240}
-            style={StyleSheet.absoluteFill}
-          />
           <View style={styles.heroTopActions}>
             <Pressable
               onPress={onDismiss}
-              style={[styles.actionBtn, { backgroundColor: colors.surfaceRaised, borderColor: colors.ink }]}
+              style={[
+                styles.actionBtn,
+                {
+                  backgroundColor: colors.surfaceRaised,
+                  borderColor: colors.ink,
+                },
+              ]}
               accessibilityRole="button"
               accessibilityLabel="Close identity sheet"
             >
@@ -281,7 +307,13 @@ export function IdentitySheet({
             {profile && computed && !isThinData && !sharing && (
               <Pressable
                 onPress={() => void handleShare()}
-                style={[styles.shareBtn, { backgroundColor: colors.surfaceRaised, borderColor: colors.ink }]}
+                style={[
+                  styles.shareBtn,
+                  {
+                    backgroundColor: colors.surfaceRaised,
+                    borderColor: colors.ink,
+                  },
+                ]}
                 accessibilityRole="button"
                 accessibilityLabel="Share your music identity card"
               >
@@ -312,11 +344,17 @@ export function IdentitySheet({
                 </Text>
               </View>
               <Text style={styles.heroTagline} color="secondary">
-                Log at least {MIN_SHOWS_FOR_PROTOTYPE} shows to unlock your concert prototype and musical identity!
+                Log at least {MIN_SHOWS_FOR_PROTOTYPE} shows to unlock your
+                concert prototype and musical identity!
               </Text>
               {/* Progress meter */}
               <View style={styles.progressWrap}>
-                <View style={[styles.progressTrack, { backgroundColor: colors.line }]}>
+                <View
+                  style={[
+                    styles.progressTrack,
+                    { backgroundColor: colors.line },
+                  ]}
+                >
                   <View
                     style={[
                       styles.progressFill,
@@ -346,15 +384,32 @@ export function IdentitySheet({
 
               {/* Musical Age callout */}
               {computed?.musicalAge ? (
-                <View style={[styles.ageCallout, { backgroundColor: colors.surfaceRaised, borderColor: colors.ink }]}>
+                <View
+                  style={[
+                    styles.ageCallout,
+                    {
+                      backgroundColor: colors.surfaceRaised,
+                      borderColor: colors.ink,
+                    },
+                  ]}
+                >
                   <View style={styles.ageTextCol}>
-                    <Text variant="caption" weight="bold" color="secondary" style={styles.ageHeader}>
+                    <Text
+                      variant="caption"
+                      weight="bold"
+                      color="secondary"
+                      style={styles.ageHeader}
+                    >
                       MUSICAL AGE
                     </Text>
                     <Text style={[styles.ageSublabel, { color: colors.ink }]}>
                       {computed.musicalAge.formattedText}
                     </Text>
-                    <Text variant="caption" color="secondary" style={styles.ageExplain}>
+                    <Text
+                      variant="caption"
+                      color="secondary"
+                      style={styles.ageExplain}
+                    >
                       {computed.musicalAge.sublabel}
                     </Text>
                   </View>
@@ -373,7 +428,15 @@ export function IdentitySheet({
           <View style={styles.body}>
             {/* Era label pill */}
             {computed.eraLabel ? (
-              <View style={[styles.eraBadge, { backgroundColor: colors.surfaceRaised, borderColor: prototype?.accentColor ?? colors.accent }]}>
+              <View
+                style={[
+                  styles.eraBadge,
+                  {
+                    backgroundColor: colors.surfaceRaised,
+                    borderColor: prototype?.accentColor ?? colors.accent,
+                  },
+                ]}
+              >
                 <Text style={{ color: colors.ink }} weight="bold">
                   {computed.eraLabel}
                 </Text>
@@ -403,7 +466,15 @@ export function IdentitySheet({
 
             {/* Runner-up prototype */}
             {prototype?.runnerUp ? (
-              <View style={[styles.runnerUpCard, { backgroundColor: colors.surfaceRaised, borderColor: colors.line }]}>
+              <View
+                style={[
+                  styles.runnerUpCard,
+                  {
+                    backgroundColor: colors.surfaceRaised,
+                    borderColor: colors.line,
+                  },
+                ]}
+              >
                 <Text variant="caption" color="secondary">
                   Also leans:
                 </Text>
@@ -470,17 +541,23 @@ export function IdentitySheet({
                         accessibilityRole="button"
                         accessibilityLabel={`${item.bucket}: ${item.share}%`}
                       >
-                        <View style={[styles.eraDot, { backgroundColor: color }]} />
+                        <View
+                          style={[styles.eraDot, { backgroundColor: color }]}
+                        />
                         <Text
-                          style={[
-                            styles.eraRowLabel,
-                            { color: colors.ink },
-                          ]}
+                          style={[styles.eraRowLabel, { color: colors.ink }]}
                           weight={isSelected ? 'bold' : 'medium'}
                         >
-                          {item.bucket ? item.bucket.toUpperCase() : `${item.decade}s`}
+                          {item.bucket
+                            ? item.bucket.toUpperCase()
+                            : `${item.decade}s`}
                         </Text>
-                        <View style={[styles.eraRowTrack, { backgroundColor: colors.surfaceRaised }]}>
+                        <View
+                          style={[
+                            styles.eraRowTrack,
+                            { backgroundColor: colors.surfaceRaised },
+                          ]}
+                        >
                           <View
                             style={[
                               styles.eraRowFill,
@@ -491,7 +568,11 @@ export function IdentitySheet({
                             ]}
                           />
                         </View>
-                        <Text variant="caption" color="secondary" weight="semibold">
+                        <Text
+                          variant="caption"
+                          color="secondary"
+                          weight="semibold"
+                        >
                           {item.share.toFixed(0)}%
                         </Text>
                       </Pressable>
@@ -539,11 +620,15 @@ export function IdentitySheet({
               <Pressable
                 style={[
                   styles.highlightAction,
-                  { backgroundColor: colors.surfaceRaised, borderColor: prototype?.accentColor ?? colors.accent },
+                  {
+                    backgroundColor: colors.surfaceRaised,
+                    borderColor: prototype?.accentColor ?? colors.accent,
+                  },
                 ]}
                 onPress={() => {
                   void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-                  const medianDecade = Math.floor(rawData.weighted_median_begin_year! / 10) * 10;
+                  const medianDecade =
+                    Math.floor(rawData.weighted_median_begin_year! / 10) * 10;
                   onHighlightDecade(medianDecade);
                   onDismiss();
                 }}

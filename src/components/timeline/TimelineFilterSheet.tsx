@@ -15,6 +15,7 @@ import {
   MACRO_GENRES,
   MACRO_GENRE_ORDER,
 } from '../../features/genres/macroGenres';
+import { GenreLabel, VenueLabel } from '../paper/GenreLabel';
 
 interface TimelineFilterSheetProps {
   visible: boolean;
@@ -70,42 +71,24 @@ export function TimelineFilterSheet({
           <View style={styles.chipsWrap}>
             {VENUE_TYPE_ORDER.map((typeKey) => {
               const def = VENUE_TYPES[typeKey];
-              const Icon = def.icon;
               const isSelected = filters.venueTypes.includes(typeKey);
-              const color = def.primaryColor;
 
               return (
                 <Pressable
                   key={typeKey}
                   accessibilityRole="button"
                   accessibilityLabel={`${def.label} filter`}
+                  accessibilityState={{ selected: isSelected }}
                   onPress={() => toggleVenueType(typeKey)}
-                  style={[
-                    styles.chip,
-                    {
-                      backgroundColor: isSelected
-                        ? `${color}25`
-                        : colors.surfaceRaised,
-                      borderColor: isSelected ? color : colors.line,
-                    },
-                  ]}
+                  style={styles.chip}
                 >
-                  <Icon
-                    size={14}
-                    color={isSelected ? color : colors.inkMuted}
-                    strokeWidth={2.2}
+                  <VenueLabel
+                    venue={typeKey}
+                    size="xs"
+                    variant={isSelected ? 'solid' : 'outline'}
                   />
-                  <Text
-                    variant="caption"
-                    weight={isSelected ? 'bold' : 'medium'}
-                    style={{
-                      color: isSelected ? color : colors.ink,
-                    }}
-                  >
-                    {def.shortLabel}
-                  </Text>
                   {isSelected ? (
-                    <Check size={12} color={color} strokeWidth={2.5} />
+                    <Check size={12} color={colors.ink} strokeWidth={2.5} />
                   ) : null}
                 </Pressable>
               );
@@ -122,36 +105,23 @@ export function TimelineFilterSheet({
             {MACRO_GENRE_ORDER.map((genreKey) => {
               const def = MACRO_GENRES[genreKey];
               const isSelected = filters.genres.includes(genreKey);
-              const color = def.color;
 
               return (
                 <Pressable
                   key={genreKey}
                   accessibilityRole="button"
                   accessibilityLabel={`${def.label} genre filter`}
+                  accessibilityState={{ selected: isSelected }}
                   onPress={() => toggleGenre(genreKey)}
-                  style={[
-                    styles.chip,
-                    {
-                      backgroundColor: isSelected
-                        ? `${color}25`
-                        : colors.surfaceRaised,
-                      borderColor: isSelected ? color : colors.line,
-                    },
-                  ]}
+                  style={styles.chip}
                 >
-                  <View style={[styles.colorDot, { backgroundColor: color }]} />
-                  <Text
-                    variant="caption"
-                    weight={isSelected ? 'bold' : 'medium'}
-                    style={{
-                      color: isSelected ? color : colors.ink,
-                    }}
-                  >
-                    {def.label}
-                  </Text>
+                  <GenreLabel
+                    genre={genreKey}
+                    size="xs"
+                    variant={isSelected ? 'solid' : 'outline'}
+                  />
                   {isSelected ? (
-                    <Check size={12} color={color} strokeWidth={2.5} />
+                    <Check size={12} color={colors.ink} strokeWidth={2.5} />
                   ) : null}
                 </Pressable>
               );

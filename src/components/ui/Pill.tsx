@@ -4,6 +4,7 @@ import { useTheme } from '../../theme/ThemeProvider';
 import { radius } from '../../theme/tokens';
 import { VENUE_TYPES, type VenueType } from '../../features/venues/venueTypes';
 import { Text } from './Text';
+import { VenueLabel } from '../paper/GenreLabel';
 
 export type PillProps = PropsWithChildren<{
   venueType?: VenueType;
@@ -20,7 +21,20 @@ export function Pill({
   style,
 }: PillProps) {
   const { colors } = useTheme();
-  const venue = venueType ? VENUE_TYPES[venueType] : undefined;
+  if (venueType) {
+    return (
+      <VenueLabel
+        venue={venueType}
+        label={
+          typeof children === 'string'
+            ? children
+            : VENUE_TYPES[venueType].shortLabel
+        }
+        size="xs"
+        style={style}
+      />
+    );
+  }
   const toneColor = {
     default: colors.inkMuted,
     accent: colors.accent,
@@ -28,8 +42,7 @@ export function Pill({
     warning: colors.warning,
     danger: colors.danger,
   }[tone];
-  const color = venue?.primaryColor ?? toneColor;
-  const Icon = venue?.icon;
+  const color = toneColor;
 
   return (
     <View
@@ -42,10 +55,9 @@ export function Pill({
         style,
       ]}
     >
-      {icon ??
-        (Icon ? <Icon color={color} size={12} strokeWidth={2.5} /> : null)}
+      {icon ?? null}
       <Text variant="label" style={[styles.label, { color }]}>
-        {children ?? venue?.shortLabel ?? 'Badge'}
+        {children ?? 'Badge'}
       </Text>
     </View>
   );

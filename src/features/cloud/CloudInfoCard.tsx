@@ -13,6 +13,7 @@ import { useTheme } from '../../theme/ThemeProvider';
 import { VENUE_TYPES } from '../venues/venueTypes';
 import { MACRO_GENRES } from '../genres/macroGenres';
 import type { CloudArtistNode } from './simulation';
+import { GenreLabel, VenueLabel } from '../../components/paper/GenreLabel';
 
 export type CloudInfoCardProps = {
   node: CloudArtistNode;
@@ -61,7 +62,7 @@ export function CloudInfoCard({
       ? firstYear === lastYear
         ? firstYear
         : `${firstYear} – ${lastYear}`
-      : firstYear ?? lastYear ?? null;
+      : (firstYear ?? lastYear ?? null);
 
   const venueEntries = Object.entries(node.venueTypeCounts).filter(
     (entry): entry is [keyof typeof VENUE_TYPES, number] =>
@@ -114,7 +115,9 @@ export function CloudInfoCard({
               cachePolicy="memory-disk"
             />
           ) : (
-            <View style={[styles.avatarFallback, { backgroundColor: node.color }]}>
+            <View
+              style={[styles.avatarFallback, { backgroundColor: node.color }]}
+            >
               <Text style={styles.avatarInitials} weight="bold">
                 {node.name.slice(0, 2).toUpperCase()}
               </Text>
@@ -130,14 +133,11 @@ export function CloudInfoCard({
                 const macro = MACRO_GENRES[slug as keyof typeof MACRO_GENRES];
                 if (!macro) return null;
                 return (
-                  <View
+                  <GenreLabel
                     key={slug}
-                    style={[styles.macroPill, { backgroundColor: `${macro.color}25`, borderColor: macro.color }]}
-                  >
-                    <Text style={[styles.macroPillText, { color: macro.color }]}>
-                      {macro.label}
-                    </Text>
-                  </View>
+                    genre={slug as keyof typeof MACRO_GENRES}
+                    size="xs"
+                  />
                 );
               })}
             </View>
@@ -161,9 +161,7 @@ export function CloudInfoCard({
       </View>
 
       <View style={styles.statsRow}>
-        <Pill tone="accent">
-          {`Seen ${node.logCount}x`}
-        </Pill>
+        <Pill tone="accent">{`Seen ${node.logCount}x`}</Pill>
         {node.avgRating > 0 ? (
           <View style={styles.ratingBadge}>
             <Star size={12} color={colors.accent} fill={colors.accent} />
@@ -187,20 +185,13 @@ export function CloudInfoCard({
           {venueEntries.slice(0, 4).map(([venueKey, count]) => {
             const venueDef = VENUE_TYPES[venueKey];
             if (!venueDef) return null;
-            const VenueIcon = venueDef.icon;
             return (
-              <View
+              <VenueLabel
                 key={venueKey}
-                style={[
-                  styles.venueChip,
-                  { backgroundColor: `${venueDef.primaryColor}18`, borderColor: `${venueDef.primaryColor}40` },
-                ]}
-              >
-                <VenueIcon size={11} color={venueDef.primaryColor} />
-                <Text style={[styles.venueChipText, { color: venueDef.primaryColor }]}>
-                  {count}
-                </Text>
-              </View>
+                venue={venueKey}
+                label={`${venueDef.shortLabel} ${count}`}
+                size="xs"
+              />
             );
           })}
         </View>
@@ -209,17 +200,24 @@ export function CloudInfoCard({
       <View style={styles.actionsRow}>
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel={isFocused ? 'Clear related focus' : 'Highlight related artists'}
+          accessibilityLabel={
+            isFocused ? 'Clear related focus' : 'Highlight related artists'
+          }
           onPress={() => onFocusRelated?.(node)}
           style={[
             styles.relatedBtn,
             {
-              backgroundColor: isFocused ? `${colors.accent}30` : colors.surface,
+              backgroundColor: isFocused
+                ? `${colors.accent}30`
+                : colors.surface,
               borderColor: isFocused ? colors.accent : colors.line,
             },
           ]}
         >
-          <Sparkles size={13} color={isFocused ? colors.accent : colors.inkMuted} />
+          <Sparkles
+            size={13}
+            color={isFocused ? colors.accent : colors.inkMuted}
+          />
           <Text
             variant="caption"
             weight="semibold"

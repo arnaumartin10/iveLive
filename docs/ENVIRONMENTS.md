@@ -40,6 +40,12 @@ for preview deployments, then add that environment's public Supabase values in
 Vercel Project Settings. Vercel preview and production should point to separate
 Supabase projects.
 
-The web OAuth callback returns to the current site root. Native Supabase Auth
-redirect allowlists need each scheme above; Google continues to use only the
-Supabase callback URL as its authorized redirect URI.
+The web OAuth callback returns to the current site root, including the
+localhost origin during development. Add the localhost and 127.0.0.1 URLs from
+`supabase/config.toml` to the **hosted development Supabase project's**
+Authentication → URL Configuration → Redirect URLs allowlist as well; the
+local TOML config does not configure hosted projects. Otherwise Supabase may
+fall back to the project's Site URL and return the browser to the deployed
+Vercel domain. Native Supabase Auth redirect allowlists need each scheme above;
+Google continues to use only the Supabase callback URL as its authorized
+redirect URI.

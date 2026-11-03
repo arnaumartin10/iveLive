@@ -5,11 +5,19 @@ import { Text } from '../../components/ui/Text';
 import { Stamp, Sticker } from '../../components/paper';
 import { useTheme } from '../../theme/ThemeProvider';
 import { cloudExperienceStrings } from './experienceStrings';
+import { GenreLabel, VenueLabel } from '../../components/paper/GenreLabel';
+import type { MacroGenre } from '../genres/macroGenres';
+import type { VenueType } from '../venues/venueTypes';
 
 export type TerritoryCardArtist = { id: string; name: string };
-export type TerritoryVenueStamp = { id: string; label: string };
+export type TerritoryVenueStamp = {
+  id: string;
+  label: string;
+  venue: VenueType;
+};
 
 type CloudTerritoryCardProps = {
+  genre: MacroGenre;
   label: string;
   unexplored: boolean;
   sharePercent?: number;
@@ -26,6 +34,7 @@ type CloudTerritoryCardProps = {
 };
 
 export function CloudTerritoryCard({
+  genre,
   label,
   unexplored,
   sharePercent = 0,
@@ -44,7 +53,7 @@ export function CloudTerritoryCard({
   return (
     <Card padding={12} style={styles.card}>
       <View style={styles.titleRow}>
-        <Text variant="headline">{label}</Text>
+        <GenreLabel genre={genre} label={label} size="md" variant="stamp" />
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Close territory card"
@@ -138,11 +147,11 @@ export function CloudTerritoryCard({
           </View>
           <View style={styles.stampRow}>
             {venues.map((venue) => (
-              <Stamp
+              <VenueLabel
                 key={venue.id}
-                id={`territory-venue-${venue.id}`}
+                venue={venue.venue}
                 label={venue.label}
-                variant="slate"
+                size="xs"
               />
             ))}
           </View>
