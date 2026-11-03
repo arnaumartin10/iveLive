@@ -279,6 +279,7 @@ export function ArtistCardContent({
   const [imageTarget, setImageTarget] = useState<ArtistImageRole | null>(null);
 
   const macroGenres = overrideQuery.data ?? artist?.macro_genres ?? [];
+  const subGenres = artist?.sub_genres ?? [];
   const primaryMacro =
     macroGenres[0] ?? artist?.primary_macro ?? 'unclassified';
   const genreColor =
@@ -495,6 +496,7 @@ export function ArtistCardContent({
         : artist.bio_source
           ? `From ${artist.bio_source}`
           : null;
+  const visibleBio = artist.bio_lang === 'en' ? artist.bio : null;
 
   return (
     <>
@@ -704,17 +706,15 @@ export function ArtistCardContent({
                   />
                 );
               })}
+              {subGenres.slice(0, 4).map((subGenre) => (
+                <GenreLabel key={subGenre} genre={subGenre} size="xs" />
+              ))}
               {!macroGenres.length ? (
-                <View
-                  style={[
-                    styles.macroPill,
-                    { backgroundColor: colors.surfaceRaised },
-                  ]}
-                >
-                  <Text variant="caption" color="secondary">
-                    Unclassified
-                  </Text>
-                </View>
+                <GenreLabel
+                  genre="unclassified"
+                  size="md"
+                  interactive={false}
+                />
               ) : null}
             </View>
             {userId && persistedArtistId ? (
@@ -733,7 +733,7 @@ export function ArtistCardContent({
                   genre={
                     genre in MACRO_GENRES
                       ? (genre as keyof typeof MACRO_GENRES)
-                      : 'other'
+                      : genre
                   }
                   label={genre}
                   size="xs"
@@ -820,16 +820,16 @@ export function ArtistCardContent({
                 <PendingShimmer width="82%" />
                 <PendingShimmer width="64%" />
               </View>
-            ) : artist.bio ? (
+            ) : visibleBio ? (
               <>
                 <Text
                   variant="body"
                   color="secondary"
                   numberOfLines={bioExpanded ? undefined : 5}
                 >
-                  {artist.bio}
+                  {visibleBio}
                 </Text>
-                {artist.bio.length > 240 ? (
+                {visibleBio.length > 240 ? (
                   <Pressable onPress={() => setBioExpanded((value) => !value)}>
                     <Text variant="caption" color="accent" weight="semibold">
                       {bioExpanded ? 'Read less' : 'Read more'}
@@ -1197,6 +1197,7 @@ export function ArtistCardContent({
                   genre={macro as keyof typeof MACRO_GENRES}
                   size="sm"
                   variant={checked ? 'solid' : 'outline'}
+                  interactive={false}
                 />
                 {checked ? (
                   <Check size={18} color={colors.accent} />

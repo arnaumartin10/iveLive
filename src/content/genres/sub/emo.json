@@ -1,0 +1,28 @@
+{
+  "slug": "emo",
+  "parent_slug": "punk",
+  "title": "Emo",
+  "tagline": "Punk-rooted songs that turn emotional candor into a musical force.",
+  "summary": "Emo began as a branch of hardcore punk whose musicians brought more personal, emotionally direct writing into the style. Over time, different scenes developed distinct sounds, from angular underground bands to melodic guitar groups and later pop-influenced forms. Its core is expressive songwriting, not one fixed arrangement.",
+  "origin_place": "Washington, D.C., United States",
+  "origin_years": "1980s",
+  "history": [],
+  "related_slugs": ["punk", "hardcore-punk", "indie-rock"],
+  "wikipedia_title": "Emo",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Rites of Spring", "why": "Rites of Spring brought intensely personal lyrics and dynamic songwriting into the Washington, D.C. hardcore scene." },
+    { "name": "Fugazi", "why": "Fugazi carried the D.C. scene's ethical independence and emotional intensity into a more expansive post-hardcore sound." },
+    { "name": "Jimmy Eat World", "why": "Jimmy Eat World helped connect emo's guitar-band roots with melodic songwriting and a wider audience." }
+  ],
+  "examples": [
+    { "name": "Sunny Day Real Estate" }, { "name": "Jawbreaker" },
+    { "name": "American Football" }, { "name": "The Get Up Kids" },
+    { "name": "Dashboard Confessional" }, { "name": "My Chemical Romance" },
+    { "name": "Thursday" }, { "name": "Taking Back Sunday" },
+    { "name": "Paramore" }, { "name": "Mineral" },
+    { "name": "Braid" }, { "name": "Mitski" }
+  ],
+  "sources_to_verify": ["Emo", "Rites of Spring", "Fugazi", "Jimmy Eat World"]
+}

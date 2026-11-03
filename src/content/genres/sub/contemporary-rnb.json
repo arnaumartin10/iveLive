@@ -1,0 +1,34 @@
+{
+  "slug": "contemporary-rnb",
+  "parent_slug": "rnb_soul",
+  "title": "Contemporary R&B",
+  "tagline": "Soul-rooted vocals shaped by modern rhythm, production, and pop forms.",
+  "summary": "Contemporary R&B carries the vocal focus and emotional directness of rhythm and blues into modern production. Its sound has shifted with each generation, incorporating hip-hop beats, synthesizers, electronic textures, and pop songwriting while retaining expressive singing at its core. The genre's breadth reflects how artists continually reshape the relationship between voice and groove.",
+  "origin_place": "United States",
+  "origin_years": "1980s onwards",
+  "history": [],
+  "related_slugs": ["rnb_soul", "neo-soul", "pop"],
+  "wikipedia_title": "Contemporary R&B",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Janet Jackson", "why": "Janet Jackson connected precise pop songwriting, dance production, and R&B vocal phrasing across influential albums." },
+    { "name": "Mary J. Blige", "why": "Mary J. Blige brought a distinctive combination of soul singing and hip-hop production to contemporary R&B." },
+    { "name": "Aaliyah", "why": "Aaliyah's understated vocals and innovative production helped shape a sleek, influential 1990s R&B sound." }
+  ],
+  "examples": [
+    { "name": "Usher" },
+    { "name": "Beyonce" },
+    { "name": "Rihanna" },
+    { "name": "The Weeknd" },
+    { "name": "Frank Ocean" },
+    { "name": "SZA" },
+    { "name": "H.E.R." },
+    { "name": "Tinashe" },
+    { "name": "Brent Faiyaz" },
+    { "name": "Jhené Aiko" },
+    { "name": "Miguel" },
+    { "name": "Summer Walker" }
+  ],
+  "sources_to_verify": ["Contemporary R&B", "Janet Jackson", "Mary J. Blige", "Aaliyah"]
+}

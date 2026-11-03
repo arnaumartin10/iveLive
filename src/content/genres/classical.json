@@ -1,0 +1,31 @@
+{
+  "slug": "classical",
+  "title": "Classical",
+  "tagline": "Composed traditions, reimagined by every generation.",
+  "summary": "Classical music is a broad umbrella spanning centuries of composed traditions, performance practices and regional schools. It includes orchestral, chamber, choral and solo music, with a history far wider than a short list of European composers. The artists here are representative foundations of influential Western concert traditions, not a complete or exclusive canon. Contemporary musicians continue to expand the field through new works and changing approaches to performance.",
+  "origin_place": "Europe, with global traditions and contemporary practice",
+  "origin_years": "Medieval era onward",
+  "history": [
+    { "years": "Medieval–Renaissance", "heading": "Notation and shared repertory", "text": "Written music supported the preservation and exchange of sacred and secular repertories across European institutions. Composers developed ways to layer voices and instruments, while performance remained tied to specific communities and occasions. Many oral and non-European traditions developed through different systems." },
+    { "years": "1600–1750", "heading": "Baroque forms", "text": "Opera, instrumental suites and concertos grew into influential forms, supported by courts, churches and public theatres. Composers explored contrast, ornament and structured counterpoint. Printed scores helped music circulate, while performers continued to adapt parts according to local practice." },
+    { "years": "1750–1900", "heading": "Orchestra and public concert", "text": "The symphony, sonata and string quartet developed as concert life expanded beyond court settings. Romantic composers explored larger emotional and orchestral worlds. Conservatories, publishers and touring performers helped create a shared repertoire, though access to formal musical institutions remained uneven." },
+    { "years": "1900–today", "heading": "New languages and listeners", "text": "Composers questioned inherited harmony and form, then explored recording, electronics and new performance spaces. Film and broadcast brought orchestral music into everyday listening. Contemporary classical practice includes diverse global voices, collaborations and approaches that challenge the idea of one fixed tradition." }
+  ],
+  "related_slugs": ["jazz_blues", "folk_acoustic", "world", "electronic"],
+  "wikipedia_title": "Classical music",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Johann Sebastian Bach", "why": "Bach's mastery of counterpoint and musical architecture became a central reference for generations of composers and performers." },
+    { "name": "Wolfgang Amadeus Mozart", "why": "Mozart's work across opera, symphony and chamber music remains a representative foundation of the Classical-era repertoire." },
+    { "name": "Ludwig van Beethoven", "why": "Beethoven expanded established forms and helped shape the expressive scale associated with later concert music." }
+  ],
+  "examples": [
+    { "name": "Hildegard von Bingen" }, { "name": "Claudio Monteverdi" }, { "name": "Antonio Vivaldi" }, { "name": "Joseph Haydn" },
+    { "name": "Franz Schubert" }, { "name": "Frédéric Chopin" }, { "name": "Clara Schumann" }, { "name": "Pyotr Ilyich Tchaikovsky" },
+    { "name": "Claude Debussy" }, { "name": "Igor Stravinsky" }, { "name": "Dmitri Shostakovich" }, { "name": "Arvo Pärt" },
+    { "name": "Montserrat Caballé" }, { "name": "Alicia de Larrocha" }, { "name": "Pau Casals" }, { "name": "Manuel de Falla" },
+    { "name": "Joaquín Rodrigo" }, { "name": "Xavier Montsalvatge" }, { "name": "Ferran Sor" }, { "name": "Maria Canals" }
+  ],
+  "sources_to_verify": ["Classical music", "Baroque music", "Wolfgang Amadeus Mozart", "Ludwig van Beethoven", "Pau Casals"]
+}

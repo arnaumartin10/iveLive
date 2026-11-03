@@ -30,6 +30,28 @@ export async function fetchGenreStats(userId: string, year: StatsScope) {
   return data as GenreStat[];
 }
 
+export type SubgenreStat = {
+  sub_genre: string;
+  parent_macro: string;
+  log_count: number;
+  artist_count: number;
+  avg_rating: number | null;
+};
+
+export async function fetchSubgenreStats(userId: string, year: StatsScope) {
+  const { data, error } = await supabase.rpc('user_subgenre_stats', {
+    p_user: userId,
+    p_year: year ?? undefined,
+  });
+  if (error) throw new Error(error.message);
+  return (data ?? []).map((row) => ({
+    ...row,
+    avg_rating: row.avg_rating == null ? null : Number(row.avg_rating),
+    log_count: Number(row.log_count),
+    artist_count: Number(row.artist_count),
+  })) as SubgenreStat[];
+}
+
 export async function fetchVenueStats(userId: string, year: StatsScope) {
   const { data, error } = await supabase.rpc('user_venue_stats', {
     p_user: userId,

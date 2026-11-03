@@ -1,0 +1,34 @@
+{
+  "slug": "post-punk",
+  "parent_slug": "punk",
+  "title": "Post-Punk",
+  "tagline": "Restless rhythm, open-ended guitars, and a refusal to stand still.",
+  "summary": "Post-punk grew from punk's energy into an expansive approach to songwriting and sound. Artists kept punk's urgency while borrowing from dub, funk, electronic music, art schools, and experimental pop. The result was a network of scenes connected through records and venues. Its influence remains wherever bands treat rhythm, texture, and production as boldly as the song.",
+  "origin_place": "United Kingdom and the United States",
+  "origin_years": "late 1970s",
+  "history": [],
+  "related_slugs": ["punk", "indie-rock", "new-wave"],
+  "wikipedia_title": "Post-punk",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Joy Division", "why": "Joy Division paired stark arrangements with a propulsive rhythm section, helping establish one influential direction for post-punk." },
+    { "name": "Public Image Ltd", "why": "Public Image Ltd stretched punk forms with dub space, shifting lineups, and abrasive experimentation." },
+    { "name": "Wire", "why": "Wire's concise songs and changing structures showed how much invention could fit inside a short, direct performance." }
+  ],
+  "examples": [
+    { "name": "Siouxsie and the Banshees" },
+    { "name": "Gang of Four" },
+    { "name": "The Cure" },
+    { "name": "The Fall" },
+    { "name": "Talking Heads" },
+    { "name": "Magazine" },
+    { "name": "Killing Joke" },
+    { "name": "Echo & the Bunnymen" },
+    { "name": "The Raincoats" },
+    { "name": "Television" },
+    { "name": "Sonic Youth" },
+    { "name": "Parálisis Permanente" }
+  ],
+  "sources_to_verify": ["Post-punk", "Joy Division", "Public Image Ltd", "Wire", "Parálisis Permanente"]
+}

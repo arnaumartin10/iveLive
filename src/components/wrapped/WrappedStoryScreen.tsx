@@ -332,6 +332,7 @@ function WrappedSlide({
                   size="md"
                   variant="stamp"
                   surface="sunken"
+                  interactive={false}
                 />
               </Entrance>
             ))}

@@ -757,11 +757,7 @@ export function ProfileScreen({
                       return (
                         <View key={genre.macro_genre} style={styles.genreChip}>
                           <GenreLabel
-                            genre={
-                              genre.macro_genre in MACRO_GENRES
-                                ? (genre.macro_genre as keyof typeof MACRO_GENRES)
-                                : 'other'
-                            }
+                            genre={genre.macro_genre}
                             label={config?.label ?? genre.macro_genre}
                             size="xs"
                           />

@@ -1,0 +1,28 @@
+{
+  "slug": "folk-rock",
+  "parent_slug": "folk_acoustic",
+  "title": "Folk Rock",
+  "tagline": "Traditional songcraft and acoustic storytelling with a rock band's electricity.",
+  "summary": "Folk rock combines folk songwriting and acoustic traditions with electric instruments and rock arrangements. The style became prominent in the 1960s, when artists adapted folk material and wrote new songs for amplified bands. It continues to connect narrative lyrics and roots influences with the energy and reach of rock music.",
+  "origin_place": "United States and United Kingdom",
+  "origin_years": "1960s",
+  "history": [],
+  "related_slugs": ["folk_acoustic", "rock", "indie-folk"],
+  "wikipedia_title": "Folk rock",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Bob Dylan", "why": "Dylan's move to electric arrangements became a prominent moment in folk rock's development." },
+    { "name": "The Byrds", "why": "The Byrds connected folk material and close harmonies with jangling electric guitars." },
+    { "name": "Fairport Convention", "why": "Fairport Convention developed a British folk-rock sound that brought traditional songs into electric arrangements." }
+  ],
+  "examples": [
+    { "name": "Crosby, Stills, Nash & Young" }, { "name": "Joni Mitchell" },
+    { "name": "The Band" }, { "name": "The Mamas & the Papas" },
+    { "name": "Donovan" }, { "name": "Richard Thompson" },
+    { "name": "Mumford & Sons" }, { "name": "The Lumineers" },
+    { "name": "The Waterboys" }, { "name": "The Decemberists" },
+    { "name": "R.E.M." }, { "name": "The Jayhawks" }
+  ],
+  "sources_to_verify": ["Folk rock", "Bob Dylan", "The Byrds", "Fairport Convention"]
+}

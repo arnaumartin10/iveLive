@@ -1,0 +1,75 @@
+{
+  "slug": "math-rock",
+  "parent_slug": "rock",
+  "title": "Math Rock",
+  "tagline": "Odd meters, sharp guitars and a sense of engineering in the groove.",
+  "summary": "Math rock often treats rhythm as a structure to be chiselled, not just a pulse to follow. With angular guitars, shifting patterns and intricate timing, it draws energy from prog, post-hardcore and jazz without sounding like a direct copy of any one of them. The style rewards closeness and repetition in equal measure.",
+  "origin_place": "United States and United Kingdom",
+  "origin_years": "1990s",
+  "history": [],
+  "related_slugs": [
+    "rock",
+    "jazz_blues"
+  ],
+  "wikipedia_title": "Math rock",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    {
+      "name": "Don Caballero",
+      "why": "Don Caballero helped make the genre feel both technical and musical, placing precision inside a strong rock identity."
+    },
+    {
+      "name": "The Mars Volta",
+      "why": "The Mars Volta fused progressive ambition with a striking sense of drama and movement."
+    },
+    {
+      "name": "Fugazi",
+      "why": "Fugazi brought a stripped, sharp-edged discipline that fed later guitar-led, rhythm-forward work."
+    }
+  ],
+  "examples": [
+    {
+      "name": "The National"
+    },
+    {
+      "name": "Tortoise"
+    },
+    {
+      "name": "Slint"
+    },
+    {
+      "name": "Hella"
+    },
+    {
+      "name": "This Heat"
+    },
+    {
+      "name": "Marnie Stern"
+    },
+    {
+      "name": "King Crimson"
+    },
+    {
+      "name": "Animals as Leaders"
+    },
+    {
+      "name": "The Dismemberment Plan"
+    },
+    {
+      "name": "Rival Consoles"
+    },
+    {
+      "name": "Pale Waves"
+    },
+    {
+      "name": "Mogwai"
+    }
+  ],
+  "sources_to_verify": [
+    "Math rock",
+    "Don Caballero",
+    "The Mars Volta",
+    "Slint"
+  ]
+}

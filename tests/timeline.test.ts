@@ -7,6 +7,7 @@ import { useTimelineStore } from '../src/features/concerts/timelineStore';
 import type { ConcertWithRelations } from '../src/features/concerts/types';
 
 const enrichmentFields = {
+  sub_genres: [],
   bio: null,
   bio_source: null,
   bio_url: null,

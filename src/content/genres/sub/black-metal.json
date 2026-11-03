@@ -1,0 +1,34 @@
+{
+  "slug": "black-metal",
+  "parent_slug": "metal",
+  "title": "Black Metal",
+  "tagline": "Abrasive guitars, stark atmospheres, and an uncompromising edge.",
+  "summary": "Black metal is a diverse extreme-metal style associated with raw guitar tone, tremolo-picked melodies, fast drumming, and atmospheric or stark production. Early scenes developed different sounds and visual codes, and later artists expanded the music toward ambient, folk, and progressive forms. The genre is best understood as a collection of evolving scenes rather than one fixed template.",
+  "origin_place": "Norway, Sweden, and the United Kingdom",
+  "origin_years": "1980s",
+  "history": [],
+  "related_slugs": ["metal", "death-metal", "doom-metal"],
+  "wikipedia_title": "Black metal",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Bathory", "why": "Bathory's early recordings helped shape black metal's raw sound, while later work also influenced Viking metal." },
+    { "name": "Mayhem", "why": "Mayhem became closely associated with Norway's early black-metal scene and its stark musical aesthetic." },
+    { "name": "Darkthrone", "why": "Darkthrone's stripped-back recordings became a widely recognized reference for the lo-fi second-wave sound." }
+  ],
+  "examples": [
+    { "name": "Emperor" },
+    { "name": "Immortal" },
+    { "name": "Burzum" },
+    { "name": "Gorgoroth" },
+    { "name": "Enslaved" },
+    { "name": "Satyricon" },
+    { "name": "Dissection" },
+    { "name": "Venom" },
+    { "name": "Celtic Frost" },
+    { "name": "Ulver" },
+    { "name": "Agalloch" },
+    { "name": "Deafheaven" }
+  ],
+  "sources_to_verify": ["Black metal", "Bathory", "Mayhem", "Darkthrone"]
+}

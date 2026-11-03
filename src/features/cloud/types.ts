@@ -1,6 +1,10 @@
 import type { VenueType } from '../venues/venueTypes';
 
-export type CloudLogTuple = [date: string, venueType: VenueType, rating: number | null];
+export type CloudLogTuple = [
+  date: string,
+  venueType: VenueType,
+  rating: number | null,
+];
 
 export type CloudArtistData = {
   id: string;
@@ -9,6 +13,7 @@ export type CloudArtistData = {
   image_url_large: string | null;
   primary_macro: string | null;
   macro_genres: string[];
+  sub_genres?: string[];
   genres: string[];
   begin_year: number | null;
   log_count: number;

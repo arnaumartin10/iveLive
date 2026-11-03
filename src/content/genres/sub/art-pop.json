@@ -1,0 +1,34 @@
+{
+  "slug": "art-pop",
+  "parent_slug": "pop",
+  "title": "Art Pop",
+  "tagline": "Pop songwriting shaped by experimentation, concept, and visual imagination.",
+  "summary": "Art pop uses the clarity and reach of pop while making room for unusual structures, production, and concepts. Its artists may draw on avant-garde ideas, theatrical performance, or unexpected sounds without abandoning memorable melodies. The result is a flexible space where popular songwriting and artistic experimentation meet on equal terms.",
+  "origin_place": "United Kingdom and United States",
+  "origin_years": "1960s onwards",
+  "history": [],
+  "related_slugs": ["pop", "synth-pop", "chamber-pop"],
+  "wikipedia_title": "Art pop",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "David Bowie", "why": "David Bowie repeatedly connected accessible songs with theatrical personas, studio experimentation, and ambitious visual ideas." },
+    { "name": "Kate Bush", "why": "Kate Bush built a singular pop language through adventurous arrangements, expressive vocals, and self-directed production." },
+    { "name": "Roxy Music", "why": "Roxy Music paired sophisticated pop forms with art-school presentation and a willingness to challenge rock conventions." }
+  ],
+  "examples": [
+    { "name": "Bjork" },
+    { "name": "St. Vincent" },
+    { "name": "Florence and the Machine" },
+    { "name": "FKA twigs" },
+    { "name": "Charli XCX" },
+    { "name": "Grimes" },
+    { "name": "SOPHIE" },
+    { "name": "Lorde" },
+    { "name": "Perfume Genius" },
+    { "name": "Julia Holter" },
+    { "name": "Caroline Polachek" },
+    { "name": "Mitski" }
+  ],
+  "sources_to_verify": ["Art pop", "David Bowie", "Kate Bush", "Roxy Music"]
+}

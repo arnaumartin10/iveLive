@@ -1,0 +1,75 @@
+{
+  "slug": "noise-rock",
+  "parent_slug": "rock",
+  "title": "Noise Rock",
+  "tagline": "Guitars pushed past tune and into texture and friction.",
+  "summary": "Noise rock treats volume, distortion and harsh textures as part of the structure rather than as a side effect. It grew from punk and experimental scenes where a band could make a song feel as unstable as its rehearsal room. The genre often emphasizes abrasion, repetition and the emotional charge of a wall of sound.",
+  "origin_place": "United States and United Kingdom",
+  "origin_years": "1980s",
+  "history": [],
+  "related_slugs": [
+    "rock",
+    "punk"
+  ],
+  "wikipedia_title": "Noise rock",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    {
+      "name": "Sonic Youth",
+      "why": "Sonic Youth fused feedback, scratches and melody into a template that still defines the genre."
+    },
+    {
+      "name": "The Jesus Lizard",
+      "why": "The Jesus Lizard made tension and attack feel physical, with rhythm and volume pushed to the edge."
+    },
+    {
+      "name": "Big Black",
+      "why": "Big Black stripped the form to its sharpest, most abrasive edge without losing a clear sense of purpose."
+    }
+  ],
+  "examples": [
+    {
+      "name": "The Birthday Party"
+    },
+    {
+      "name": "The Ex"
+    },
+    {
+      "name": "The Dead Kennedys"
+    },
+    {
+      "name": "The Wrecks"
+    },
+    {
+      "name": "Palehounds"
+    },
+    {
+      "name": "Murder City Devils"
+    },
+    {
+      "name": "The Slits"
+    },
+    {
+      "name": "Melt-Banana"
+    },
+    {
+      "name": "Tuxedomoon"
+    },
+    {
+      "name": "The Flying Luttenbachers"
+    },
+    {
+      "name": "Boredoms"
+    },
+    {
+      "name": "Liars"
+    }
+  ],
+  "sources_to_verify": [
+    "Noise rock",
+    "Sonic Youth",
+    "The Jesus Lizard",
+    "Big Black"
+  ]
+}

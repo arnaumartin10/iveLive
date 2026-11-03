@@ -1,0 +1,34 @@
+{
+  "slug": "metalcore",
+  "parent_slug": "metal",
+  "title": "Metalcore",
+  "tagline": "Metal precision colliding with hardcore urgency.",
+  "summary": "Metalcore combines heavy-metal riffing and breakdowns with the urgency and communal energy of hardcore punk. Early bands built a sound around abrupt rhythmic shifts, shouted vocals, and heavy guitar work; later waves incorporated melodic leads and polished production. The style continues to evolve across underground scenes and large festival stages.",
+  "origin_place": "United States",
+  "origin_years": "late 1980s",
+  "history": [],
+  "related_slugs": ["metal", "hardcore-punk", "post-hardcore"],
+  "wikipedia_title": "Metalcore",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Converge", "why": "Converge fused chaotic hardcore intensity with intricate, dissonant arrangements that became a key metalcore reference." },
+    { "name": "Killswitch Engage", "why": "Killswitch Engage helped bring melodic metalcore to a wider audience through harmonized guitar leads and strong hooks." },
+    { "name": "Integrity", "why": "Integrity's dark, aggressive blend of hardcore and metal helped shape the style's early underground sound." }
+  ],
+  "examples": [
+    { "name": "Hatebreed" },
+    { "name": "Shai Hulud" },
+    { "name": "Unearth" },
+    { "name": "As I Lay Dying" },
+    { "name": "The Dillinger Escape Plan" },
+    { "name": "Architects" },
+    { "name": "Parkway Drive" },
+    { "name": "August Burns Red" },
+    { "name": "Every Time I Die" },
+    { "name": "Bring Me the Horizon" },
+    { "name": "Poison the Well" },
+    { "name": "The Devil Wears Prada" }
+  ],
+  "sources_to_verify": ["Metalcore", "Converge", "Killswitch Engage", "Integrity"]
+}

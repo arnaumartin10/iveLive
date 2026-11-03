@@ -1,0 +1,18 @@
+appId: com.ivelive.app
+---
+- launchApp:
+    clearState: false
+- openLink: ivelive-development://genre/rock
+- assertVisible: Rock
+- assertVisible: The three pillars
+- tapOn:
+    text: Open Chuck Berry artist card
+- assertVisible: Chuck Berry
+- tapOn:
+    text: Open the Rock page
+- assertVisible: The three pillars
+- tapOn:
+    text: Open Chuck Berry artist card
+- assertVisible: Chuck Berry
+- back
+- assertVisible: The three pillars

@@ -1,0 +1,34 @@
+{
+  "slug": "singer-songwriter",
+  "parent_slug": "folk_acoustic",
+  "title": "Singer-Songwriter",
+  "tagline": "Personal songs built around voice, guitar, and a direct point of view.",
+  "summary": "The singer-songwriter tradition is grounded in directness: one voice, one instrument, and a lyric shaped by lived experience. It draws from folk, blues, pop, and country, creating songs that feel intimate without losing emotional power. The form thrives on confession, interpretation, and a strong sense of character.",
+  "origin_place": "United States and Europe",
+  "origin_years": "1950s onwards",
+  "history": [],
+  "related_slugs": ["folk_acoustic", "indie-folk", "americana"],
+  "wikipedia_title": "Singer-songwriter",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Bob Dylan", "why": "Bob Dylan expanded the singer-songwriter form into something poetic, political, and endlessly influential." },
+    { "name": "Joni Mitchell", "why": "Joni Mitchell fused lyrical sophistication, guitar craft, and emotional detail into a singular artistic language." },
+    { "name": "Nick Drake", "why": "Nick Drake showed how subtle arrangements and intimate phrasing could create a profound, fragile emotional world." }
+  ],
+  "examples": [
+    { "name": "Cat Stevens" },
+    { "name": "James Taylor" },
+    { "name": "Carole King" },
+    { "name": "John Prine" },
+    { "name": "Tom Waits" },
+    { "name": "Laura Marling" },
+    { "name": "Alexi Murdoch" },
+    { "name": "Townes Van Zandt" },
+    { "name": "Suzanne Vega" },
+    { "name": "Dylan" },
+    { "name": "The National" },
+    { "name": "Bon Iver" }
+  ],
+  "sources_to_verify": ["Singer-songwriter", "Bob Dylan", "Joni Mitchell", "Nick Drake"]
+}

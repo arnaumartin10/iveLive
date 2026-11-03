@@ -1,0 +1,34 @@
+{
+  "slug": "new-wave",
+  "parent_slug": "punk",
+  "title": "New Wave",
+  "tagline": "Catchy hooks, sharp synths, and a future-facing edge.",
+  "summary": "New wave emerged as punk's more stylized and electronic cousin. It fused direct pop songwriting with a strong design sense, synth textures, and a love of movement on stage. The genre carried punk's attitude into polished production and art-school cool, creating a bridge between club culture, radio, and post-punk experimentation.",
+  "origin_place": "United Kingdom and United States",
+  "origin_years": "late 1970s",
+  "history": [],
+  "related_slugs": ["punk", "post-punk", "synth-pop"],
+  "wikipedia_title": "New wave music",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "The Cure", "why": "The Cure brought a melodic, emotionally open sensibility to new wave while keeping its edge intact." },
+    { "name": "Talking Heads", "why": "Talking Heads made rhythmic tension and clever lyrics central to the movement's appeal." },
+    { "name": "Devo", "why": "Devo pushed the movement toward theatricality and concept, using odd rhythms and cool minimalism to make new wave feel strange and forward-looking." }
+  ],
+  "examples": [
+    { "name": "Blondie" },
+    { "name": "The Cars" },
+    { "name": "The Police" },
+    { "name": "Duran Duran" },
+    { "name": "The B-52's" },
+    { "name": "A Flock of Seagulls" },
+    { "name": "The Human League" },
+    { "name": "The Pretenders" },
+    { "name": "The Ramones" },
+    { "name": "The Go-Go's" },
+    { "name": "The Psychedelic Furs" },
+    { "name": "The Smiths" }
+  ],
+  "sources_to_verify": ["New wave music", "Talking Heads", "The Cure", "Blondie"]
+}

@@ -64,6 +64,17 @@ export const lastFmInfoFixture = {
   },
 };
 
+export const wikidataEnglishSitelinkFixture = {
+  entities: {
+    Q123456789: {
+      sitelinks: {
+        enwiki: { title: 'Example Artist' },
+        cawiki: { title: 'Artista d’exemple' },
+      },
+    },
+  },
+};
+
 export const wikipediaSummaryFixture = {
   extract: 'Arctic Monkeys are an English rock band formed in Sheffield.',
   content_urls: {
@@ -72,6 +83,7 @@ export const wikipediaSummaryFixture = {
   originalimage: { source: 'https://upload.wikimedia.org/arctic-monkeys.jpg' },
   lang: 'en',
   title: 'Arctic Monkeys',
+  type: 'standard',
 };
 
 export const coverArtArchiveFixture = {

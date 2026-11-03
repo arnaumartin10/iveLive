@@ -42,6 +42,7 @@ import {
   useHeatmap,
   useLeaderboard,
   useStatsOverview,
+  useSubgenreStats,
   useVenueStats,
 } from '../../features/stats/hooks';
 import { useStatsScopeStore } from '../../features/stats/store';
@@ -136,6 +137,7 @@ export function StatsScreen() {
   const [artistMode, setArtistMode] = useState('count');
   const [genreMetric, setGenreMetric] = useState('shows');
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
+  const [expandedGenre, setExpandedGenre] = useState<string | null>(null);
   const [heatmapYear, setHeatmapYear] = useState<number | 'all' | null>(null);
   const [selectedVenue, setSelectedVenue] = useState<VenueType>('festival');
   const [exclusiveOnly, setExclusiveOnly] = useState(false);
@@ -164,6 +166,7 @@ export function StatsScreen() {
 
   const overviewQuery = useStatsOverview();
   const genresQuery = useGenreStats();
+  const subgenresQuery = useSubgenreStats();
   const venuesQuery = useVenueStats();
   const heatmapQuery = useHeatmap();
   const diversityQuery = useDiversity();
@@ -252,7 +255,7 @@ export function StatsScreen() {
         );
   const showEmpty =
     overviewQuery.isSuccess && overview != null && overview.total_shows === 0;
-  const statsErrors = [overviewQuery, genresQuery, venuesQuery]
+  const statsErrors = [overviewQuery, genresQuery, subgenresQuery, venuesQuery]
     .filter((query) => query.isError)
     .map((query) => query.error.message);
 
@@ -410,6 +413,7 @@ export function StatsScreen() {
               void Promise.all([
                 overviewQuery.refetch(),
                 genresQuery.refetch(),
+                subgenresQuery.refetch(),
                 venuesQuery.refetch(),
               ]);
             }}
@@ -1020,61 +1024,130 @@ export function StatsScreen() {
           </Card>
           <Card style={styles.chartCard}>
             <SectionTitle>GENRES</SectionTitle>
-            {genres.map((genre, index) => (
-              <Pressable
-                key={genre.macro_genre}
-                onPress={() => setSelectedGenre(genre.macro_genre)}
-                style={[styles.genreRow, { borderBottomColor: colors.line }]}
-              >
-                <View style={styles.genreTitle}>
-                  <Text variant="label" weight="bold">
-                    {String(index + 1).padStart(2, '0')}
-                  </Text>
-                  <GenreLabel
-                    genre={genre.macro_genre as keyof typeof MACRO_GENRES}
-                    label={
-                      MACRO_GENRES[
-                        genre.macro_genre as keyof typeof MACRO_GENRES
-                      ]?.label ?? genre.macro_genre
-                    }
-                    size="xs"
-                  />
-                  <Text variant="caption" weight="bold">
-                    {genrePercentages[index] ?? 0}%
-                  </Text>
-                </View>
-                <View
-                  style={[
-                    styles.progressTrack,
-                    { backgroundColor: colors.surfaceRaised },
-                  ]}
-                >
-                  <View
+            {genres.map((genre, index) => {
+              const childStats = (subgenresQuery.data ?? []).filter(
+                (item) => item.parent_macro === genre.macro_genre,
+              );
+              const childPercentages = largestRemainder(
+                childStats.map((item) => item.log_count),
+                100,
+              );
+              const expanded = expandedGenre === genre.macro_genre;
+              return (
+                <View key={genre.macro_genre}>
+                  <Pressable
+                    onPress={() => setSelectedGenre(genre.macro_genre)}
                     style={[
-                      styles.progressFill,
-                      {
-                        backgroundColor:
+                      styles.genreRow,
+                      { borderBottomColor: colors.line },
+                    ]}
+                  >
+                    <View style={styles.genreTitle}>
+                      <Text variant="label" weight="bold">
+                        {String(index + 1).padStart(2, '0')}
+                      </Text>
+                      <GenreLabel
+                        genre={genre.macro_genre as keyof typeof MACRO_GENRES}
+                        label={
                           MACRO_GENRES[
                             genre.macro_genre as keyof typeof MACRO_GENRES
-                          ]?.color ?? colors.accent,
-                        width: `${genreValues.reduce((sum, value) => sum + value, 0) ? (genreValues[index]! / genreValues.reduce((sum, value) => sum + value, 0)) * 100 : 0}%`,
-                      },
-                    ]}
-                  />
-                </View>
-                <View style={styles.genreMeta}>
-                  <Text variant="caption" color="secondary">
-                    {genre.log_count} shows · {genre.artist_count} artists ·{' '}
-                    {genre.avg_rating == null ? '—' : `${genre.avg_rating}★`}
-                  </Text>
-                  {genre.top_artist ? (
-                    <Text variant="caption" color="secondary">
-                      Top: {genre.top_artist.name} ({genre.top_artist.count}×)
-                    </Text>
+                          ]?.label ?? genre.macro_genre
+                        }
+                        size="xs"
+                        interactive={false}
+                      />
+                      <Text variant="caption" weight="bold">
+                        {genrePercentages[index] ?? 0}%
+                      </Text>
+                    </View>
+                    <View
+                      style={[
+                        styles.progressTrack,
+                        { backgroundColor: colors.surfaceRaised },
+                      ]}
+                    >
+                      <View
+                        style={[
+                          styles.progressFill,
+                          {
+                            backgroundColor:
+                              MACRO_GENRES[
+                                genre.macro_genre as keyof typeof MACRO_GENRES
+                              ]?.color ?? colors.accent,
+                            width: `${genreValues.reduce((sum, value) => sum + value, 0) ? (genreValues[index]! / genreValues.reduce((sum, value) => sum + value, 0)) * 100 : 0}%`,
+                          },
+                        ]}
+                      />
+                    </View>
+                    <View style={styles.genreMeta}>
+                      <Text variant="caption" color="secondary">
+                        {genre.log_count} shows · {genre.artist_count} artists ·{' '}
+                        {genre.avg_rating == null
+                          ? '—'
+                          : `${genre.avg_rating}★`}
+                      </Text>
+                      {genre.top_artist ? (
+                        <Text variant="caption" color="secondary">
+                          Top: {genre.top_artist.name} ({genre.top_artist.count}
+                          ×)
+                        </Text>
+                      ) : null}
+                    </View>
+                    <Pressable
+                      accessibilityRole="link"
+                      accessibilityLabel={`About ${genre.macro_genre.replaceAll('_', ' ')}`}
+                      hitSlop={8}
+                      onPress={(event) => {
+                        event.stopPropagation();
+                        router.push({
+                          pathname: '/genre/[slug]',
+                          params: { slug: genre.macro_genre },
+                        });
+                      }}
+                      style={styles.genreAbout}
+                    >
+                      <Text variant="caption" weight="bold" color="accent">
+                        About
+                      </Text>
+                    </Pressable>
+                  </Pressable>
+                  {childStats.length ? (
+                    <View style={styles.subgenreExpansion}>
+                      <Pressable
+                        accessibilityRole="button"
+                        accessibilityState={{ expanded }}
+                        onPress={() =>
+                          setExpandedGenre(expanded ? null : genre.macro_genre)
+                        }
+                        style={styles.expandSubgenres}
+                      >
+                        <Text variant="caption" weight="bold" color="accent">
+                          {expanded ? 'Hide sub-genres' : 'Show sub-genres'}
+                        </Text>
+                      </Pressable>
+                      {expanded
+                        ? childStats.map((subgenre, subIndex) => (
+                            <View
+                              key={subgenre.sub_genre}
+                              style={styles.subgenreRow}
+                            >
+                              <GenreLabel
+                                genre={subgenre.sub_genre}
+                                size="xs"
+                              />
+                              <Text variant="caption" color="secondary">
+                                {subgenre.log_count} shows ·{' '}
+                                {subgenre.artist_count} artists ·{' '}
+                                {childPercentages[subIndex] ?? 0}%
+                              </Text>
+                            </View>
+                          ))
+                        : null}
+                    </View>
                   ) : null}
                 </View>
-              </Pressable>
-            ))}
+              );
+            })}
           </Card>
         </View>
       ) : null}
@@ -1416,6 +1489,24 @@ const styles = StyleSheet.create({
   },
   genreTitle: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   genreMeta: { flexDirection: 'row', justifyContent: 'space-between', gap: 6 },
+  genreAbout: {
+    alignSelf: 'flex-end',
+    minHeight: 44,
+    justifyContent: 'center',
+  },
+  subgenreExpansion: { paddingLeft: 28, paddingBottom: 8, gap: 5 },
+  expandSubgenres: {
+    alignSelf: 'flex-start',
+    justifyContent: 'center',
+    minHeight: 36,
+  },
+  subgenreRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 8,
+    minHeight: 34,
+  },
   venueRow: {
     flexDirection: 'row',
     minHeight: 44,

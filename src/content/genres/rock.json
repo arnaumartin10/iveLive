@@ -1,0 +1,31 @@
+{
+  "slug": "rock",
+  "title": "Rock",
+  "tagline": "Amplified stories, played loud and made to travel.",
+  "summary": "Rock is a broad family of popular music built around amplified instruments, strong rhythms and songs that invite a crowd to answer back. It grew from blues, country, gospel and rhythm and blues, then kept changing through local scenes and new technology. Its umbrella is wide: a quiet guitar ballad and a forceful electric performance can both belong here. The page follows a few shared roots without treating one place or decade as the whole story.",
+  "origin_place": "United States",
+  "origin_years": "1950s",
+  "history": [
+    { "years": "1950s", "heading": "A new blend takes shape", "text": "In the United States, performers brought together blues phrasing, country guitar, gospel energy and rhythm and blues. Electric instruments and a backbeat made the music feel immediate to young audiences. Early rock travelled quickly through radio and records, while Black musicians' foundational work was often minimized in popular histories." },
+    { "years": "1960s", "heading": "Bands expand the sound", "text": "British groups reworked American blues and rock and roll, then carried the sound back across the Atlantic. Guitar bands developed longer forms, studio experimentation and heavier amplification. At the same time, soul, folk protest and psychedelic scenes shaped rock's lyrics and performance culture on both sides of the ocean." },
+    { "years": "1970s–1980s", "heading": "Many scenes, many scales", "text": "Hard rock, punk, metal, glam and progressive music grew into distinct approaches, from intimate clubs to enormous stages. The punk movement challenged elaborate production with speed and directness. Independent labels and local venues helped artists build communities outside the mainstream, even as arena rock became a global spectacle." },
+    { "years": "1990s–today", "heading": "Reinvention and exchange", "text": "Alternative scenes moved from independent circuits into international popular culture, while Britpop, grunge and many regional movements gave the guitar band new identities. Digital recording widened access and blurred genre borders. Rock now shares space with pop, electronic and hip-hop traditions, continually reshaped by local artists." }
+  ],
+  "related_slugs": ["indie", "metal", "punk", "pop"],
+  "wikipedia_title": "Rock music",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Chuck Berry", "why": "Berry's guitar-led songs and stage language helped establish the vocabulary of early rock and roll. His influence travelled through generations of performers." },
+    { "name": "The Beatles", "why": "The group showed how a band could move from concise pop songs into ambitious studio work while remaining central to popular culture." },
+    { "name": "Jimi Hendrix", "why": "Hendrix expanded what an electric guitar could express through feedback, tone and improvisation, leaving a lasting mark on rock performance." }
+  ],
+  "examples": [
+    { "name": "Sister Rosetta Tharpe" }, { "name": "Little Richard" }, { "name": "Elvis Presley" }, { "name": "The Rolling Stones" },
+    { "name": "The Kinks" }, { "name": "Led Zeppelin" }, { "name": "David Bowie" }, { "name": "Queen" },
+    { "name": "Bruce Springsteen" }, { "name": "The Clash" }, { "name": "AC/DC" }, { "name": "Metallica" },
+    { "name": "Nirvana" }, { "name": "Radiohead" }, { "name": "Foo Fighters" }, { "name": "Héroes del Silencio" },
+    { "name": "Los Planetas" }, { "name": "Extremoduro" }, { "name": "Vetusta Morla" }, { "name": "Triana" }
+  ],
+  "sources_to_verify": ["Rock music", "Rock and roll", "Chuck Berry", "The Beatles", "Jimi Hendrix"]
+}

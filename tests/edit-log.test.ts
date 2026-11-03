@@ -22,6 +22,7 @@ const mockConcert: ConcertWithRelations = {
     image_url_thumb: 'https://example.com/coldplay-thumb.jpg',
     genres: ['pop', 'rock'],
     macro_genres: ['pop'],
+    sub_genres: [],
     primary_macro: 'pop',
     is_on_tour: false,
     public_avg_rating: null,

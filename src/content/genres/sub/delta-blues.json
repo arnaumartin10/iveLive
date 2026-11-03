@@ -1,0 +1,28 @@
+{
+  "slug": "delta-blues",
+  "parent_slug": "jazz_blues",
+  "title": "Delta Blues",
+  "tagline": "Raw, expressive blues rooted in the Mississippi Delta.",
+  "summary": "Delta blues developed in the Mississippi Delta through solo singing accompanied by guitar, often using slide techniques and flexible rhythms. Its recordings preserve a powerful regional tradition shaped by African American musical life in the early 20th century. The style influenced Chicago blues, rock, and countless later guitarists.",
+  "origin_place": "Mississippi Delta, United States",
+  "origin_years": "early 20th century",
+  "history": [],
+  "related_slugs": ["jazz_blues", "folk_acoustic", "blues"],
+  "wikipedia_title": "Delta blues",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Robert Johnson", "why": "Johnson's recordings became among the most influential documents of Delta blues guitar and songwriting." },
+    { "name": "Charley Patton", "why": "Patton is regarded as a foundational Delta blues musician whose forceful performances shaped the regional style." },
+    { "name": "Son House", "why": "House's intense vocal delivery and bottleneck guitar playing became a major influence on later blues artists." }
+  ],
+  "examples": [
+    { "name": "Mississippi John Hurt" }, { "name": "Skip James" },
+    { "name": "Howlin' Wolf" }, { "name": "Muddy Waters" },
+    { "name": "John Lee Hooker" }, { "name": "Bukka White" },
+    { "name": "Tommy Johnson" }, { "name": "Ishmon Bracey" },
+    { "name": "Big Joe Williams" }, { "name": "R. L. Burnside" },
+    { "name": "Junior Kimbrough" }, { "name": "Bonnie Raitt" }
+  ],
+  "sources_to_verify": ["Delta blues", "Robert Johnson", "Charley Patton", "Son House"]
+}

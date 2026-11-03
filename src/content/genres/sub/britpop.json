@@ -1,0 +1,34 @@
+{
+  "slug": "britpop",
+  "parent_slug": "indie",
+  "title": "Britpop",
+  "tagline": "Guitar pop with a distinctly British voice and a taste for big choruses.",
+  "summary": "Britpop became a prominent British guitar-music movement in the 1990s. Its bands drew from earlier UK pop and rock while writing about everyday life, place, and identity in a direct, often witty style. The movement brought guitar bands back to the center of popular music and created a recognizable era of competing scenes and anthemic singles.",
+  "origin_place": "United Kingdom",
+  "origin_years": "1990s",
+  "history": [],
+  "related_slugs": ["indie", "indie-rock", "alternative-rock"],
+  "wikipedia_title": "Britpop",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Blur", "why": "Blur used character-driven lyrics and shifting pop arrangements to become one of Britpop's defining bands." },
+    { "name": "Oasis", "why": "Oasis paired direct songwriting with large choruses and a classic-rock scale that defined the movement's mainstream reach." },
+    { "name": "Pulp", "why": "Pulp's observational lyrics and carefully built songs offered a distinctive, socially attentive take on Britpop." }
+  ],
+  "examples": [
+    { "name": "Suede" },
+    { "name": "Elastica" },
+    { "name": "Supergrass" },
+    { "name": "The Verve" },
+    { "name": "Sleeper" },
+    { "name": "Menswear" },
+    { "name": "Ash" },
+    { "name": "The Charlatans" },
+    { "name": "Ocean Colour Scene" },
+    { "name": "The Lightning Seeds" },
+    { "name": "Catatonia" },
+    { "name": "The Boo Radleys" }
+  ],
+  "sources_to_verify": ["Britpop", "Blur", "Oasis", "Pulp"]
+}

@@ -259,6 +259,19 @@ export function HomeHub() {
             />
           </Pressable>
         </View>
+        <Pressable
+          accessibilityRole="link"
+          accessibilityLabel="Browse music genres"
+          onPress={() => router.push('/genres')}
+          style={[styles.browseGenresLink, { borderColor: colors.ink }]}
+        >
+          <Text variant="caption" weight="bold">
+            BROWSE GENRES
+          </Text>
+          <Text variant="caption" color="secondary">
+            Explore the sounds behind your live diary
+          </Text>
+        </Pressable>
 
         {!location.country ? (
           <Pressable
@@ -549,6 +562,7 @@ export function HomeHub() {
                   genre={key as keyof typeof MACRO_GENRES}
                   size="xs"
                   variant={genre === key ? 'solid' : 'outline'}
+                  interactive={false}
                 />
               </Pressable>
             ))}
@@ -889,6 +903,12 @@ const styles = StyleSheet.create({
     gap: spacing.md,
   },
   mastheadCopy: { flex: 1, gap: spacing.xs },
+  browseGenresLink: {
+    borderWidth: 1.5,
+    gap: 2,
+    paddingHorizontal: 12,
+    paddingVertical: 9,
+  },
   avatarButton: {
     alignItems: 'center',
     height: 48,

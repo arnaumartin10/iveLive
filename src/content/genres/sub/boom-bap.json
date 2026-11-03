@@ -1,0 +1,28 @@
+{
+  "slug": "boom-bap",
+  "parent_slug": "hip_hop",
+  "title": "Boom Bap",
+  "tagline": "Hard-hitting drums, chopped samples, and lyric-forward hip-hop.",
+  "summary": "Boom bap is a production style in hip-hop known for punchy kick and snare patterns, sampled loops, and a strong emphasis on the MC. It became closely associated with East Coast rap and the sound of independent producers digging through records for distinctive breaks. Its direct, rhythmic approach remains influential in underground hip-hop.",
+  "origin_place": "New York City, United States",
+  "origin_years": "late 1980s–1990s",
+  "history": [],
+  "related_slugs": ["hip_hop", "conscious-hip-hop", "trap"],
+  "wikipedia_title": "East Coast hip hop",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "DJ Premier", "why": "Premier's chopped samples and forceful drums became a landmark production sound in East Coast hip-hop." },
+    { "name": "Pete Rock", "why": "Pete Rock shaped a warm, sample-rich approach that made boom bap both hard-hitting and soulful." },
+    { "name": "KRS-One", "why": "KRS-One's commanding delivery and socially minded writing exemplify the MC-centered tradition associated with boom bap." }
+  ],
+  "examples": [
+    { "name": "Gang Starr" }, { "name": "Nas" },
+    { "name": "The Notorious B.I.G." }, { "name": "Wu-Tang Clan" },
+    { "name": "Mobb Deep" }, { "name": "Black Moon" },
+    { "name": "Jeru the Damaja" }, { "name": "D.I.T.C." },
+    { "name": "Organized Konfusion" }, { "name": "Onyx" },
+    { "name": "J Dilla" }, { "name": "Large Professor" }
+  ],
+  "sources_to_verify": ["East Coast hip hop", "DJ Premier", "Pete Rock", "KRS-One"]
+}

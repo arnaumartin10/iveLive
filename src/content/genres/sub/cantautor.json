@@ -1,0 +1,28 @@
+{
+  "slug": "cantautor",
+  "parent_slug": "folk_acoustic",
+  "title": "Cantautor",
+  "tagline": "Songwriters who place words, melody, and personal perspective up front.",
+  "summary": "Cantautor describes singer-songwriters, especially within Spanish- and Catalan-language traditions, who write and perform their own material. The music can draw on folk, pop, and regional forms, often using lyrics to address personal or social themes. It is a broad songwriting tradition rather than one fixed arrangement or sound.",
+  "origin_place": "Spain and Latin America",
+  "origin_years": "1960s onwards",
+  "history": [],
+  "related_slugs": ["folk_acoustic", "singer-songwriter", "latin"],
+  "wikipedia_title": "Singer-songwriter",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Joan Manuel Serrat", "why": "Serrat is a major Catalan and Spanish-language songwriter whose repertoire combines poetry and popular song." },
+    { "name": "Silvio Rodríguez", "why": "Rodríguez became one of the most recognized voices of Nueva Trova through intimate, socially engaged songwriting." },
+    { "name": "Paco Ibáñez", "why": "Ibáñez is known for setting Spanish poetry to music and bringing literary texts into a singer-songwriter format." }
+  ],
+  "examples": [
+    { "name": "Joaquín Sabina" }, { "name": "Luis Eduardo Aute" },
+    { "name": "Víctor Jara" }, { "name": "Violeta Parra" },
+    { "name": "Pablo Milanés" }, { "name": "Raimon" },
+    { "name": "Lluís Llach" }, { "name": "Chico Buarque" },
+    { "name": "Mercedes Sosa" }, { "name": "Ismael Serrano" },
+    { "name": "Rozalén" }, { "name": "María del Mar Bonet" }
+  ],
+  "sources_to_verify": ["Singer-songwriter", "Joan Manuel Serrat", "Silvio Rodríguez", "Paco Ibáñez"]
+}

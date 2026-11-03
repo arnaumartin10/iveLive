@@ -1,0 +1,34 @@
+{
+  "slug": "hardcore-punk",
+  "parent_slug": "punk",
+  "title": "Hardcore Punk",
+  "tagline": "Speed, volume, and urgency stripped down to the essentials.",
+  "summary": "Hardcore punk pushed punk rock into a sharper, faster, more confrontational form. It favors relentless drums, distorted guitars, and lyrics that feel blunt and immediate. In a short span, scenes spread across the United States and beyond, with each location adding its own sense of style, attitude, and community.",
+  "origin_place": "United States and United Kingdom",
+  "origin_years": "late 1970s",
+  "history": [],
+  "related_slugs": ["punk", "post-hardcore", "ska-punk"],
+  "wikipedia_title": "Hardcore punk",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Black Flag", "why": "Black Flag weaponized speed and tension, making hardcore a demanding, confrontational sound." },
+    { "name": "The Ramones", "why": "The Ramones kept the energy direct and immediate, influencing how fast and blunt hardcore could be." },
+    { "name": "Minor Threat", "why": "Minor Threat's clarity and aggression defined a compact, high-intensity hardcore identity." }
+  ],
+  "examples": [
+    { "name": "Bad Brains" },
+    { "name": "Dead Kennedys" },
+    { "name": "The Misfits" },
+    { "name": "Fugazi" },
+    { "name": "Circle Jerks" },
+    { "name": "Sonic Youth" },
+    { "name": "Rites of Spring" },
+    { "name": "The Germs" },
+    { "name": "Suicidal Tendencies" },
+    { "name": "D.O.A." },
+    { "name": "Youth Brigade" },
+    { "name": "Agnostic Front" }
+  ],
+  "sources_to_verify": ["Hardcore punk", "Black Flag", "Minor Threat", "Bad Brains"]
+}

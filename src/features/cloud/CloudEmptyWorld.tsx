@@ -40,7 +40,7 @@ export function CloudEmptyWorld({ onStart }: { onStart: () => void }) {
                 { backgroundColor: MACRO_GENRES[slug].color },
               ]}
             />
-            <GenreLabel genre={slug} size="xs" />
+            <GenreLabel genre={slug} size="xs" interactive={false} />
             <Text variant="mono" color="secondary">
               UNEXPLORED · {MACRO_GENRES[slug].pattern.toUpperCase()}
             </Text>

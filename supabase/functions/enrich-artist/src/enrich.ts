@@ -1,4 +1,5 @@
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.117.3';
+import type { SupabaseClient } from 'https://esm.sh/@supabase/supabase-js@2.117.3';
+import type { Database } from '../../../../src/lib/database.types.ts';
 import { albumsProvider } from './providers/albums.ts';
 import { lastFmProvider } from './providers/lastfm.ts';
 import { musicBrainzProvider } from './providers/musicbrainz.ts';
@@ -9,17 +10,35 @@ import {
 } from './providers/merge.ts';
 import { theAudioDbProvider } from './providers/theaudiodb.ts';
 import { wikipediaProvider } from './providers/wikipedia.ts';
+import { isBioField, selectEnglishBio } from './providers/bio.ts';
 import type {
   AlbumCandidate,
   ArtistSnapshot,
   ProviderContext,
   WeightedTag,
 } from './providers/types.ts';
+import { runIsolatedProvider } from './providers/merge.ts';
 
-type DatabaseClient = ReturnType<typeof createClient>;
+type ArtistUpdate = Database['public']['Tables']['artists']['Update'];
+type DatabaseClient = SupabaseClient<Database>;
+
+function storedTags(value: unknown): WeightedTag[] {
+  if (!Array.isArray(value)) return [];
+  return value.flatMap((item): WeightedTag[] => {
+    if (!item || typeof item !== 'object' || Array.isArray(item)) return [];
+    const tag = item as Record<string, unknown>;
+    if (typeof tag.name !== 'string' || !tag.name.trim()) return [];
+    return [
+      {
+        name: tag.name,
+        weight: Math.max(Number(tag.weight) || 1, 1),
+      },
+    ];
+  });
+}
 
 function applyUneditedFields(
-  target: Record<string, unknown>,
+  target: ArtistUpdate,
   patch: Record<string, unknown> | undefined,
   edited: Set<string>,
 ) {
@@ -55,7 +74,7 @@ function applyUneditedFields(
       value !== null &&
       value !== ''
     )
-      target[field] = value;
+      Object.assign(target, { [field]: value });
   }
 }
 
@@ -82,7 +101,6 @@ function cleanGenres(tags: WeightedTag[], denied: Set<string>): string[] {
 export async function enrichArtist(
   database: DatabaseClient,
   artistId: string,
-  language: string | null = null,
   force = false,
 ) {
   const { data: artist, error } = await database
@@ -91,7 +109,19 @@ export async function enrichArtist(
     .eq('id', artistId)
     .single();
   if (error || !artist) throw new Error(error?.message ?? 'Artist not found');
-  const snapshot = artist as ArtistSnapshot;
+  const snapshot: ArtistSnapshot = {
+    id: artist.id,
+    name: artist.name,
+    spotify_id: artist.spotify_id,
+    genres: artist.genres ?? [],
+    user_edited_fields: artist.user_edited_fields ?? [],
+    lastfm_tags: storedTags(artist.lastfm_tags),
+    musicbrainz_id: artist.musicbrainz_id,
+    wikidata_id: artist.wikidata_id,
+    wikipedia_title: artist.wikipedia_title,
+    begin_year: artist.begin_year,
+    begin_year_source: artist.begin_year_source,
+  };
   const enrichedAt = artist.enriched_at
     ? Date.parse(artist.enriched_at)
     : Number.NaN;
@@ -126,9 +156,8 @@ export async function enrichArtist(
     releaseGroups: [],
     musicbrainzId: artist.musicbrainz_id,
     wikidataId: artist.wikidata_id,
-    wikipediaTitle: artist.wikipedia_title,
+    wikipediaTitle: null,
     lastfmApiKey: Deno.env.get('LASTFM_API_KEY') ?? null,
-    language,
   };
   const providers = [
     musicBrainzProvider,
@@ -139,15 +168,37 @@ export async function enrichArtist(
   ];
   let albums: AlbumCandidate[] | undefined;
   const collected = await collectProviderResults(providers, context);
-  const patches: Record<string, unknown> = {};
+  const patches: ArtistUpdate = {};
   const errors = collected.errors;
   for (const { result } of collected.results) {
+    const nonBioPatch = Object.fromEntries(
+      Object.entries(result.patch ?? {}).filter(
+        ([field]) => !isBioField(field),
+      ),
+    );
     applyUneditedFields(
       patches,
-      result.patch,
+      nonBioPatch,
       new Set(snapshot.user_edited_fields ?? []),
     );
     if (result.albums) albums = result.albums;
+  }
+  const selectedBio = selectEnglishBio(
+    {
+      bio_source: artist.bio_source,
+      user_edited_fields: snapshot.user_edited_fields,
+    },
+    collected.results.map(({ provider, result }) => ({
+      provider,
+      patch: result.patch,
+    })),
+    context.wikipediaTitle,
+  );
+  if (selectedBio) {
+    for (const [field, value] of Object.entries(selectedBio)) {
+      if (!snapshot.user_edited_fields?.includes(field))
+        Object.assign(patches, { [field]: value });
+    }
   }
   const galleryImages = collected.results.flatMap(
     ({ result }) =>
@@ -194,7 +245,12 @@ export async function enrichArtist(
   );
 
   if (!edited.has('lastfm_tags') && rawLastFmTags?.length) {
-    patches.lastfm_tags = rawLastFmTags.slice(0, 10);
+    patches.lastfm_tags = rawLastFmTags
+      .slice(0, 10)
+      .map(({ name, weight }) => ({
+        name,
+        weight,
+      }));
   }
   if (!edited.has('genres') && mergedTags.length) {
     patches.genres = cleanGenres(mergedTags, denied);
@@ -211,21 +267,27 @@ export async function enrichArtist(
       if (result) {
         patches.macro_genres = result.macro_genres;
         patches.primary_macro = result.primary_macro;
+        patches.sub_genres = result.sub_genres ?? [];
       }
     }
   } else if (!edited.has('genres') && !classificationTags.length) {
     patches.macro_genres = ['unclassified'];
     patches.primary_macro = 'unclassified';
+    patches.sub_genres = [];
   }
 
   const hasTags = mergedTags.length > 0 || originalGenres.length > 0;
   const hasBio =
     (typeof patches.bio === 'string' && patches.bio.trim().length > 0) ||
-    (typeof artist.bio === 'string' && artist.bio.trim().length > 0);
+    (selectedBio === null &&
+      artist.bio_lang === 'en' &&
+      typeof artist.bio === 'string' &&
+      artist.bio.trim().length > 0);
   const hasProviderMetadata =
     collected.results.some(({ result }) =>
       Object.entries(result.patch ?? {}).some(
         ([field, value]) =>
+          !isBioField(field) &&
           field !== 'bio' &&
           value !== undefined &&
           value !== null &&
@@ -307,5 +369,145 @@ export async function enrichArtist(
     errors,
     successfulProviders: collected.successfulProviders,
     hasTags,
+  };
+}
+
+export async function enrichArtistBiosOnly(
+  database: DatabaseClient,
+  artistId: string,
+) {
+  const { data: artist, error } = await database
+    .from('artists')
+    .select(
+      'id, name, spotify_id, musicbrainz_id, wikidata_id, wikipedia_title, bio, bio_source, bio_lang, bio_url, user_edited_fields',
+    )
+    .eq('id', artistId)
+    .single();
+  if (error || !artist) throw new Error(error?.message ?? 'Artist not found');
+
+  const userEditedFields = artist.user_edited_fields ?? [];
+  if (artist.bio_source === 'manual' || userEditedFields.includes('bio')) {
+    return {
+      artist,
+      skipped: true,
+      errors: [] as string[],
+      successfulProviders: [] as string[],
+    };
+  }
+
+  const snapshot = {
+    id: artist.id,
+    name: artist.name,
+    spotify_id: artist.spotify_id,
+    genres: [],
+    user_edited_fields: userEditedFields,
+    lastfm_tags: [],
+    musicbrainz_id: artist.musicbrainz_id,
+    wikidata_id: artist.wikidata_id,
+    wikipedia_title: null,
+    begin_year: null,
+    begin_year_source: null,
+  } satisfies ArtistSnapshot;
+  const context: ProviderContext = {
+    artist: snapshot,
+    tags: [],
+    releaseGroups: [],
+    musicbrainzId: artist.musicbrainz_id,
+    wikidataId: artist.wikidata_id,
+    wikipediaTitle: null,
+    lastfmApiKey: Deno.env.get('LASTFM_API_KEY') ?? null,
+  };
+  const errors: string[] = [];
+  const successfulProviders: string[] = [];
+
+  try {
+    const result = await runIsolatedProvider(musicBrainzProvider, context);
+    successfulProviders.push('musicbrainz');
+    if (result.patch?.musicbrainz_id)
+      context.musicbrainzId = String(result.patch.musicbrainz_id);
+    if (result.patch?.wikidata_id)
+      context.wikidataId = String(result.patch.wikidata_id);
+    if (result.patch?.wikipedia_title)
+      context.wikipediaTitle = String(result.patch.wikipedia_title);
+  } catch (error) {
+    errors.push(
+      `musicbrainz: ${error instanceof Error ? error.message : String(error)}`,
+    );
+  }
+
+  const candidates: { provider: string; patch?: Record<string, unknown> }[] =
+    [];
+  for (const provider of [
+    wikipediaProvider,
+    lastFmProvider,
+    theAudioDbProvider,
+  ]) {
+    try {
+      const result = await runIsolatedProvider(provider, context);
+      successfulProviders.push(provider.name);
+      candidates.push({ provider: provider.name, patch: result.patch });
+      if (result.patch?.wikipedia_title)
+        context.wikipediaTitle = String(result.patch.wikipedia_title);
+      const selected = selectEnglishBio(
+        {
+          bio_source: artist.bio_source,
+          user_edited_fields: userEditedFields,
+        },
+        candidates,
+        context.wikipediaTitle,
+      );
+      if (typeof selected?.bio === 'string') break;
+    } catch (error) {
+      errors.push(
+        `${provider.name}: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
+  }
+
+  const bioPatch = selectEnglishBio(
+    {
+      bio_source: artist.bio_source,
+      user_edited_fields: userEditedFields,
+    },
+    candidates,
+    context.wikipediaTitle,
+  );
+  if (!bioPatch) {
+    return {
+      artist,
+      skipped: true,
+      errors,
+      successfulProviders,
+    };
+  }
+
+  const { data: updated, error: updateError } = await database
+    .from('artists')
+    .update({
+      bio: bioPatch.bio,
+      bio_source: bioPatch.bio_source,
+      bio_url: bioPatch.bio_url,
+      bio_lang: bioPatch.bio_lang,
+      wikipedia_title: bioPatch.wikipedia_title,
+    })
+    .eq('id', artistId)
+    .or('bio_source.is.null,bio_source.neq.manual')
+    .not('user_edited_fields', 'cs', '{"bio"}')
+    .select('id, name, bio, bio_source, bio_lang, bio_url, wikipedia_title')
+    .maybeSingle();
+  if (updateError) throw new Error(updateError.message);
+  if (!updated) {
+    return {
+      artist,
+      skipped: true,
+      errors,
+      successfulProviders,
+    };
+  }
+  return {
+    artist: updated,
+    skipped: false,
+    errors,
+    successfulProviders,
   };
 }

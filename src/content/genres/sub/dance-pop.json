@@ -1,0 +1,28 @@
+{
+  "slug": "dance-pop",
+  "parent_slug": "pop",
+  "title": "Dance-Pop",
+  "tagline": "Pop hooks designed to move with the pulse of the dance floor.",
+  "summary": "Dance-pop combines concise pop songwriting with club-ready rhythms and production. Strong choruses, steady beats, and polished arrangements help songs work both on radio and on the dance floor. The style has absorbed disco, house, electronic music, and contemporary production trends while remaining centered on memorable vocal melodies.",
+  "origin_place": "United States and United Kingdom",
+  "origin_years": "1980s onwards",
+  "history": [],
+  "related_slugs": ["pop", "disco", "electropop"],
+  "wikipedia_title": "Dance-pop",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Madonna", "why": "Madonna repeatedly connected pop songwriting with club production and dance-centered performance." },
+    { "name": "Janet Jackson", "why": "Jackson's rhythmic vocals and tightly arranged productions helped define an influential dance-pop sound." },
+    { "name": "Kylie Minogue", "why": "Minogue built a long-running catalog around bright hooks and polished dance-pop production." }
+  ],
+  "examples": [
+    { "name": "Britney Spears" }, { "name": "Lady Gaga" },
+    { "name": "Rihanna" }, { "name": "Dua Lipa" },
+    { "name": "Katy Perry" }, { "name": "Robyn" },
+    { "name": "Carly Rae Jepsen" }, { "name": "The Weeknd" },
+    { "name": "Pet Shop Boys" }, { "name": "Sophie Ellis-Bextor" },
+    { "name": "Jessie Ware" }, { "name": "Ava Max" }
+  ],
+  "sources_to_verify": ["Dance-pop", "Madonna", "Janet Jackson", "Kylie Minogue"]
+}

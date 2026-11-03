@@ -7,6 +7,7 @@ import {
   fetchArtistsByVenue,
   fetchExclusiveArtists,
   fetchGenreStats,
+  fetchSubgenreStats,
   fetchHeatmap,
   fetchLeaderboard,
   fetchStatsOverview,
@@ -23,6 +24,8 @@ export const statsQueryKeys = {
     ['stats', 'overview', userId, year] as const,
   genres: (userId: string, year: StatsScope) =>
     ['stats', 'genres', userId, year] as const,
+  subgenres: (userId: string, year: StatsScope) =>
+    ['stats', 'subgenres', userId, year] as const,
   venues: (userId: string, year: StatsScope) =>
     ['stats', 'venues', userId, year] as const,
   exclusiveArtists: (userId: string, type: VenueType, year: StatsScope) =>
@@ -60,6 +63,16 @@ export function useGenreStats(userId?: string, year?: StatsScope) {
   return useQuery({
     queryKey: statsQueryKeys.genres(context.userId, context.year),
     queryFn: () => fetchGenreStats(context.userId, context.year),
+    enabled: !!context.userId,
+    staleTime: STALE_TIME,
+  });
+}
+
+export function useSubgenreStats(userId?: string, year?: StatsScope) {
+  const context = useStatsContext(userId, year);
+  return useQuery({
+    queryKey: statsQueryKeys.subgenres(context.userId, context.year),
+    queryFn: () => fetchSubgenreStats(context.userId, context.year),
     enabled: !!context.userId,
     staleTime: STALE_TIME,
   });

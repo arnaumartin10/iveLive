@@ -1,0 +1,28 @@
+{
+  "slug": "neo-soul",
+  "parent_slug": "rnb_soul",
+  "title": "Neo Soul",
+  "tagline": "Soul traditions revisited through contemporary grooves and personal songwriting.",
+  "summary": "Neo soul emerged in the 1990s as singers and musicians reconnected contemporary R&B with classic soul, jazz, and hip-hop. Warm live instrumentation, expressive vocals, and personal writing became common features, though the style varies widely. Its artists helped broaden R&B beyond polished radio conventions.",
+  "origin_place": "United States",
+  "origin_years": "1990s",
+  "history": [],
+  "related_slugs": ["rnb_soul", "contemporary-rnb", "funk"],
+  "wikipedia_title": "Neo soul",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Erykah Badu", "why": "Badu's distinctive voice and jazz-inflected arrangements made her a defining figure of neo soul." },
+    { "name": "D'Angelo", "why": "D'Angelo brought deep grooves, live-band interplay, and classic soul references into a modern R&B framework." },
+    { "name": "Jill Scott", "why": "Scott's songwriting and vocal delivery helped establish neo soul's intimate, poetic approach." }
+  ],
+  "examples": [
+    { "name": "Maxwell" }, { "name": "Lauryn Hill" },
+    { "name": "India.Arie" }, { "name": "Musiq Soulchild" },
+    { "name": "Bilal" }, { "name": "Raphael Saadiq" },
+    { "name": "Angie Stone" }, { "name": "Cleo Sol" },
+    { "name": "Alicia Keys" }, { "name": "The Internet" },
+    { "name": "Snoh Aalegra" }, { "name": "Lianne La Havas" }
+  ],
+  "sources_to_verify": ["Neo soul", "Erykah Badu", "D'Angelo", "Jill Scott"]
+}

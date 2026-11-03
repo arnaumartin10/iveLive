@@ -9,6 +9,34 @@ interface SpotifyTokenResponse {
 }
 
 let cachedToken: CachedToken | null = null;
+const spotifyRequestTimeoutMs = 8_000;
+
+async function fetchWithTimeout(
+  input: RequestInfo | URL,
+  init?: RequestInit,
+): Promise<Response> {
+  const controller = new AbortController();
+  const upstreamSignal = init?.signal;
+  const abortFromUpstream = () => controller.abort(upstreamSignal?.reason);
+  if (upstreamSignal?.aborted) {
+    abortFromUpstream();
+  } else {
+    upstreamSignal?.addEventListener('abort', abortFromUpstream, {
+      once: true,
+    });
+  }
+  const timeout = setTimeout(
+    () => controller.abort(new Error('Spotify request timed out')),
+    spotifyRequestTimeoutMs,
+  );
+
+  try {
+    return await fetch(input, { ...init, signal: controller.signal });
+  } finally {
+    clearTimeout(timeout);
+    upstreamSignal?.removeEventListener('abort', abortFromUpstream);
+  }
+}
 
 export class SpotifyRateLimitedError extends Error {
   constructor(readonly retryAfter: number) {
@@ -37,14 +65,17 @@ async function getAccessToken(forceRefresh = false): Promise<string> {
     throw new Error('Spotify client credentials are not configured');
   }
 
-  const response = await fetch('https://accounts.spotify.com/api/token', {
-    method: 'POST',
-    headers: {
-      Authorization: `Basic ${btoa(`${clientId}:${clientSecret}`)}`,
-      'Content-Type': 'application/x-www-form-urlencoded',
+  const response = await fetchWithTimeout(
+    'https://accounts.spotify.com/api/token',
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Basic ${btoa(`${clientId}:${clientSecret}`)}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: 'grant_type=client_credentials',
     },
-    body: 'grant_type=client_credentials',
-  });
+  );
 
   console.log(
     JSON.stringify({
@@ -90,15 +121,15 @@ function retryDelay(header: string | null): number {
 
 export async function spotifyGet(path: string): Promise<unknown> {
   let refreshedAfterUnauthorized = false;
-  let retriedRateLimit = false;
   let forceRefresh = false;
 
   while (true) {
     const accessToken = await getAccessToken(forceRefresh);
     forceRefresh = false;
-    const response = await fetch(`https://api.spotify.com${path}`, {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
+    const response = await fetchWithTimeout(
+      `https://api.spotify.com${path}`,
+      { headers: { Authorization: `Bearer ${accessToken}` } },
+    );
 
     console.log(
       JSON.stringify({
@@ -118,10 +149,7 @@ export async function spotifyGet(path: string): Promise<unknown> {
 
     if (response.status === 429) {
       const retryAfter = retryDelay(response.headers.get('Retry-After'));
-      if (retriedRateLimit) throw new SpotifyRateLimitedError(retryAfter);
-      retriedRateLimit = true;
-      await new Promise((resolve) => setTimeout(resolve, retryAfter * 1000));
-      continue;
+      throw new SpotifyRateLimitedError(retryAfter);
     }
 
     if (!response.ok) {

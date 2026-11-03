@@ -6,6 +6,13 @@ import { CloudAccessibleList } from '../src/features/cloud/CloudAccessibleList';
 import { CloudEmptyWorld } from '../src/features/cloud/CloudEmptyWorld';
 import type { CloudArtistData } from '../src/features/cloud/types';
 
+jest.mock('../src/features/genres/catalog', () => ({
+  ...jest.requireActual<typeof import('../src/features/genres/catalog')>(
+    '../src/features/genres/catalog',
+  ),
+  useGenreCatalog: () => ({ data: [] }),
+}));
+
 const artist: CloudArtistData = {
   id: 'artist-1',
   name: 'Artist One',
@@ -33,7 +40,8 @@ describe('Atlas accessibility and empty world', () => {
     expect(
       screen.getByLabelText('Artist One, 3 shows, rated 4.5 out of 5'),
     ).toBeTruthy();
-    expect(screen.getByText('Rock · 1 artists')).toBeTruthy();
+    expect(screen.getByText('Rock')).toBeTruthy();
+    expect(screen.getByText('1 artists')).toBeTruthy();
     expect(screen.getAllByText('Unexplored')).toHaveLength(13);
   });
 
@@ -45,8 +53,6 @@ describe('Atlas accessibility and empty world', () => {
     expect(
       screen.getByLabelText('Rock, dots pattern, unexplored'),
     ).toBeTruthy();
-    expect(
-      screen.getAllByText(/UNEXPLORED ·/),
-    ).toHaveLength(14);
+    expect(screen.getAllByText(/UNEXPLORED ·/)).toHaveLength(14);
   });
 });

@@ -5,6 +5,7 @@ import type {
   ProviderResult,
   WeightedTag,
 } from './types.ts';
+import { isEnglishBio, stripBioMarkup } from './language.ts';
 
 type LastFmInfoPayload = {
   artist?: {
@@ -35,12 +36,15 @@ export function parseLastFmBio(payload: {
   };
 }) {
   const bio = payload.artist?.bio;
-  const summary = (bio?.summary ?? bio?.content ?? '')
-    .replace(/\s*<a\s+href=[^>]*>.*?<\/a>\s*$/i, '')
-    .trim();
-  return summary
-    ? { bio: summary, bio_url: bio?.links?.link?.href ?? null }
-    : null;
+  const rawSummary = (bio?.summary ?? bio?.content ?? '')
+    .replace(/\s*<a\b[^>]*>[\s\S]*?<\/a>\s*$/i, '')
+    .replace(/\s*Read more(?:\s+on\s+Last\.fm)?\.?\s*$/i, '');
+  const summary = stripBioMarkup(rawSummary);
+  if (!summary || !isEnglishBio(summary)) return null;
+  return {
+    bio: summary,
+    bio_url: bio?.links?.link?.href ?? null,
+  };
 }
 
 async function lastFmRequest<T>(
@@ -54,6 +58,7 @@ async function lastFmRequest<T>(
     artist: context.artist.name,
     api_key: context.lastfmApiKey,
     format: 'json',
+    lang: 'en',
   });
   if (context.musicbrainzId) params.set('mbid', context.musicbrainzId);
   return cachedJson<T>(
@@ -95,7 +100,14 @@ export const lastFmProvider: EnrichmentProvider = {
     return {
       tags,
       patch: bio
-        ? { bio: bio.bio, bio_source: 'lastfm', bio_url: bio.bio_url }
+        ? {
+            bio: bio.bio,
+            bio_source: 'lastfm',
+            bio_url:
+              bio.bio_url ??
+              `https://www.last.fm/music/${encodeURIComponent(context.artist.name)}/+wiki`,
+            bio_lang: 'en',
+          }
         : undefined,
     };
   },

@@ -1,0 +1,34 @@
+{
+  "slug": "reggaeton",
+  "parent_slug": "latin",
+  "title": "Reggaeton",
+  "tagline": "A syncopated beat shaped by Caribbean exchange.",
+  "summary": "Reggaeton developed through musical exchange across Panama, Puerto Rico, Jamaica, and wider Latin American communities. Its familiar dembow rhythm connects dancehall and reggae influences with Spanish-language rap, local production, and club culture. The style has changed across generations, moving between underground mixtapes and global pop while continuing to make room for regional voices and new rhythmic ideas.",
+  "origin_place": "Caribbean and Central America",
+  "origin_years": "1990s",
+  "history": [],
+  "related_slugs": ["latin", "hip_hop", "urbano-latino"],
+  "wikipedia_title": "Reggaeton",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Vico C", "why": "Vico C helped establish Spanish-language rap as a central part of the music's early development." },
+    { "name": "Daddy Yankee", "why": "Daddy Yankee helped bring Puerto Rican reggaeton to a broad international audience." },
+    { "name": "Tego Calderón", "why": "Calderón's records foregrounded Afro-Caribbean references and a distinctive lyrical voice." }
+  ],
+  "examples": [
+    { "name": "Ivy Queen" },
+    { "name": "Don Omar" },
+    { "name": "Wisin & Yandel" },
+    { "name": "Calle 13" },
+    { "name": "J Balvin" },
+    { "name": "Bad Bunny" },
+    { "name": "Nicky Jam" },
+    { "name": "Farruko" },
+    { "name": "Karol G" },
+    { "name": "Rauw Alejandro" },
+    { "name": "Residente" },
+    { "name": "Rosalía" }
+  ],
+  "sources_to_verify": ["Reggaeton", "Vico C", "Daddy Yankee", "Tego Calderón"]
+}

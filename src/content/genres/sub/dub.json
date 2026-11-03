@@ -1,0 +1,75 @@
+{
+  "slug": "dub",
+  "parent_slug": "world",
+  "title": "Dub",
+  "tagline": "A stripped-back take on rhythm that makes space itself part of the song.",
+  "summary": "Dub takes the rhythm section and the studio as the main instruments, turning mix and echo into an artistic force. It often strips songs down to a bassline and drums, then reshapes the sound with delay, subtraction and reverb. The result is a music of atmosphere, depth and intentional space.",
+  "origin_place": "Jamaica",
+  "origin_years": "1970s and 1980s",
+  "history": [],
+  "related_slugs": [
+    "world",
+    "electronic"
+  ],
+  "wikipedia_title": "Dub",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    {
+      "name": "Lee “Scratch” Perry",
+      "why": "Lee “Scratch” Perry transformed dub into a sonic practice that treated the studio as an instrument in its own right."
+    },
+    {
+      "name": "King Tubby",
+      "why": "King Tubby used mixing and echo to create a monumental sense of movement and depth in the form."
+    },
+    {
+      "name": "Augustus Pablo",
+      "why": "Augustus Pablo linked dub to melodic improvisation and a sensitive, atmospheric touch."
+    }
+  ],
+  "examples": [
+    {
+      "name": "Scientist"
+    },
+    {
+      "name": "Mad Professor"
+    },
+    {
+      "name": "Bunny Lee"
+    },
+    {
+      "name": "U-Roy"
+    },
+    {
+      "name": "Sly & Robbie"
+    },
+    {
+      "name": "Prince Far I"
+    },
+    {
+      "name": "The Upsetters"
+    },
+    {
+      "name": "Tappa Zukie"
+    },
+    {
+      "name": "Mikey Dread"
+    },
+    {
+      "name": "Yabby You"
+    },
+    {
+      "name": "Big Youth"
+    },
+    {
+      "name": "Channel One Sound System"
+    }
+  ],
+  "sources_to_verify": [
+    "Dub",
+    "Lee “Scratch” Perry",
+    "King Tubby",
+    "Augustus Pablo"
+  ]
+}

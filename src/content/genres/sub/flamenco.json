@@ -1,0 +1,34 @@
+{
+  "slug": "flamenco",
+  "parent_slug": "latin",
+  "title": "Flamenco",
+  "tagline": "Voice, guitar, rhythm, and a living Andalusian tradition.",
+  "summary": "Flamenco is a diverse music and dance tradition associated especially with Andalusia. It brings together singing, guitar, handclaps, and dance in forms known as palos, each with its own rhythmic and expressive character. Its history reflects Roma, Andalusian, and wider cultural exchange. Artists continue to honor its forms while finding new ways to connect flamenco with contemporary music.",
+  "origin_place": "Andalusia, Spain",
+  "origin_years": "18th–19th centuries",
+  "history": [],
+  "related_slugs": ["latin", "flamenco-pop", "folk_acoustic"],
+  "wikipedia_title": "Flamenco",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Camarón de la Isla", "why": "Camarón became a defining cantaor whose recordings brought a powerful personal voice to flamenco." },
+    { "name": "Paco de Lucía", "why": "De Lucía expanded flamenco guitar technique and explored dialogue with other musical traditions." },
+    { "name": "Lola Flores", "why": "Flores carried flamenco song and dance into popular performance while remaining closely associated with Andalusian culture." }
+  ],
+  "examples": [
+    { "name": "Manolo Caracol" },
+    { "name": "La Niña de los Peines" },
+    { "name": "Enrique Morente" },
+    { "name": "Carmen Amaya" },
+    { "name": "Tomatito" },
+    { "name": "Vicente Amigo" },
+    { "name": "Estrella Morente" },
+    { "name": "Rocío Márquez" },
+    { "name": "Israel Fernández" },
+    { "name": "Ketama" },
+    { "name": "Rosalía" },
+    { "name": "La Plazuela" }
+  ],
+  "sources_to_verify": ["Flamenco", "Camarón de la Isla", "Paco de Lucía", "Carmen Amaya"]
+}

@@ -1,0 +1,31 @@
+{
+  "slug": "metal",
+  "title": "Metal",
+  "tagline": "Weight, precision and theatrical force.",
+  "summary": "Metal is a broad set of amplified music built around heavy guitar tones, powerful rhythm sections and commanding performance. Its many branches range from concise hard rock roots to intricate, extreme and atmospheric forms. Artists have shaped the sound through technical experimentation and strong visual worlds. This guide follows a few turning points while recognizing that metal scenes are global, community-led and continually developing their own local identities.",
+  "origin_place": "United Kingdom and United States",
+  "origin_years": "Late 1960s–1970s",
+  "history": [
+    { "years": "Late 1960s–1970s", "heading": "Heavier rock takes shape", "text": "Blues-derived guitar riffs grew louder and darker as bands explored extended forms and forceful stage sound. British groups helped establish a recognizable heavy metal vocabulary. The style offered a new sense of volume and drama, building on blues and rock while giving the guitar a central role." },
+    { "years": "1980s", "heading": "Subgenres multiply", "text": "New wave of British heavy metal bands emphasized speed and precision, while thrash scenes developed faster, sharper approaches. Glam metal brought theatrical presentation to large audiences. Independent labels and fan networks connected musicians who pushed intensity and technical ambition in different directions." },
+    { "years": "1990s", "heading": "Extreme and alternative forms", "text": "Death, black and doom metal scenes developed distinct vocal, rhythmic and atmospheric languages. Alternative metal brought new influences into broader rock culture. Small venues, tapes and dedicated magazines helped artists maintain communities even when their sound sat outside mainstream radio." },
+    { "years": "2000s–today", "heading": "A worldwide continuum", "text": "Metal artists increasingly mixed styles, from progressive arrangements to hardcore and electronic production. Online communities connected listeners across continents, while festivals made local scenes visible to wider audiences. The genre remains a space for technical craft, collective identity and deliberate sonic excess." }
+  ],
+  "related_slugs": ["rock", "punk", "indie", "electronic"],
+  "wikipedia_title": "Heavy metal music",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Black Sabbath", "why": "Their dark riffs and deliberate weight became a foundational reference for heavy metal's sound and imagery." },
+    { "name": "Judas Priest", "why": "The band's twin-guitar attack and dramatic presentation helped define metal's evolving performance language." },
+    { "name": "Metallica", "why": "Metallica carried thrash's speed and precision to a broad audience while helping establish a lasting global metal community." }
+  ],
+  "examples": [
+    { "name": "Deep Purple" }, { "name": "Iron Maiden" }, { "name": "Motörhead" }, { "name": "Slayer" },
+    { "name": "Megadeth" }, { "name": "Pantera" }, { "name": "Sepultura" }, { "name": "Dio" },
+    { "name": "Type O Negative" }, { "name": "Nightwish" }, { "name": "System of a Down" }, { "name": "Mastodon" },
+    { "name": "Opeth" }, { "name": "Gojira" }, { "name": "Barón Rojo" }, { "name": "Obús" },
+    { "name": "Mägo de Oz" }, { "name": "Sôber" }, { "name": "Crisix" }, { "name": "Toundra" }
+  ],
+  "sources_to_verify": ["Heavy metal music", "Black Sabbath", "Judas Priest", "Metallica", "Thrash metal"]
+}

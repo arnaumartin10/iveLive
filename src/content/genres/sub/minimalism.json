@@ -1,0 +1,28 @@
+{
+  "slug": "minimalism",
+  "parent_slug": "classical",
+  "title": "Minimalism",
+  "tagline": "Small musical ideas unfolding through repetition, pulse, and gradual change.",
+  "summary": "Musical minimalism uses limited materials, repetition, and gradual transformation to create large-scale forms. In classical music, composers explored steady pulses and slowly shifting patterns, often challenging expectations about development and duration. Minimalist ideas have influenced film music, ambient, electronic music, and popular songwriting.",
+  "origin_place": "United States",
+  "origin_years": "1960s",
+  "history": [],
+  "related_slugs": ["classical", "ambient", "film-score"],
+  "wikipedia_title": "Minimal music",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Steve Reich", "why": "Reich developed phase shifting and repeating rhythmic patterns into a distinctive compositional language." },
+    { "name": "Philip Glass", "why": "Glass's repeating figures and additive structures brought minimalist composition to opera, film, and concert audiences." },
+    { "name": "Terry Riley", "why": "Riley's open forms and repeating patterns became influential in both minimalism and later experimental music." }
+  ],
+  "examples": [
+    { "name": "La Monte Young" }, { "name": "Julius Eastman" },
+    { "name": "John Adams" }, { "name": "Michael Nyman" },
+    { "name": "Arvo Pärt" }, { "name": "Caroline Shaw" },
+    { "name": "Julia Wolfe" }, { "name": "Max Richter" },
+    { "name": "Ludovico Einaudi" }, { "name": "Nils Frahm" },
+    { "name": "Ólafur Arnalds" }, { "name": "Hania Rani" }
+  ],
+  "sources_to_verify": ["Minimal music", "Steve Reich", "Philip Glass", "Terry Riley"]
+}

@@ -1,0 +1,31 @@
+{
+  "slug": "latin",
+  "title": "Latin",
+  "tagline": "Many rhythms, languages and histories in motion.",
+  "summary": "Latin music is a broad label for diverse traditions shaped across Latin America, the Caribbean and their diasporas. It includes music with Indigenous, African and European roots, alongside contemporary pop and urban forms. No single rhythm or language represents the whole. This page offers a few connecting landmarks while making room for the regional differences, migration stories and new combinations that keep Latin music evolving.",
+  "origin_place": "Latin America and the Caribbean",
+  "origin_years": "Multiple traditions; global popular forms from the 20th century",
+  "history": [
+    { "years": "Before recorded music", "heading": "Many local foundations", "text": "Across Latin America and the Caribbean, Indigenous, African and European traditions formed distinct musical practices. Instruments, rhythms and languages varied by region and community. These foundations cannot be compressed into one origin story, and they continue to shape popular music in different ways." },
+    { "years": "1930s–1950s", "heading": "Records and radio travel", "text": "Radio, cinema and commercial recording carried Cuban, Mexican, Brazilian and other regional sounds to larger audiences. Dance orchestras and vocalists brought local styles into public life across borders. Migration connected musicians and listeners, creating new exchanges without erasing their distinct roots." },
+    { "years": "1960s–1980s", "heading": "Diaspora reshapes the sound", "text": "Salsa grew through Caribbean communities in New York, while rock, folk and protest songwriting developed across Latin America. New studio formats and touring joined artists to wider audiences. Regional musicians adapted outside influences while using music to express identity, change and everyday experience." },
+    { "years": "1990s–today", "heading": "Local voices, global reach", "text": "Latin pop and urban styles reached global audiences through television, clubs and digital media. Artists increasingly blended genres and languages, linking local scenes with international collaborators. The umbrella remains expansive, and its strongest stories often begin with a specific place, rhythm or community." }
+  ],
+  "related_slugs": ["pop", "hip_hop", "rnb_soul", "world"],
+  "wikipedia_title": "Latin music",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Celia Cruz", "why": "Cruz's unmistakable voice and long career made her a defining ambassador for Cuban music and salsa." },
+    { "name": "Tito Puente", "why": "Puente brought percussion-led Latin dance music to broad audiences and helped establish a lasting bandleader tradition." },
+    { "name": "Mercedes Sosa", "why": "Sosa carried Latin American folk song and socially engaged repertoire to audiences across generations and borders." }
+  ],
+  "examples": [
+    { "name": "Carlos Gardel" }, { "name": "Chavela Vargas" }, { "name": "João Gilberto" }, { "name": "Caetano Veloso" },
+    { "name": "Rubén Blades" }, { "name": "Willie Colón" }, { "name": "Selena" }, { "name": "Shakira" },
+    { "name": "Juanes" }, { "name": "Calle 13" }, { "name": "J Balvin" }, { "name": "Bad Bunny" },
+    { "name": "Rosalía" }, { "name": "Manu Chao" }, { "name": "Bomba Estéreo" }, { "name": "Natalia Lafourcade" },
+    { "name": "Silvana Estrada" }, { "name": "Luz Casal" }, { "name": "Ketama" }, { "name": "Amaral" }
+  ],
+  "sources_to_verify": ["Latin music", "Salsa music", "Celia Cruz", "Tito Puente", "Mercedes Sosa"]
+}

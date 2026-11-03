@@ -1,0 +1,75 @@
+{
+  "slug": "contemporary-soul",
+  "parent_slug": "rnb_soul",
+  "title": "Contemporary Soul",
+  "tagline": "Warm, direct singing shaped by modern production and a broad field of influences.",
+  "summary": "Contemporary soul keeps the emotional clarity of classic soul while absorbing newer production methods and rhythmic language. It can be intimate or expansive, but it usually centers the voice and the feeling behind the lyric. Its range is wide, from sleek radio cuts to deeper, more meditative recordings.",
+  "origin_place": "United States",
+  "origin_years": "1980s and 1990s",
+  "history": [],
+  "related_slugs": [
+    "rnb_soul",
+    "pop"
+  ],
+  "wikipedia_title": "Contemporary soul",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    {
+      "name": "Alicia Keys",
+      "why": "Alicia Keys combined classic soul singing with modern rhythm and a strong sense of emotional detail."
+    },
+    {
+      "name": "Maxwell",
+      "why": "Maxwell made smooth, intimate R&B feel rich, stylish and deeply musical."
+    },
+    {
+      "name": "Mary J. Blige",
+      "why": "Mary J. Blige ensured contemporary soul carried weight, honesty and a lived-in vocal texture."
+    }
+  ],
+  "examples": [
+    {
+      "name": "Usher"
+    },
+    {
+      "name": "SZA"
+    },
+    {
+      "name": "Ariana Grande"
+    },
+    {
+      "name": "Miguel"
+    },
+    {
+      "name": "D’Angelo"
+    },
+    {
+      "name": "Chic"
+    },
+    {
+      "name": "Janet Jackson"
+    },
+    {
+      "name": "Brandy"
+    },
+    {
+      "name": "Sabrina Claudio"
+    },
+    {
+      "name": "H.E.R."
+    },
+    {
+      "name": "The Weeknd"
+    },
+    {
+      "name": "Solange"
+    }
+  ],
+  "sources_to_verify": [
+    "Contemporary soul",
+    "Alicia Keys",
+    "Maxwell",
+    "Mary J. Blige"
+  ]
+}

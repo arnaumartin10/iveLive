@@ -1,0 +1,28 @@
+{
+  "slug": "bebop",
+  "parent_slug": "jazz_blues",
+  "title": "Bebop",
+  "tagline": "Fast tempos, intricate harmony, and improvisation at the center.",
+  "summary": "Bebop developed in the 1940s as jazz musicians moved toward smaller groups, rapid tempos, and more harmonically adventurous improvisation. Its lines can be intricate and spontaneous, rewarding close listening as much as dancing. Bebop changed the expectations of jazz performance and influenced nearly every later modern-jazz style.",
+  "origin_place": "New York City, United States",
+  "origin_years": "1940s",
+  "history": [],
+  "related_slugs": ["jazz_blues", "cool-jazz", "jazz-fusion"],
+  "wikipedia_title": "Bebop",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Charlie Parker", "why": "Parker's alto saxophone improvisations became a defining model for bebop phrasing and harmonic invention." },
+    { "name": "Dizzy Gillespie", "why": "Gillespie combined virtuosic trumpet playing with compositions and ensembles central to bebop's development." },
+    { "name": "Thelonious Monk", "why": "Monk's distinctive piano language and compositions expanded bebop's rhythmic and harmonic possibilities." }
+  ],
+  "examples": [
+    { "name": "Bud Powell" }, { "name": "Max Roach" },
+    { "name": "Kenny Clarke" }, { "name": "Sonny Stitt" },
+    { "name": "Fats Navarro" }, { "name": "J. J. Johnson" },
+    { "name": "Dexter Gordon" }, { "name": "Tadd Dameron" },
+    { "name": "Clifford Brown" }, { "name": "Sarah Vaughan" },
+    { "name": "Barry Harris" }, { "name": "Sonny Rollins" }
+  ],
+  "sources_to_verify": ["Bebop", "Charlie Parker", "Dizzy Gillespie", "Thelonious Monk"]
+}

@@ -62,9 +62,19 @@ export function parseMusicBrainzArtist(
   const wikidata = artist.relations?.find(
     (relation) => relation.type === 'wikidata',
   )?.url?.resource;
-  const wikipedia = artist.relations?.find(
-    (relation) => relation.type === 'wikipedia',
-  )?.url?.resource;
+  const wikipedia = artist.relations?.find((relation) => {
+    if (relation.type !== 'wikipedia' || !relation.url?.resource) return false;
+    try {
+      const url = new URL(relation.url.resource);
+      return (
+        url.protocol === 'https:' &&
+        url.hostname.toLowerCase() === 'en.wikipedia.org' &&
+        url.pathname.startsWith('/wiki/')
+      );
+    } catch {
+      return false;
+    }
+  })?.url?.resource;
   let wikipediaTitle: string | undefined;
   if (wikipedia) {
     try {
@@ -90,7 +100,9 @@ export function parseMusicBrainzArtist(
       musicbrainz_id: artist.id,
       wikidata_id: wikidata?.match(/Q\d+/)?.[0] ?? null,
       wikipedia_title: wikipediaTitle ?? null,
-      ...(beginYear !== null ? { begin_year: beginYear, begin_year_source: 'musicbrainz' } : {}),
+      ...(beginYear !== null
+        ? { begin_year: beginYear, begin_year_source: 'musicbrainz' }
+        : {}),
     },
     tags,
     releaseGroups,

@@ -1,0 +1,75 @@
+{
+  "slug": "trip-hop",
+  "parent_slug": "electronic",
+  "title": "Trip-Hop",
+  "tagline": "Slow tempos, dusty textures and a deep drift between beat and mood.",
+  "summary": "Trip-hop blends beat-driven production with dub, soul and ambient textures, giving the music a restrained but cinematic atmosphere. It emerged in the 1990s as a style for late-night listening and club drift, with rhythm doing as much emotional work as melody. The result is often moody, spacious and slightly off-center.",
+  "origin_place": "United Kingdom",
+  "origin_years": "1990s",
+  "history": [],
+  "related_slugs": [
+    "electronic",
+    "hip_hop"
+  ],
+  "wikipedia_title": "Trip-hop",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    {
+      "name": "Massive Attack",
+      "why": "Massive Attack made trip-hop feel cinematic and spacious, balancing rhythm with atmosphere and mood."
+    },
+    {
+      "name": "Portishead",
+      "why": "Portishead gave the style a darker, more vocal and melodic identity without losing its slow-burn command."
+    },
+    {
+      "name": "Tricky",
+      "why": "Tricky brought a more fragmented, confrontational edge to the genre’s rhythmic language."
+    }
+  ],
+  "examples": [
+    {
+      "name": "Morcheeba"
+    },
+    {
+      "name": "Sneaker Pimps"
+    },
+    {
+      "name": "UNKLE"
+    },
+    {
+      "name": "DJ Shadow"
+    },
+    {
+      "name": "Moby"
+    },
+    {
+      "name": "Lamb"
+    },
+    {
+      "name": "Nitin Sawhney"
+    },
+    {
+      "name": "Archive"
+    },
+    {
+      "name": "Zero 7"
+    },
+    {
+      "name": "The Cinematic Orchestra"
+    },
+    {
+      "name": "Miike Snow"
+    },
+    {
+      "name": "The Auteurs"
+    }
+  ],
+  "sources_to_verify": [
+    "Trip-hop",
+    "Massive Attack",
+    "Portishead",
+    "Tricky"
+  ]
+}

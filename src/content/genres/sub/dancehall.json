@@ -1,0 +1,75 @@
+{
+  "slug": "dancehall",
+  "parent_slug": "world",
+  "title": "Dancehall",
+  "tagline": "A sharper, more rhythmic strain of Jamaican music with a direct club focus.",
+  "summary": "Dancehall pushes reggae toward faster tempos, louder drums and a more immediate, vocal-forward presentation. It often feels social and kinetic, built for movement and for direct interaction between performer and crowd. The style grew quickly in Jamaica and then spread into a wider global club circuit.",
+  "origin_place": "Jamaica",
+  "origin_years": "1980s and 1990s",
+  "history": [],
+  "related_slugs": [
+    "world",
+    "hip_hop"
+  ],
+  "wikipedia_title": "Dancehall",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    {
+      "name": "Shabba Ranks",
+      "why": "Shabba Ranks helped define dancehall’s vocal power and its ability to turn rhythm into a direct social force."
+    },
+    {
+      "name": "Super Cat",
+      "why": "Super Cat brought a sharp lyrical precision and a strong sense of vocal style to the form."
+    },
+    {
+      "name": "Beenie Man",
+      "why": "Beenie Man made dancehall feel globally legible while keeping the music rooted in its local energy."
+    }
+  ],
+  "examples": [
+    {
+      "name": "Buju Banton"
+    },
+    {
+      "name": "Bounty Killer"
+    },
+    {
+      "name": "Lady Saw"
+    },
+    {
+      "name": "Capleton"
+    },
+    {
+      "name": "Sean Paul"
+    },
+    {
+      "name": "Spragga Benz"
+    },
+    {
+      "name": "Vybz Kartel"
+    },
+    {
+      "name": "Mr. Vegas"
+    },
+    {
+      "name": "Patra"
+    },
+    {
+      "name": "Sizzla"
+    },
+    {
+      "name": "Elephant Man"
+    },
+    {
+      "name": "Mavado"
+    }
+  ],
+  "sources_to_verify": [
+    "Dancehall",
+    "Shabba Ranks",
+    "Super Cat",
+    "Beenie Man"
+  ]
+}

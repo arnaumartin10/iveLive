@@ -268,7 +268,12 @@ export default function WelcomeScreen() {
             accessibilityLiveRegion={captionIsLive ? 'polite' : 'none'}
             style={styles.caption}
           >
-            <GenreLabel genre={genre} label={caption} size="sm" />
+            <GenreLabel
+              genre={genre}
+              label={caption}
+              size="sm"
+              accessibilityLiveRegion={captionIsLive ? 'polite' : 'none'}
+            />
           </View>
           <Text
             variant="headline"

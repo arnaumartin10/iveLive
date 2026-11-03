@@ -140,6 +140,9 @@ export function CloudInfoCard({
                   />
                 );
               })}
+              {(node.subGenreSlugs ?? []).slice(0, 2).map((slug) => (
+                <GenreLabel key={slug} genre={slug} size="xs" />
+              ))}
             </View>
           </View>
         </Pressable>

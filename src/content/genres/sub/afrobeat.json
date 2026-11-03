@@ -1,0 +1,34 @@
+{
+  "slug": "afrobeat",
+  "parent_slug": "world",
+  "title": "Afrobeat",
+  "tagline": "Interlocking grooves carrying music and social commentary.",
+  "summary": "Afrobeat emerged in Nigeria through the work of musicians who joined West African rhythmic traditions with jazz, funk, and other popular sounds. Long arrangements, layered percussion, horns, and call-and-response vocals create room for both dance and pointed lyrics. The style's history is closely associated with bandleaders and ensembles, and its influence continues across African and global music.",
+  "origin_place": "Nigeria",
+  "origin_years": "late 1960s–1970s",
+  "history": [],
+  "related_slugs": ["world", "funk", "highlife"],
+  "wikipedia_title": "Afrobeat",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Fela Kuti", "why": "Kuti shaped Afrobeat's extended ensemble sound and used its performances for sustained social commentary." },
+    { "name": "Tony Allen", "why": "Allen's drumming helped establish the interlocking rhythmic feel central to Afrobeat." },
+    { "name": "Orlando Julius", "why": "Julius connected Nigerian highlife and jazz influences in work that helped prepare the ground for Afrobeat." }
+  ],
+  "examples": [
+    { "name": "Africa 70" },
+    { "name": "Egypt 80" },
+    { "name": "Seun Kuti" },
+    { "name": "Femi Kuti" },
+    { "name": "Antibalas" },
+    { "name": "The Budos Band" },
+    { "name": "Newen Afrobeat" },
+    { "name": "Ebo Taylor" },
+    { "name": "Dele Sosimi" },
+    { "name": "Kokoroko" },
+    { "name": "Ibibio Sound Machine" },
+    { "name": "Groupe Poly-Rythmo" }
+  ],
+  "sources_to_verify": ["Afrobeat", "Fela Kuti", "Tony Allen", "Orlando Julius"]
+}

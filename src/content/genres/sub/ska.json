@@ -1,0 +1,75 @@
+{
+  "slug": "ska",
+  "parent_slug": "world",
+  "title": "Ska",
+  "tagline": "Upbeat, syncopated rhythm with a brass-heavy punch.",
+  "summary": "Ska brings jazz, Caribbean mento and rhythm and blues into a fast, danceable form with a strong offbeat accent. It is lively and communal, often mixing horns, guitar and a lighthearted sense of motion. The style helped shape later reggae and punk scenes while keeping its own festive energy.",
+  "origin_place": "Jamaica",
+  "origin_years": "1950s and 1960s",
+  "history": [],
+  "related_slugs": [
+    "world",
+    "punk"
+  ],
+  "wikipedia_title": "Ska",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    {
+      "name": "The Skatalites",
+      "why": "The Skatalites gave ska its foundational sound, combining brass fire with a highly rhythmic, modern groove."
+    },
+    {
+      "name": "Desmond Dekker",
+      "why": "Desmond Dekker made ska’s crossover energy widely audible beyond the island itself."
+    },
+    {
+      "name": "Madness",
+      "why": "Madness carried ska into a new pop era with melodic hooks and larger audiences."
+    }
+  ],
+  "examples": [
+    {
+      "name": "Prince Buster"
+    },
+    {
+      "name": "Jason and the Scorchers"
+    },
+    {
+      "name": "The Specials"
+    },
+    {
+      "name": "The Selecter"
+    },
+    {
+      "name": "Bad Manners"
+    },
+    {
+      "name": "The Beat"
+    },
+    {
+      "name": "The Gaylads"
+    },
+    {
+      "name": "The Toasters"
+    },
+    {
+      "name": "The Bodysnatchers"
+    },
+    {
+      "name": "The Ethiopians"
+    },
+    {
+      "name": "The Maytals"
+    },
+    {
+      "name": "The Slackers"
+    }
+  ],
+  "sources_to_verify": [
+    "Ska",
+    "The Skatalites",
+    "Desmond Dekker",
+    "Madness"
+  ]
+}

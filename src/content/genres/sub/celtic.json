@@ -1,0 +1,28 @@
+{
+  "slug": "celtic",
+  "parent_slug": "world",
+  "title": "Celtic",
+  "tagline": "Regional folk traditions carried by fiddles, pipes, songs, and dance.",
+  "summary": "Celtic music is an umbrella for related folk traditions from Ireland, Scotland, Wales, Brittany, and other regions. Tunes and songs vary widely, with fiddles, harps, pipes, and dance rhythms common in many settings. Contemporary artists preserve, reinterpret, and blend this heritage with folk, rock, and other styles.",
+  "origin_place": "Ireland, Scotland, Wales, Brittany, and related regions",
+  "origin_years": "Traditional; modern recordings from the 20th century",
+  "history": [],
+  "related_slugs": ["world", "folk_acoustic", "balkan"],
+  "wikipedia_title": "Celtic music",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "The Chieftains", "why": "The Chieftains brought Irish traditional music to international audiences through ensemble performance and collaborations." },
+    { "name": "Clannad", "why": "Clannad blended Irish-language song and traditional influences with atmospheric modern arrangements." },
+    { "name": "Alan Stivell", "why": "Stivell helped renew interest in Breton music and the Celtic harp through contemporary arrangements." }
+  ],
+  "examples": [
+    { "name": "The Dubliners" }, { "name": "Planxty" },
+    { "name": "The Bothy Band" }, { "name": "Capercaillie" },
+    { "name": "Loreena McKennitt" }, { "name": "Cara Dillon" },
+    { "name": "Lúnasa" }, { "name": "The Corrs" },
+    { "name": "Julie Fowlis" }, { "name": "Runrig" },
+    { "name": "Altan" }, { "name": "Tri Yann" }
+  ],
+  "sources_to_verify": ["Celtic music", "The Chieftains", "Clannad", "Alan Stivell"]
+}

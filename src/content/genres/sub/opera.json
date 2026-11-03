@@ -1,0 +1,28 @@
+{
+  "slug": "opera",
+  "parent_slug": "classical",
+  "title": "Opera",
+  "tagline": "Drama told through voices, orchestra, and a fully staged musical world.",
+  "summary": "Opera combines music, drama, and theatrical staging, typically using sung roles supported by an orchestra. Since its beginnings in Europe around the turn of the 17th century, it has developed into a wide range of forms and national traditions. Operatic repertoire continues to be performed in historic houses and reimagined in contemporary productions.",
+  "origin_place": "Italy",
+  "origin_years": "late 16th century onwards",
+  "history": [],
+  "related_slugs": ["classical", "baroque", "romantic"],
+  "wikipedia_title": "Opera",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Claudio Monteverdi", "why": "Monteverdi's early operas helped establish the genre's musical and dramatic possibilities." },
+    { "name": "Wolfgang Amadeus Mozart", "why": "Mozart composed operas that remain central to the repertoire for their musical craft and vivid characters." },
+    { "name": "Giuseppe Verdi", "why": "Verdi shaped Italian opera through memorable melodies and dramatically focused writing." }
+  ],
+  "examples": [
+    { "name": "Giacomo Puccini" }, { "name": "Richard Wagner" },
+    { "name": "Gioachino Rossini" }, { "name": "Richard Strauss" },
+    { "name": "Georg Friedrich Händel" }, { "name": "Maria Callas" },
+    { "name": "Luciano Pavarotti" }, { "name": "Joan Sutherland" },
+    { "name": "Renée Fleming" }, { "name": "Leontyne Price" },
+    { "name": "Dmitri Shostakovich" }, { "name": "Benjamin Britten" }
+  ],
+  "sources_to_verify": ["Opera", "Claudio Monteverdi", "Wolfgang Amadeus Mozart", "Giuseppe Verdi"]
+}

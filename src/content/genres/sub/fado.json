@@ -1,0 +1,28 @@
+{
+  "slug": "fado",
+  "parent_slug": "world",
+  "title": "Fado",
+  "tagline": "Portuguese song shaped by expressive voices and a distinctive guitar tradition.",
+  "summary": "Fado is a Portuguese song tradition often associated with expressive vocals, themes of longing, and the bright, intricate sound of the Portuguese guitar. It developed in urban neighborhoods and has been performed in intimate settings as well as on international stages. Artists continue to reinterpret the tradition while preserving its distinctive phrasing and emotional depth.",
+  "origin_place": "Lisbon and Coimbra, Portugal",
+  "origin_years": "19th century",
+  "history": [],
+  "related_slugs": ["world", "folk_acoustic", "flamenco"],
+  "wikipedia_title": "Fado",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Amália Rodrigues", "why": "Rodrigues became the best-known international ambassador for fado through an influential recording and performance career." },
+    { "name": "Carlos do Carmo", "why": "Do Carmo brought a modern sensibility to fado while remaining closely connected to its Lisbon tradition." },
+    { "name": "Carlos Paredes", "why": "Paredes was a celebrated Portuguese guitarist whose instrumental work expanded the expressive possibilities of the instrument." }
+  ],
+  "examples": [
+    { "name": "Mariza" }, { "name": "Mísia" },
+    { "name": "Camané" }, { "name": "Ana Moura" },
+    { "name": "Cristina Branco" }, { "name": "Dulce Pontes" },
+    { "name": "António Zambujo" }, { "name": "Carminho" },
+    { "name": "Gisela João" }, { "name": "Kátia Guerreiro" },
+    { "name": "Ricardo Ribeiro" }, { "name": "Mafalda Arnauth" }
+  ],
+  "sources_to_verify": ["Fado", "Amália Rodrigues", "Carlos do Carmo", "Carlos Paredes"]
+}

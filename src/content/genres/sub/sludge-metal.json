@@ -1,0 +1,75 @@
+{
+  "slug": "sludge-metal",
+  "parent_slug": "metal",
+  "title": "Sludge Metal",
+  "tagline": "Slow, crushing riffs and a feeling of inertia pushed to the limit.",
+  "summary": "Sludge metal mixes doom, hardcore and punk into a heavy sound that feels both confrontational and viscous. It typically centers on thick riffs, tense pacing and a sense that each song moves through pressure rather than momentum. The style thrives on repetition, density and a deliberately dirty tone.",
+  "origin_place": "United States",
+  "origin_years": "1990s",
+  "history": [],
+  "related_slugs": [
+    "metal",
+    "rock"
+  ],
+  "wikipedia_title": "Sludge metal",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    {
+      "name": "Eyehategod",
+      "why": "Eyehategod defined the form with punishing grooves and a distinctly abrasive sense of atmosphere."
+    },
+    {
+      "name": "Melvins",
+      "why": "Melvins helped blur the threshold between punk, doom and heavy rock while keeping everything raw."
+    },
+    {
+      "name": "Crowbar",
+      "why": "Crowbar tied sludge to a more oppressive, slow-burn emotional intensity."
+    }
+  ],
+  "examples": [
+    {
+      "name": "Boris"
+    },
+    {
+      "name": "Acid Bath"
+    },
+    {
+      "name": "Down"
+    },
+    {
+      "name": "The Body"
+    },
+    {
+      "name": "The Obsessed"
+    },
+    {
+      "name": "Mutoid Man"
+    },
+    {
+      "name": "Unearthly Trance"
+    },
+    {
+      "name": "Twitching Tongues"
+    },
+    {
+      "name": "Coffin Worm"
+    },
+    {
+      "name": "Mouth of the Wolf"
+    },
+    {
+      "name": "Baroness"
+    },
+    {
+      "name": "High on Fire"
+    }
+  ],
+  "sources_to_verify": [
+    "Sludge metal",
+    "Eyehategod",
+    "Melvins",
+    "Crowbar"
+  ]
+}

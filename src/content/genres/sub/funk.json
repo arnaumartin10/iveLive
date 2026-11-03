@@ -1,0 +1,34 @@
+{
+  "slug": "funk",
+  "parent_slug": "rnb_soul",
+  "title": "Funk",
+  "tagline": "Interlocking grooves where the rhythm section leads the way.",
+  "summary": "Funk places the groove at the center of a song. Repeating bass lines, clipped guitar parts, syncopated drums, and expressive horns work together to create a strong rhythmic pocket. Emerging from soul and rhythm and blues, funk influenced dance music, hip-hop sampling, and generations of musicians who treat rhythm as the main event.",
+  "origin_place": "United States",
+  "origin_years": "1960s",
+  "history": [],
+  "related_slugs": ["rnb_soul", "disco", "jazz-funk"],
+  "wikipedia_title": "Funk",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "James Brown", "why": "James Brown's rhythm-first arrangements made the downbeat and the band’s interlocking parts central to funk." },
+    { "name": "Parliament-Funkadelic", "why": "Parliament-Funkadelic stretched funk into an expansive world of deep grooves, group vocals, and playful production." },
+    { "name": "Sly and the Family Stone", "why": "Sly and the Family Stone brought a distinctive blend of funk, soul, and rock to a multivocal band sound." }
+  ],
+  "examples": [
+    { "name": "The Meters" },
+    { "name": "Bootsy Collins" },
+    { "name": "Kool & the Gang" },
+    { "name": "Curtis Mayfield" },
+    { "name": "Earth, Wind & Fire" },
+    { "name": "Ohio Players" },
+    { "name": "Rick James" },
+    { "name": "Prince" },
+    { "name": "Cameo" },
+    { "name": "Tower of Power" },
+    { "name": "Betty Davis" },
+    { "name": "Vulfpeck" }
+  ],
+  "sources_to_verify": ["Funk", "James Brown", "Parliament-Funkadelic", "Sly and the Family Stone"]
+}

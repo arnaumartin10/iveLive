@@ -1,0 +1,75 @@
+{
+  "slug": "quiet-storm",
+  "parent_slug": "rnb_soul",
+  "title": "Quiet Storm",
+  "tagline": "Slow-burn vocals, soft keys and late-night feeling.",
+  "summary": "Quiet storm is a slow, atmospheric branch of soul and R&B built around intimate vocals and gently unfolding arrangements. It often feels like the after-hours version of the radio: warm synths, patient rhythm and a sense of calm confidence. The style made space for mood and feeling without losing the pull of a good hook.",
+  "origin_place": "United States",
+  "origin_years": "1970s and 1980s",
+  "history": [],
+  "related_slugs": [
+    "rnb_soul",
+    "pop"
+  ],
+  "wikipedia_title": "Quiet storm",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    {
+      "name": "Marvin Gaye",
+      "why": "Marvin Gaye shaped a deep, intimate singer-songwriter approach that defined the quiet-storm mood."
+    },
+    {
+      "name": "The Isley Brothers",
+      "why": "The Isley Brothers brought a smooth, luxurious balance of soul and rhythm that made the style feel expansive."
+    },
+    {
+      "name": "Sade",
+      "why": "Sade gave the form a cooler, more minimal elegance that still felt emotionally direct."
+    }
+  ],
+  "examples": [
+    {
+      "name": "Barry White"
+    },
+    {
+      "name": "Luther Vandross"
+    },
+    {
+      "name": "Anita Baker"
+    },
+    {
+      "name": "Kenny G"
+    },
+    {
+      "name": "Earth, Wind & Fire"
+    },
+    {
+      "name": "The O’Jays"
+    },
+    {
+      "name": "Alicia Keys"
+    },
+    {
+      "name": "Maxwell"
+    },
+    {
+      "name": "Dionne Warwick"
+    },
+    {
+      "name": "Tamia"
+    },
+    {
+      "name": "Beyoncé"
+    },
+    {
+      "name": "Usher"
+    }
+  ],
+  "sources_to_verify": [
+    "Quiet storm",
+    "Marvin Gaye",
+    "The Isley Brothers",
+    "Sade"
+  ]
+}

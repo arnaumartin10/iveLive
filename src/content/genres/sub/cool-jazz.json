@@ -1,0 +1,28 @@
+{
+  "slug": "cool-jazz",
+  "parent_slug": "jazz_blues",
+  "title": "Cool Jazz",
+  "tagline": "Measured tempos, spacious arrangements, and a lighter, more restrained jazz sound.",
+  "summary": "Cool jazz emerged after World War II with a more restrained sound than the high-energy bebop that preceded it. Musicians explored softer dynamics, spacious arrangements, and carefully balanced ensemble writing. The style developed on both coasts of the United States and helped broaden modern jazz's range of textures and moods.",
+  "origin_place": "United States",
+  "origin_years": "late 1940s–1950s",
+  "history": [],
+  "related_slugs": ["jazz_blues", "bebop", "jazz-fusion"],
+  "wikipedia_title": "Cool jazz",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Miles Davis", "why": "Davis's nonet recordings for Birth of the Cool became a central reference for the style's arranged, understated sound." },
+    { "name": "Lester Young", "why": "Young's light, relaxed phrasing influenced generations of jazz musicians and the cool-jazz aesthetic." },
+    { "name": "Dave Brubeck", "why": "Brubeck led a popular quartet known for poised ensemble playing and adventurous rhythmic ideas." }
+  ],
+  "examples": [
+    { "name": "Chet Baker" }, { "name": "Gerry Mulligan" },
+    { "name": "Stan Getz" }, { "name": "Lee Konitz" },
+    { "name": "Shorty Rogers" }, { "name": "Jimmy Giuffre" },
+    { "name": "Paul Desmond" }, { "name": "Shelly Manne" },
+    { "name": "Lennie Tristano" }, { "name": "Modern Jazz Quartet" },
+    { "name": "Bill Evans" }, { "name": "Terry Gibbs" }
+  ],
+  "sources_to_verify": ["Cool jazz", "Miles Davis", "Lester Young", "Dave Brubeck"]
+}

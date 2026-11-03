@@ -1,0 +1,28 @@
+{
+  "slug": "baroque",
+  "parent_slug": "classical",
+  "title": "Baroque",
+  "tagline": "Ornamented melodies, vivid contrasts, and the foundations of modern orchestral music.",
+  "summary": "Baroque music spans an era of European composition marked by elaborate counterpoint, ornament, and strong contrasts. Composers developed opera, concerto, and suite forms while writing for voices, strings, and keyboard instruments. Its repertoire remains central to concert performance and continues to inspire new interpretations.",
+  "origin_place": "Europe",
+  "origin_years": "c. 1600–1750",
+  "history": [],
+  "related_slugs": ["classical", "opera", "minimalism"],
+  "wikipedia_title": "Baroque music",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Johann Sebastian Bach", "why": "Bach brought counterpoint and formal craft to an exceptionally influential body of sacred and instrumental music." },
+    { "name": "George Frideric Handel", "why": "Handel shaped the era's opera and oratorio traditions with dramatic writing and memorable choruses." },
+    { "name": "Antonio Vivaldi", "why": "Vivaldi helped establish the solo concerto and is celebrated for energetic, vividly characterized instrumental works." }
+  ],
+  "examples": [
+    { "name": "Claudio Monteverdi" }, { "name": "Henry Purcell" },
+    { "name": "Domenico Scarlatti" }, { "name": "Arcangelo Corelli" },
+    { "name": "Jean-Philippe Rameau" }, { "name": "Georg Philipp Telemann" },
+    { "name": "François Couperin" }, { "name": "Heinrich Schütz" },
+    { "name": "Barbara Strozzi" }, { "name": "Elisabeth Jacquet de La Guerre" },
+    { "name": "Dietrich Buxtehude" }, { "name": "Alessandro Scarlatti" }
+  ],
+  "sources_to_verify": ["Baroque music", "Johann Sebastian Bach", "George Frideric Handel", "Antonio Vivaldi"]
+}

@@ -1,0 +1,28 @@
+{
+  "slug": "idm",
+  "parent_slug": "electronic",
+  "title": "IDM",
+  "tagline": "Detailed electronic music built for curious listening as much as dancing.",
+  "summary": "IDM, short for intelligent dance music, became a label for experimental electronic releases that drew on techno, ambient, and breakbeat while emphasizing intricate production. The term is debated by artists and listeners, but it describes a body of adventurous work that expanded electronic music's rhythmic and textural possibilities.",
+  "origin_place": "United Kingdom",
+  "origin_years": "1990s",
+  "history": [],
+  "related_slugs": ["electronic", "ambient", "breakbeat"],
+  "wikipedia_title": "Intelligent dance music",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Aphex Twin", "why": "Aphex Twin's releases move between intricate rhythms, ambient passages, and unpredictable electronic sound design." },
+    { "name": "Autechre", "why": "Autechre continually explored complex programming and abstract structures within electronic music." },
+    { "name": "Boards of Canada", "why": "Boards of Canada paired textured electronics with hazy melodies and distinctive, nostalgic production." }
+  ],
+  "examples": [
+    { "name": "Squarepusher" }, { "name": "µ-Ziq" },
+    { "name": "The Future Sound of London" }, { "name": "Plaid" },
+    { "name": "Luke Vibert" }, { "name": "Clark" },
+    { "name": "Four Tet" }, { "name": "Telefon Tel Aviv" },
+    { "name": "Oneohtrix Point Never" }, { "name": "Floating Points" },
+    { "name": "Objekt" }, { "name": "Skee Mask" }
+  ],
+  "sources_to_verify": ["Intelligent dance music", "Aphex Twin", "Autechre", "Boards of Canada"]
+}

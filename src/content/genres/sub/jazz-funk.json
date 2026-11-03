@@ -1,0 +1,28 @@
+{
+  "slug": "jazz-funk",
+  "parent_slug": "jazz_blues",
+  "title": "Jazz Funk",
+  "tagline": "Improvising jazz musicians locked into a deep, danceable funk groove.",
+  "summary": "Jazz funk brings jazz improvisation together with the syncopated grooves and electric instrumentation of funk. The style grew in the late 1960s and 1970s as musicians explored electric keyboards, amplified bass, and rhythm-first arrangements. It influenced fusion, soul-jazz, hip-hop sampling, and later dance music.",
+  "origin_place": "United States",
+  "origin_years": "late 1960s",
+  "history": [],
+  "related_slugs": ["jazz_blues", "funk", "jazz-fusion"],
+  "wikipedia_title": "Jazz-funk",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Herbie Hancock", "why": "Hancock's electric-era recordings connected jazz improvisation with deep funk rhythms and synthesizers." },
+    { "name": "The Headhunters", "why": "The Headhunters brought an influential ensemble groove to Hancock's jazz-funk explorations." },
+    { "name": "Donald Byrd", "why": "Byrd helped popularize a groove-oriented jazz sound through influential collaborations and recordings." }
+  ],
+  "examples": [
+    { "name": "Roy Ayers" }, { "name": "The Crusaders" },
+    { "name": "Lonnie Liston Smith" }, { "name": "Ramsey Lewis" },
+    { "name": "Idris Muhammad" }, { "name": "Grant Green" },
+    { "name": "Cannonball Adderley" }, { "name": "The Blackbyrds" },
+    { "name": "Brian Auger's Oblivion Express" }, { "name": "Maceo Parker" },
+    { "name": "Medeski Martin & Wood" }, { "name": "The RH Factor" }
+  ],
+  "sources_to_verify": ["Jazz-funk", "Herbie Hancock", "The Headhunters", "Donald Byrd"]
+}

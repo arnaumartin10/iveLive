@@ -1,0 +1,28 @@
+{
+  "slug": "teen-pop",
+  "parent_slug": "pop",
+  "title": "Teen Pop",
+  "tagline": "Youth-centered pop built around bright hooks, clear vocals, and big choruses.",
+  "summary": "Teen pop is popular music aimed primarily at young listeners, often featuring accessible melodies, energetic production, and themes of adolescence and relationships. It has appeared in many eras, from vocal groups to solo performers and contemporary pop acts. Its sound reflects the changing production and media landscape of each generation.",
+  "origin_place": "United States and United Kingdom",
+  "origin_years": "1990s prominence",
+  "history": [],
+  "related_slugs": ["pop", "dance-pop", "k-pop"],
+  "wikipedia_title": "Teen pop",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "The Jackson 5", "why": "The Jackson 5 combined youthful performers with strong songwriting and Motown production in a hugely successful group." },
+    { "name": "Britney Spears", "why": "Spears became a defining late-1990s teen-pop star with polished production and memorable singles." },
+    { "name": "Christina Aguilera", "why": "Aguilera paired teen-pop success with a powerful vocal style and a career that moved into broader pop and soul." }
+  ],
+  "examples": [
+    { "name": "NSYNC" }, { "name": "Backstreet Boys" },
+    { "name": "Miley Cyrus" }, { "name": "Demi Lovato" },
+    { "name": "Selena Gomez" }, { "name": "One Direction" },
+    { "name": "Hilary Duff" }, { "name": "Olivia Rodrigo" },
+    { "name": "Justin Bieber" }, { "name": "Hanson" },
+    { "name": "Tiffany" }, { "name": "Debbie Gibson" }
+  ],
+  "sources_to_verify": ["Teen pop", "The Jackson 5", "Britney Spears", "Christina Aguilera"]
+}

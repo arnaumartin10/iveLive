@@ -1,0 +1,75 @@
+{
+  "slug": "alternative-hip-hop",
+  "parent_slug": "hip_hop",
+  "title": "Alternative Hip-Hop",
+  "tagline": "Rap that treats production, form and voice as experimental territory.",
+  "summary": "Alternative hip-hop pushes rap toward unusual textures, looser structures and a wider set of musical references. It grew alongside independent scenes, where producers and MCs could move beyond the strictest expectations of mainstream radio. The result is often more subtle, more collage-like and more open to genre mixing.",
+  "origin_place": "United States",
+  "origin_years": "1990s and 2000s",
+  "history": [],
+  "related_slugs": [
+    "hip_hop",
+    "indie"
+  ],
+  "wikipedia_title": "Alternative hip-hop",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    {
+      "name": "De La Soul",
+      "why": "De La Soul helped define a playful, fully musical kind of rap grounded in unusual production and atmosphere."
+    },
+    {
+      "name": "A Tribe Called Quest",
+      "why": "A Tribe Called Quest built a melodic and jazz-aware style that widened what rap could sound like."
+    },
+    {
+      "name": "Outkast",
+      "why": "Outkast brought a larger musical imagination to the form, blending identity, rhythm and experiment into one voice."
+    }
+  ],
+  "examples": [
+    {
+      "name": "The Roots"
+    },
+    {
+      "name": "Mos Def"
+    },
+    {
+      "name": "Kanye West"
+    },
+    {
+      "name": "Run the Jewels"
+    },
+    {
+      "name": "Black Star"
+    },
+    {
+      "name": "The Fugees"
+    },
+    {
+      "name": "Common"
+    },
+    {
+      "name": "MIA"
+    },
+    {
+      "name": "Danny Brown"
+    },
+    {
+      "name": "Pusha T"
+    },
+    {
+      "name": "Killer Mike"
+    },
+    {
+      "name": "A$AP Rocky"
+    }
+  ],
+  "sources_to_verify": [
+    "Alternative hip-hop",
+    "De La Soul",
+    "A Tribe Called Quest",
+    "Outkast"
+  ]
+}

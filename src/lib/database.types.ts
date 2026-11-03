@@ -356,6 +356,7 @@ export type Database = {
           public_weighted_rating: number | null
           source: Database["public"]["Enums"]["artist_source"]
           spotify_id: string | null
+          sub_genres: string[]
           tour_end_date: string | null
           tour_last_checked_at: string | null
           tour_start_date: string | null
@@ -397,6 +398,7 @@ export type Database = {
           public_weighted_rating?: number | null
           source: Database["public"]["Enums"]["artist_source"]
           spotify_id?: string | null
+          sub_genres?: string[]
           tour_end_date?: string | null
           tour_last_checked_at?: string | null
           tour_start_date?: string | null
@@ -438,6 +440,7 @@ export type Database = {
           public_weighted_rating?: number | null
           source?: Database["public"]["Enums"]["artist_source"]
           spotify_id?: string | null
+          sub_genres?: string[]
           tour_end_date?: string | null
           tour_last_checked_at?: string | null
           tour_start_date?: string | null
@@ -782,6 +785,157 @@ export type Database = {
           },
         ]
       }
+      genre_autopages: {
+        Row: {
+          fetched_at: string
+          payload: Json
+          slug: string
+        }
+        Insert: {
+          fetched_at?: string
+          payload?: Json
+          slug: string
+        }
+        Update: {
+          fetched_at?: string
+          payload?: Json
+          slug?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "genre_autopages_slug_fkey"
+            columns: ["slug"]
+            isOneToOne: true
+            referencedRelation: "genres"
+            referencedColumns: ["slug"]
+          },
+        ]
+      }
+      genre_examples: {
+        Row: {
+          artist_id: string
+          genre_slug: string
+          note: string | null
+          position: number
+        }
+        Insert: {
+          artist_id: string
+          genre_slug: string
+          note?: string | null
+          position: number
+        }
+        Update: {
+          artist_id?: string
+          genre_slug?: string
+          note?: string | null
+          position?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "genre_examples_artist_id_fkey"
+            columns: ["artist_id"]
+            isOneToOne: false
+            referencedRelation: "artists"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "genre_examples_genre_slug_fkey"
+            columns: ["genre_slug"]
+            isOneToOne: false
+            referencedRelation: "genre_pages"
+            referencedColumns: ["slug"]
+          },
+        ]
+      }
+      genre_pages: {
+        Row: {
+          content_version: number
+          history: Json
+          origin_place: string
+          origin_years: string
+          related_slugs: string[]
+          reviewed: boolean
+          slug: string
+          summary: string
+          tagline: string
+          title: string
+          updated_at: string
+          wikipedia_title: string | null
+        }
+        Insert: {
+          content_version?: number
+          history?: Json
+          origin_place: string
+          origin_years: string
+          related_slugs?: string[]
+          reviewed?: boolean
+          slug: string
+          summary: string
+          tagline: string
+          title: string
+          updated_at?: string
+          wikipedia_title?: string | null
+        }
+        Update: {
+          content_version?: number
+          history?: Json
+          origin_place?: string
+          origin_years?: string
+          related_slugs?: string[]
+          reviewed?: boolean
+          slug?: string
+          summary?: string
+          tagline?: string
+          title?: string
+          updated_at?: string
+          wikipedia_title?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "genre_pages_slug_fkey"
+            columns: ["slug"]
+            isOneToOne: true
+            referencedRelation: "genres"
+            referencedColumns: ["slug"]
+          },
+        ]
+      }
+      genre_pillars: {
+        Row: {
+          artist_id: string
+          genre_slug: string
+          position: number
+          why: string
+        }
+        Insert: {
+          artist_id: string
+          genre_slug: string
+          position: number
+          why: string
+        }
+        Update: {
+          artist_id?: string
+          genre_slug?: string
+          position?: number
+          why?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "genre_pillars_artist_id_fkey"
+            columns: ["artist_id"]
+            isOneToOne: false
+            referencedRelation: "artists"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "genre_pillars_genre_slug_fkey"
+            columns: ["genre_slug"]
+            isOneToOne: false
+            referencedRelation: "genre_pages"
+            referencedColumns: ["slug"]
+          },
+        ]
+      }
       genre_rules: {
         Row: {
           id: string
@@ -817,6 +971,53 @@ export type Database = {
           tag?: string
         }
         Relationships: []
+      }
+      genres: {
+        Row: {
+          aliases: string[]
+          created_at: string
+          has_editorial: boolean
+          label: string
+          lastfm_tag: string | null
+          level: number
+          origin_years: string | null
+          parent_slug: string | null
+          slug: string
+          wikipedia_title: string | null
+        }
+        Insert: {
+          aliases?: string[]
+          created_at?: string
+          has_editorial?: boolean
+          label: string
+          lastfm_tag?: string | null
+          level: number
+          origin_years?: string | null
+          parent_slug?: string | null
+          slug: string
+          wikipedia_title?: string | null
+        }
+        Update: {
+          aliases?: string[]
+          created_at?: string
+          has_editorial?: boolean
+          label?: string
+          lastfm_tag?: string | null
+          level?: number
+          origin_years?: string | null
+          parent_slug?: string | null
+          slug?: string
+          wikipedia_title?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "genres_parent_slug_fkey"
+            columns: ["parent_slug"]
+            isOneToOne: false
+            referencedRelation: "genres"
+            referencedColumns: ["slug"]
+          },
+        ]
       }
       log_comments: {
         Row: {
@@ -1662,6 +1863,7 @@ export type Database = {
             Returns: {
               macro_genres: string[]
               primary_macro: string
+              sub_genres: string[]
             }[]
           }
       common_artists: {
@@ -1747,6 +1949,23 @@ export type Database = {
           username: string
         }[]
       }
+      get_genre_catalog: {
+        Args: never
+        Returns: {
+          aliases: string[]
+          artist_count: number
+          has_editorial: boolean
+          label: string
+          lastfm_tag: string
+          level: number
+          origin_years: string
+          parent_slug: string
+          slug: string
+          viewer_seen_count: number
+          wikipedia_title: string
+        }[]
+      }
+      get_genre_page: { Args: { p_slug: string }; Returns: Json }
       get_notifications: {
         Args: { p_limit?: number }
         Returns: {
@@ -1843,6 +2062,14 @@ export type Database = {
       mark_notifications_read: {
         Args: { p_ids?: string[] }
         Returns: undefined
+      }
+      promote_frequent_tags: { Args: { p_min?: number }; Returns: number }
+      reclassify_artists_batch: {
+        Args: { p_after_id?: string; p_batch_size?: number }
+        Returns: {
+          last_id: string
+          updated_count: number
+        }[]
       }
       recompute_artist_rating_aggregates: {
         Args: { p_artist_id: string }
@@ -1993,6 +2220,16 @@ export type Database = {
       user_stats_overview: {
         Args: { p_user: string; p_year?: number }
         Returns: Json
+      }
+      user_subgenre_stats: {
+        Args: { p_user: string; p_year?: number }
+        Returns: {
+          artist_count: number
+          avg_rating: number
+          log_count: number
+          parent_macro: string
+          sub_genre: string
+        }[]
       }
       user_taste_diversity: {
         Args: { p_user: string; p_year?: number }

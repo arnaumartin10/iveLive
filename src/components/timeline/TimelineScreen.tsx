@@ -444,6 +444,7 @@ export function TimelineScreen({
                 label={g.replaceAll('_', ' ')}
                 size="xs"
                 variant="outline"
+                interactive={false}
               />
               <X size={12} color={colors.accent} />
             </Pressable>

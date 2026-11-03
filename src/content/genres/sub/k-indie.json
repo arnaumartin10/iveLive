@@ -1,0 +1,28 @@
+{
+  "slug": "k-indie",
+  "parent_slug": "world",
+  "title": "K-Indie",
+  "tagline": "Independent Korean music across intimate songwriting, rock, and experimental pop.",
+  "summary": "K-indie refers broadly to independent music scenes in South Korea, spanning rock, folk, electronic music, and pop. Artists work outside or alongside the mainstream idol system, often building distinctive sounds through small labels, live clubs, and online communities. The category reflects a varied ecosystem rather than a single genre.",
+  "origin_place": "South Korea",
+  "origin_years": "1990s onwards",
+  "history": [],
+  "related_slugs": ["world", "indie-rock", "k-pop"],
+  "wikipedia_title": "Korean indie music",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Jaurim", "why": "Jaurim became one of South Korea's best-known rock bands, moving between alternative rock and pop songwriting." },
+    { "name": "Crying Nut", "why": "Crying Nut helped establish an energetic Korean punk-rock sound rooted in the country's club scene." },
+    { "name": "The Black Skirts", "why": "The Black Skirts built a widely recognized indie-pop catalog with personal lyrics and melodic arrangements." }
+  ],
+  "examples": [
+    { "name": "Hyukoh" }, { "name": "Se So Neon" },
+    { "name": "ADOY" }, { "name": "Mid-Air Thief" },
+    { "name": "Parannoul" }, { "name": "Jannabi" },
+    { "name": "10cm" }, { "name": "Nell" },
+    { "name": "The Volunteers" }, { "name": "Silica Gel" },
+    { "name": "Meaningful Stone" }, { "name": "Say Sue Me" }
+  ],
+  "sources_to_verify": ["Korean indie music", "Jaurim", "Crying Nut", "The Black Skirts"]
+}

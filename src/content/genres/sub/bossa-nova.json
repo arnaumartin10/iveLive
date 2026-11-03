@@ -1,0 +1,34 @@
+{
+  "slug": "bossa-nova",
+  "parent_slug": "world",
+  "title": "Bossa Nova",
+  "tagline": "Softly syncopated guitar, understated singing, and Brazilian songcraft.",
+  "summary": "Bossa nova emerged in Brazil through a meeting of samba rhythms, modern songwriting, and jazz harmony. Its intimate vocals and syncopated guitar patterns created a quieter, more conversational feel than many dance-oriented styles. The music traveled internationally through recordings and collaborations, while remaining deeply connected to Brazilian composers and performers.",
+  "origin_place": "Rio de Janeiro, Brazil",
+  "origin_years": "late 1950s",
+  "history": [],
+  "related_slugs": ["world", "samba", "jazz-fusion"],
+  "wikipedia_title": "Bossa nova",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Joao Gilberto", "why": "Joao Gilberto's guitar rhythm and restrained vocal delivery became defining features of bossa nova." },
+    { "name": "Antonio Carlos Jobim", "why": "Antonio Carlos Jobim composed songs and harmonies that helped bring bossa nova to international listeners." },
+    { "name": "Vinicius de Moraes", "why": "Vinicius de Moraes contributed poetic lyrics and collaborations central to the early bossa nova repertoire." }
+  ],
+  "examples": [
+    { "name": "Nara Leao" },
+    { "name": "Astrud Gilberto" },
+    { "name": "Stan Getz" },
+    { "name": "Sergio Mendes" },
+    { "name": "Baden Powell" },
+    { "name": "Roberto Menescal" },
+    { "name": "Carlos Lyra" },
+    { "name": "Elis Regina" },
+    { "name": "Toquinho" },
+    { "name": "Marcos Valle" },
+    { "name": "Gal Costa" },
+    { "name": "Caetano Veloso" }
+  ],
+  "sources_to_verify": ["Bossa nova", "Joao Gilberto", "Antonio Carlos Jobim", "Vinicius de Moraes"]
+}

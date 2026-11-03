@@ -1,0 +1,34 @@
+{
+  "slug": "indie-rock",
+  "parent_slug": "indie",
+  "title": "Indie Rock",
+  "tagline": "Big ideas and small scenes, with guitars front and centre.",
+  "summary": "Indie rock grew from independent labels, college radio, and scenes where bands could write on their own terms. It blends punchy pop hooks, feedback, and melodic risk-taking, with a tendency to stay flexible across styles. The genre isn't a single sound so much as a culture of autonomy: bands making records that feel personal, idiosyncratic, and unmistakably alive.",
+  "origin_place": "United States, United Kingdom, and Canada",
+  "origin_years": "1980s",
+  "history": [],
+  "related_slugs": ["indie", "dream-pop", "alternative-rock"],
+  "wikipedia_title": "Indie rock",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Pixies", "why": "Pixies mix explosive dynamics and melodic hooks, helping define a central indie-rock language of contrast and impact." },
+    { "name": "The Smiths", "why": "The Smiths balanced wit, melancholy, and sharp pop structures into an immediately recognizable indie-rock style." },
+    { "name": "Yo La Tengo", "why": "Yo La Tengo brought a patient, curious sensibility that kept indie rock open to experimentation and intimacy." }
+  ],
+  "examples": [
+    { "name": "The Breeders" },
+    { "name": "The Sundays" },
+    { "name": "Pavement" },
+    { "name": "Sonic Youth" },
+    { "name": "Arcade Fire" },
+    { "name": "The National" },
+    { "name": "The Staves" },
+    { "name": "Cat Power" },
+    { "name": "The Magnetic Fields" },
+    { "name": "The Go-Betweens" },
+    { "name": "The Hold Steady" },
+    { "name": "Belle and Sebastian" }
+  ],
+  "sources_to_verify": ["Indie rock", "Pixies", "The Smiths", "Pavement"]
+}

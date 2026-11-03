@@ -1,0 +1,31 @@
+{
+  "slug": "jazz_blues",
+  "title": "Jazz / Blues",
+  "tagline": "Improvisation, blue notes and a conversation in sound.",
+  "summary": "Jazz and blues are distinct, wide traditions whose histories are deeply connected to Black American creativity. Blues shaped popular song through expressive phrasing and repeating forms; jazz grew through improvisation, ensemble interplay and rhythmic invention. Each contains many schools and regional sounds, so this umbrella is intentionally broad. The selected artists are representative foundations, not a complete lineage, and the music remains alive through performers who carry and transform it.",
+  "origin_place": "African American communities in the United States",
+  "origin_years": "Late 19th century–early 20th century",
+  "history": [
+    { "years": "Late 19th century–1920s", "heading": "Roots in lived experience", "text": "Blues developed through African American musical practices, work songs and local performance traditions. Jazz emerged in New Orleans from a rich meeting of African American cultural forms. Early recordings brought selected styles to wider listeners, while the music's foundations remained in community performance." },
+    { "years": "1920s–1940s", "heading": "Bands and improvisers", "text": "Jazz orchestras and small groups made improvisation central to popular performance. Blues singers and instrumentalists developed distinctive regional approaches, carried by touring and records. Radio connected audiences to new sounds, even as the business often failed to fairly recognize the Black artists who created them." },
+    { "years": "1940s–1960s", "heading": "New vocabularies", "text": "Bebop shifted jazz toward faster tempos, harmonic complexity and intimate ensembles. Electric blues and rhythm and blues influenced emerging rock music, while jazz artists explored modal playing and freer forms. Musicians treated tradition not as a museum but as material for constant invention." },
+    { "years": "1970s–today", "heading": "Many paths continue", "text": "Jazz and blues artists combined acoustic roots with electric instruments, global rhythms and contemporary production. Festivals, clubs and schools supported new generations of players. The traditions now circulate worldwide, with artists honoring their histories while shaping improvisation and song to new communities." }
+  ],
+  "related_slugs": ["rnb_soul", "rock", "folk_acoustic", "classical"],
+  "wikipedia_title": "Jazz",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Louis Armstrong", "why": "Armstrong's trumpet sound and vocal phrasing helped establish the soloist as a compelling voice within jazz." },
+    { "name": "Bessie Smith", "why": "Smith's recordings show the expressive strength of classic blues singing and its influence on later popular vocalists." },
+    { "name": "Miles Davis", "why": "Davis repeatedly helped open new directions in jazz, from small-group innovation to electric experimentation." }
+  ],
+  "examples": [
+    { "name": "Ma Rainey" }, { "name": "Duke Ellington" }, { "name": "Billie Holiday" }, { "name": "Charlie Parker" },
+    { "name": "Thelonious Monk" }, { "name": "Ella Fitzgerald" }, { "name": "John Coltrane" }, { "name": "B.B. King" },
+    { "name": "Muddy Waters" }, { "name": "Nina Simone" }, { "name": "Herbie Hancock" }, { "name": "Pat Metheny" },
+    { "name": "Tete Montoliu" }, { "name": "Andrea Motis" }, { "name": "Chano Domínguez" }, { "name": "Perico Sambeat" },
+    { "name": "Jorge Pardo" }, { "name": "Mendizabal" }, { "name": "Joan Chamorro" }, { "name": "Koko-Jean Davis" }
+  ],
+  "sources_to_verify": ["Jazz", "Blues", "Louis Armstrong", "Bessie Smith", "Miles Davis"]
+}

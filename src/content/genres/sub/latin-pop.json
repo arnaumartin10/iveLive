@@ -1,0 +1,28 @@
+{
+  "slug": "latin-pop",
+  "parent_slug": "latin",
+  "title": "Latin Pop",
+  "tagline": "Pop songwriting connected to the many languages and rhythms of Latin music.",
+  "summary": "Latin pop brings popular songwriting together with musical traditions and contemporary sounds from Latin America, Spain, and their diasporas. Songs may incorporate rock, dance, regional rhythms, and urban production, often moving between Spanish, Portuguese, and English. The label covers a broad, changing musical landscape.",
+  "origin_place": "Latin America and Spain",
+  "origin_years": "1950s onwards",
+  "history": [],
+  "related_slugs": ["latin", "dance-pop", "urbano-latino"],
+  "wikipedia_title": "Latin pop",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Gloria Estefan", "why": "Estefan brought Cuban-American musical influences into international pop through a long-running recording career." },
+    { "name": "Ricky Martin", "why": "Martin helped bring Spanish-language pop into global mainstream charts with dance-oriented recordings." },
+    { "name": "Shakira", "why": "Shakira built an international career by moving between Latin pop, rock, and dance production." }
+  ],
+  "examples": [
+    { "name": "Enrique Iglesias" }, { "name": "Luis Miguel" },
+    { "name": "Juanes" }, { "name": "Thalía" },
+    { "name": "Paulina Rubio" }, { "name": "Alejandro Sanz" },
+    { "name": "Julieta Venegas" }, { "name": "Carlos Vives" },
+    { "name": "Rosalía" }, { "name": "Camila Cabello" },
+    { "name": "Sebastián Yatra" }, { "name": "Natalia Lafourcade" }
+  ],
+  "sources_to_verify": ["Latin pop", "Gloria Estefan", "Ricky Martin", "Shakira"]
+}

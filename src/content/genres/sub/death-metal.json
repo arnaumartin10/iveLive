@@ -1,0 +1,34 @@
+{
+  "slug": "death-metal",
+  "parent_slug": "metal",
+  "title": "Death Metal",
+  "tagline": "Low-tuned riffs, intricate rhythms, and extreme vocal intensity.",
+  "summary": "Death metal pushes heavy metal toward greater speed, distortion, and rhythmic complexity. Low guitar tunings, growled vocals, and technically demanding drums became defining features, while regional scenes created distinctive approaches to the style. Its range now spans blunt, old-school riffs and highly intricate compositions, with the same emphasis on intensity and precision.",
+  "origin_place": "United States",
+  "origin_years": "mid-1980s",
+  "history": [],
+  "related_slugs": ["metal", "thrash-metal", "black-metal"],
+  "wikipedia_title": "Death metal",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Death", "why": "Death helped define the genre's sound and continually expanded its musical complexity." },
+    { "name": "Morbid Angel", "why": "Morbid Angel brought a technically ambitious, influential approach to the early Florida death-metal scene." },
+    { "name": "Possessed", "why": "Possessed helped establish the name and early vocabulary of death metal through fast, abrasive songwriting." }
+  ],
+  "examples": [
+    { "name": "Cannibal Corpse" },
+    { "name": "Obituary" },
+    { "name": "Deicide" },
+    { "name": "Autopsy" },
+    { "name": "Entombed" },
+    { "name": "Dismember" },
+    { "name": "At the Gates" },
+    { "name": "Carcass" },
+    { "name": "Suffocation" },
+    { "name": "Bolt Thrower" },
+    { "name": "Cryptopsy" },
+    { "name": "Gojira" }
+  ],
+  "sources_to_verify": ["Death metal", "Death", "Morbid Angel", "Possessed"]
+}

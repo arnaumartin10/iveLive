@@ -59,6 +59,17 @@ function requestEnrichmentInBackground(
   else void task;
 }
 
+function normalizeArtistName(value: string): string {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim()
+    .replace(/\s+/g, ' ')
+    .replace(/^the\s+/, '');
+}
+
 Deno.serve(async (request: Request) => {
   if (request.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
@@ -68,7 +79,7 @@ Deno.serve(async (request: Request) => {
   }
 
   try {
-    const auth = await authenticateRequest(request);
+    const auth = await authenticateRequest(request, true);
     if ('response' in auth) return auth.response;
 
     const missingSpotifySecrets = [
@@ -113,7 +124,8 @@ Deno.serve(async (request: Request) => {
     if (
       existing &&
       Number.isFinite(lastSyncedAt) &&
-      Date.now() - lastSyncedAt < refreshAgeMs
+      Date.now() - lastSyncedAt < refreshAgeMs &&
+      (existing.image_url_large || existing.image_url_thumb)
     ) {
       requestEnrichmentInBackground(
         database,
@@ -129,6 +141,46 @@ Deno.serve(async (request: Request) => {
     const artist = toArtistDTO(payload);
     if (!artist.spotifyId) {
       return jsonResponse({ error: 'Spotify returned an invalid artist' }, 502);
+    }
+
+    const targetArtistId =
+      auth.context.isTrustedServer && typeof input.artistId === 'string'
+        ? input.artistId.trim()
+        : null;
+    if (targetArtistId) {
+      const { data: target, error: targetError } = await database
+        .from('artists')
+        .select('id,name,spotify_id')
+        .eq('id', targetArtistId)
+        .maybeSingle();
+      if (targetError) throw targetError;
+      if (
+        target &&
+        !target.spotify_id &&
+        normalizeArtistName(target.name) === normalizeArtistName(artist.name)
+      ) {
+        const { data: updated, error: updateError } = await database
+          .from('artists')
+          .update({
+            spotify_id: artist.spotifyId,
+            image_url_large: artist.imageLarge,
+            image_url_thumb: artist.imageThumb,
+            last_synced_at: new Date().toISOString(),
+          })
+          .eq('id', target.id)
+          .is('spotify_id', null)
+          .select('*')
+          .maybeSingle();
+        if (updateError) throw updateError;
+        if (updated) {
+          requestEnrichmentInBackground(
+            database,
+            auth.context.serviceRoleKey,
+            updated,
+          );
+          return jsonResponse(updated);
+        }
+      }
     }
 
     const { data, error } = await database

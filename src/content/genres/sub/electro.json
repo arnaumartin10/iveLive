@@ -1,0 +1,28 @@
+{
+  "slug": "electro",
+  "parent_slug": "electronic",
+  "title": "Electro",
+  "tagline": "Machine funk, programmed rhythms, and the robotic pulse of early electronic dance music.",
+  "summary": "Electro developed in the early 1980s through the meeting of electronic instruments, funk, and hip-hop culture. Drum machines and synthesizers gave producers a precise, futuristic sound, while DJs and dancers brought it into clubs and street scenes. Electro influenced later techno, house, and electronic pop.",
+  "origin_place": "United States",
+  "origin_years": "early 1980s",
+  "history": [],
+  "related_slugs": ["electronic", "synthwave", "hip_hop"],
+  "wikipedia_title": "Electro (music)",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Afrika Bambaataa", "why": "Afrika Bambaataa's Planet Rock connected electronic production with hip-hop and helped popularize electro." },
+    { "name": "Kraftwerk", "why": "Kraftwerk's machine-like compositions and electronic instrumentation were a major influence on electro producers." },
+    { "name": "Cybotron", "why": "Cybotron fused Detroit's electronic futurism with dance rhythms in recordings that influenced electro and techno." }
+  ],
+  "examples": [
+    { "name": "Mantronix" }, { "name": "Hashim" },
+    { "name": "Egyptian Lover" }, { "name": "Newcleus" },
+    { "name": "The Jonzun Crew" }, { "name": "Midnight Star" },
+    { "name": "Drexciya" }, { "name": "Aux 88" },
+    { "name": "Juan Atkins" }, { "name": "The Egyptian Lover" },
+    { "name": "Model 500" }, { "name": "Miss Kittin" }
+  ],
+  "sources_to_verify": ["Electro (music)", "Afrika Bambaataa", "Kraftwerk", "Cybotron"]
+}

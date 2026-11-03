@@ -1,0 +1,34 @@
+{
+  "slug": "grunge",
+  "parent_slug": "rock",
+  "title": "Grunge",
+  "tagline": "Heavy guitars, rough edges, and songs from a local scene.",
+  "summary": "Grunge grew from a Pacific Northwest network of independent bands, venues, and labels. Its songs often joined distorted guitars and forceful dynamics with punk directness and a range of melodic influences. The style reached a much larger audience in the early 1990s, but its roots remain tied to collaborative local music-making. Bands associated with grunge each developed a distinct sound.",
+  "origin_place": "Seattle and the Pacific Northwest, United States",
+  "origin_years": "1980s",
+  "history": [],
+  "related_slugs": ["rock", "indie-rock", "punk"],
+  "wikipedia_title": "Grunge",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Mudhoney", "why": "Mudhoney helped define the raw, fuzz-heavy sound of Seattle's early grunge scene." },
+    { "name": "Nirvana", "why": "Nirvana brought the underground scene's dynamic songwriting to a wide audience without losing its punk roots." },
+    { "name": "Soundgarden", "why": "Soundgarden combined heavy riffing and adventurous structures, showing one expansive side of grunge." }
+  ],
+  "examples": [
+    { "name": "Alice in Chains" },
+    { "name": "Pearl Jam" },
+    { "name": "Screaming Trees" },
+    { "name": "Tad" },
+    { "name": "Melvins" },
+    { "name": "Hole" },
+    { "name": "L7" },
+    { "name": "The Gits" },
+    { "name": "Temple of the Dog" },
+    { "name": "Mother Love Bone" },
+    { "name": "Veruca Salt" },
+    { "name": "Sunny Day Real Estate" }
+  ],
+  "sources_to_verify": ["Grunge", "Mudhoney", "Nirvana", "Soundgarden"]
+}

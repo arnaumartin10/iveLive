@@ -46,6 +46,7 @@ export type CloudArtistNode = {
   logs: CloudLogTuple[];
   hubTargets: string[];
   genreSlugs: string[];
+  subGenreSlugs?: string[];
   radius: number;
   color: string; // Genre color for outer glow and accents
   clusterColor: string; // Color of current cluster
@@ -546,6 +547,7 @@ export function buildCloudNodes(
       logs,
       hubTargets,
       genreSlugs: genreSlugs.length ? genreSlugs : [primaryMacro],
+      subGenreSlugs: isCloudArtistData(artist) ? (artist.sub_genres ?? []) : [],
       radius: artistNodeRadius(artist.log_count, avgRating),
       color: genreColor,
       clusterColor,

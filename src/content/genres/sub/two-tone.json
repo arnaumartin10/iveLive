@@ -1,0 +1,75 @@
+{
+  "slug": "two-tone",
+  "parent_slug": "world",
+  "title": "Two-Tone",
+  "tagline": "Ska stripped to a sharper, more anxious post-punk edge.",
+  "summary": "Two-tone took ska’s rhythmic punch and placed it alongside punk energy, a stripped production style and social commentary. Its music often feels brisk and tense rather than pure celebration, balancing vintage rhythm with a contemporary urban point of view. The sound became a bridge between Jamaican music traditions and British youth culture.",
+  "origin_place": "United Kingdom",
+  "origin_years": "1970s and 1980s",
+  "history": [],
+  "related_slugs": [
+    "world",
+    "punk"
+  ],
+  "wikipedia_title": "Two-tone",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    {
+      "name": "The Specials",
+      "why": "The Specials made two-tone feel immediate and politically sharp without sacrificing melodic clarity."
+    },
+    {
+      "name": "Madness",
+      "why": "Madness brought more melodic ease to the sound while keeping its rhythmic tension intact."
+    },
+    {
+      "name": "The Selecter",
+      "why": "The Selecter placed the social and musical language of ska into a more directly post-punk context."
+    }
+  ],
+  "examples": [
+    {
+      "name": "The Beat"
+    },
+    {
+      "name": "The Bodysnatchers"
+    },
+    {
+      "name": "The English Beat"
+    },
+    {
+      "name": "Bad Manners"
+    },
+    {
+      "name": "The Pains of Being Pure at Heart"
+    },
+    {
+      "name": "The Skints"
+    },
+    {
+      "name": "The Slits"
+    },
+    {
+      "name": "The Clash"
+    },
+    {
+      "name": "Selector"
+    },
+    {
+      "name": "The Bluebeats"
+    },
+    {
+      "name": "The Ruts"
+    },
+    {
+      "name": "The Alien Sex Fiend"
+    }
+  ],
+  "sources_to_verify": [
+    "Two-tone",
+    "The Specials",
+    "Madness",
+    "The Selecter"
+  ]
+}

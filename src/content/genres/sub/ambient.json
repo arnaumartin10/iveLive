@@ -1,0 +1,34 @@
+{
+  "slug": "ambient",
+  "parent_slug": "electronic",
+  "title": "Ambient",
+  "tagline": "Music that makes space, texture, and attention part of the composition.",
+  "summary": "Ambient music foregrounds atmosphere and texture, often using sustained tones, gradual change, and open-ended forms. It can sit in the background or reward close listening, depending on how its layers unfold. The style draws on electronic studios, experimental composition, field recordings, and acoustic instruments, with artists continually redefining what a musical environment can be.",
+  "origin_place": "United Kingdom and United States",
+  "origin_years": "1970s",
+  "history": [],
+  "related_slugs": ["electronic", "drone", "downtempo"],
+  "wikipedia_title": "Ambient music",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Brian Eno", "why": "Brian Eno helped define ambient as music designed to shape an environment while remaining open to focused listening." },
+    { "name": "Tangerine Dream", "why": "Tangerine Dream developed expansive electronic sequences that became a key influence on ambient and soundtrack music." },
+    { "name": "Pauline Oliveros", "why": "Pauline Oliveros connected experimental sound with deep listening and a distinctive, participatory approach to music." }
+  ],
+  "examples": [
+    { "name": "Aphex Twin" },
+    { "name": "The Orb" },
+    { "name": "Stars of the Lid" },
+    { "name": "Grouper" },
+    { "name": "Tim Hecker" },
+    { "name": "William Basinski" },
+    { "name": "Harold Budd" },
+    { "name": "Global Communication" },
+    { "name": "Biosphere" },
+    { "name": "Loscil" },
+    { "name": "Hiroshi Yoshimura" },
+    { "name": "Kaitlyn Aurelia Smith" }
+  ],
+  "sources_to_verify": ["Ambient music", "Brian Eno", "Tangerine Dream", "Pauline Oliveros"]
+}

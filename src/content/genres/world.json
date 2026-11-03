@@ -1,0 +1,31 @@
+{
+  "slug": "world",
+  "title": "World",
+  "tagline": "A listening map, never a single musical place.",
+  "summary": "World music is a wide, imperfect umbrella often used for music outside dominant Western pop categories. It can include traditional, popular and experimental sounds from every region, each with its own history and audience. The label is useful for discovery but cannot describe the depth of any one tradition. These representative artists invite a wider journey, with attention to the places and communities from which their music grows.",
+  "origin_place": "Global; no single place of origin",
+  "origin_years": "Many centuries of traditions",
+  "history": [
+    { "years": "Long-standing traditions", "heading": "Music belongs to place", "text": "Communities around the world developed music for ceremony, storytelling, dance and daily life. Instruments and musical systems carry histories that differ by region. No single timeline captures them all; each tradition deserves to be approached through its own context and practitioners." },
+    { "years": "Early recording era", "heading": "Records cross borders", "text": "Commercial recording and radio brought selected regional sounds to new listeners, often through the choices of collectors and labels. These pathways enabled discovery but could flatten context. Musicians continued to shape their own traditions, adapting to new audiences and technologies." },
+    { "years": "1980s–1990s", "heading": "A category becomes visible", "text": "The phrase world music gained wider use in the international record industry and festival programming. Collaborations connected musicians across continents, sometimes creating new forms and sometimes raising questions about representation. Listeners discovered more artists, while the category's breadth remained difficult to define." },
+    { "years": "2000s–today", "heading": "Direct exchange and discovery", "text": "Digital releases and global touring made it easier to encounter artists without relying on broad market labels. Musicians combine local traditions with contemporary production on their own terms. A thoughtful listening journey starts with curiosity and context rather than assuming that distant sounds are interchangeable." }
+  ],
+  "related_slugs": ["latin", "folk_acoustic", "jazz_blues", "electronic"],
+  "wikipedia_title": "World music",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Fela Kuti", "why": "Kuti's Afrobeat joined extended groove, ensemble interplay and political expression, becoming an influential Nigerian musical language." },
+    { "name": "Ravi Shankar", "why": "Shankar brought deep knowledge of Hindustani classical music to international stages while maintaining a distinct artistic tradition." },
+    { "name": "Miriam Makeba", "why": "Makeba carried South African song and performance to global audiences, connecting artistry with cultural history and advocacy." }
+  ],
+  "examples": [
+    { "name": "Ali Farka Touré" }, { "name": "Youssou N'Dour" }, { "name": "Cesária Évora" }, { "name": "Oumou Sangaré" },
+    { "name": "Salif Keita" }, { "name": "Nusrat Fateh Ali Khan" }, { "name": "Anoushka Shankar" }, { "name": "Fairuz" },
+    { "name": "Buena Vista Social Club" }, { "name": "Tinariwen" }, { "name": "Burna Boy" }, { "name": "Angélique Kidjo" },
+    { "name": "Lila Downs" }, { "name": "Manu Chao" }, { "name": "Ojos de Brujo" }, { "name": "Radio Tarifa" },
+    { "name": "Marina Satti" }, { "name": "A-WA" }, { "name": "Sílvia Pérez Cruz" }, { "name": "Baiuca" }
+  ],
+  "sources_to_verify": ["World music", "Afrobeat", "Fela Kuti", "Ravi Shankar", "Miriam Makeba"]
+}

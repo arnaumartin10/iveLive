@@ -1,0 +1,28 @@
+{
+  "slug": "drum-and-bass",
+  "parent_slug": "electronic",
+  "title": "Drum and Bass",
+  "tagline": "Breakneck breakbeats and deep bass built for soundsystems and clubs.",
+  "summary": "Drum and bass grew from UK rave culture through the transformation of breakbeat samples into fast, syncopated rhythms. Deep bass and detailed production anchor a sound that ranges from atmospheric and melodic to fierce and minimal. Its scenes continue to evolve through DJs, producers, pirate radio, and club communities.",
+  "origin_place": "United Kingdom",
+  "origin_years": "early 1990s",
+  "history": [],
+  "related_slugs": ["electronic", "breakbeat", "dubstep"],
+  "wikipedia_title": "Drum and bass",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Goldie", "why": "Goldie's recordings and label work helped establish drum and bass as an ambitious album and club form." },
+    { "name": "LTJ Bukem", "why": "Bukem developed a spacious, melodic approach that became central to atmospheric drum and bass." },
+    { "name": "Roni Size", "why": "Roni Size brought inventive production and live instrumentation to a widely recognized Bristol drum-and-bass sound." }
+  ],
+  "examples": [
+    { "name": "Andy C" }, { "name": "Shy FX" },
+    { "name": "A Guy Called Gerald" }, { "name": "Fabio" },
+    { "name": "Grooverider" }, { "name": "Dillinja" },
+    { "name": "Pendulum" }, { "name": "Noisia" },
+    { "name": "High Contrast" }, { "name": "London Elektricity" },
+    { "name": "Calibre" }, { "name": "Chase & Status" }
+  ],
+  "sources_to_verify": ["Drum and bass", "Goldie", "LTJ Bukem", "Roni Size"]
+}

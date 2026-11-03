@@ -1,0 +1,28 @@
+{
+  "slug": "ska-punk",
+  "parent_slug": "punk",
+  "title": "Ska Punk",
+  "tagline": "Punk's speed and shout-along spirit over ska's offbeat bounce.",
+  "summary": "Ska punk combines the fast guitars and direct energy of punk rock with ska's offbeat rhythms and horn arrangements. The style developed through several waves, often tied to local club scenes and DIY labels. Its music can move quickly between skanking grooves, loud choruses, and socially engaged lyrics.",
+  "origin_place": "United States and United Kingdom",
+  "origin_years": "1980s onwards",
+  "history": [],
+  "related_slugs": ["punk", "ska", "hardcore-punk"],
+  "wikipedia_title": "Ska punk",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Operation Ivy", "why": "Operation Ivy connected punk urgency with ska rhythms in a short-lived but highly influential sound." },
+    { "name": "The Specials", "why": "The Specials' revival-era ska and socially aware songwriting influenced later ska-punk musicians." },
+    { "name": "Rancid", "why": "Rancid carried ska and punk influences into a widely recognized 1990s street-punk sound." }
+  ],
+  "examples": [
+    { "name": "Less Than Jake" }, { "name": "The Mighty Mighty Bosstones" },
+    { "name": "Reel Big Fish" }, { "name": "NOFX" },
+    { "name": "Streetlight Manifesto" }, { "name": "Goldfinger" },
+    { "name": "Catch 22" }, { "name": "Save Ferris" },
+    { "name": "The Interrupters" }, { "name": "Mad Caddies" },
+    { "name": "The Aquabats" }, { "name": "Fishbone" }
+  ],
+  "sources_to_verify": ["Ska punk", "Operation Ivy", "The Specials", "Rancid"]
+}

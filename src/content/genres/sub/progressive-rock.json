@@ -1,0 +1,28 @@
+{
+  "slug": "progressive-rock",
+  "parent_slug": "rock",
+  "title": "Progressive Rock",
+  "tagline": "Rock that stretches its forms through long compositions and adventurous arrangements.",
+  "summary": "Progressive rock expands the scope of rock through long songs, shifting meters, conceptual albums, and influences from classical and jazz music. It became prominent in the late 1960s and 1970s, with bands exploring new studio techniques and instrumental arrangements. Later generations adapted its ambition to many different sounds.",
+  "origin_place": "United Kingdom",
+  "origin_years": "late 1960s",
+  "history": [],
+  "related_slugs": ["rock", "art-rock", "jazz-fusion"],
+  "wikipedia_title": "Progressive rock",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Yes", "why": "Yes developed intricate arrangements and extended compositions that became central to progressive rock." },
+    { "name": "King Crimson", "why": "King Crimson's changing lineups and adventurous structures helped define the genre's experimental edge." },
+    { "name": "Genesis", "why": "Genesis combined theatrical storytelling, instrumental passages, and carefully composed albums." }
+  ],
+  "examples": [
+    { "name": "Pink Floyd" }, { "name": "Emerson, Lake & Palmer" },
+    { "name": "Jethro Tull" }, { "name": "Rush" },
+    { "name": "Gentle Giant" }, { "name": "Camel" },
+    { "name": "Van der Graaf Generator" }, { "name": "The Moody Blues" },
+    { "name": "Porcupine Tree" }, { "name": "Marillion" },
+    { "name": "Dream Theater" }, { "name": "The Mars Volta" }
+  ],
+  "sources_to_verify": ["Progressive rock", "Yes", "King Crimson", "Genesis"]
+}

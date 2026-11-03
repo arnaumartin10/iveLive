@@ -1,0 +1,75 @@
+{
+  "slug": "gangsta-rap",
+  "parent_slug": "hip_hop",
+  "title": "Gangsta Rap",
+  "tagline": "Street narratives and hard-edged realism in the foreground.",
+  "summary": "Gangsta rap turns daily life, conflict and survival into direct lyrical testimony, often framed through a strong sense of location and social detail. It grew from the dense urban realities of the late 1980s and early 1990s and pushed rap toward sharper narrative and more confrontational delivery. The sound is rooted in rhythm, attitude and urgency.",
+  "origin_place": "United States",
+  "origin_years": "1980s and 1990s",
+  "history": [],
+  "related_slugs": [
+    "hip_hop",
+    "pop"
+  ],
+  "wikipedia_title": "Gangsta rap",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    {
+      "name": "N.W.A.",
+      "why": "N.W.A. helped define the genre’s tone and sharpened its relationship to real-world urban narrative."
+    },
+    {
+      "name": "Ice-T",
+      "why": "Ice-T made the expressive, confrontational voice of gangsta rap feel relentless and unmistakable."
+    },
+    {
+      "name": "The Notorious B.I.G.",
+      "why": "The Notorious B.I.G. balanced vivid detail with an elegant rhythmic touch that made the form feel broader and more literary."
+    }
+  ],
+  "examples": [
+    {
+      "name": "Snoop Dogg"
+    },
+    {
+      "name": "Dr. Dre"
+    },
+    {
+      "name": "Tupac Shakur"
+    },
+    {
+      "name": "Jay-Z"
+    },
+    {
+      "name": "50 Cent"
+    },
+    {
+      "name": "Bone Thugs-n-Harmony"
+    },
+    {
+      "name": "Scarface"
+    },
+    {
+      "name": "Public Enemy"
+    },
+    {
+      "name": "Wu-Tang Clan"
+    },
+    {
+      "name": "Eazy-E"
+    },
+    {
+      "name": "Master P"
+    },
+    {
+      "name": "KRS-One"
+    }
+  ],
+  "sources_to_verify": [
+    "Gangsta rap",
+    "N.W.A.",
+    "Ice-T",
+    "The Notorious B.I.G."
+  ]
+}

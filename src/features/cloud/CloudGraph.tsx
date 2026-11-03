@@ -126,7 +126,7 @@ import {
   type CloudNode,
   type Point,
 } from './simulation';
-import type { CloudCoattendanceLink } from './types';
+import type { CloudArtistData, CloudCoattendanceLink } from './types';
 import {
   atlasPictureCacheKey,
   buildAtlasSteps,
@@ -153,6 +153,23 @@ import { compareFeatureAvailable, type CompareAtlas } from './compare';
 import { isAccessibleListRequired } from './accessibility';
 import { normalizeCloudArtists, normalizeUserCloudData } from './normalize';
 let introRunInSession: string | null = null;
+
+function popularSubgenres(artists: CloudArtistData[], macroSlug: string) {
+  const counts = new Map<string, number>();
+  for (const artist of artists) {
+    if (!artist.macro_genres.includes(macroSlug)) continue;
+    for (const slug of artist.sub_genres ?? []) {
+      counts.set(slug, (counts.get(slug) ?? 0) + 1);
+    }
+  }
+  return [...counts.entries()]
+    .map(([slug, count]) => ({ slug, count }))
+    .sort(
+      (left, right) =>
+        right.count - left.count || left.slug.localeCompare(right.slug),
+    )
+    .slice(0, 3);
+}
 
 // ---------------------------------------------------------------------------
 // SKIA GLYPH: Die-cut artist sticker with hard ink edge and venue satellites
@@ -3197,6 +3214,7 @@ export function CloudGraph({ userId: propUserId }: { userId?: string } = {}) {
                   genre={item.slug as MacroGenre}
                   label={item.label}
                   size="xs"
+                  interactive={false}
                 />
               ) : mode === 'venue' && item.slug in VENUE_TYPES ? (
                 <VenueLabel
@@ -3243,6 +3261,7 @@ export function CloudGraph({ userId: propUserId }: { userId?: string } = {}) {
               genre={selectedHub.slug as MacroGenre}
               label={`${selectedHub.label} · ${selectedHub.count} artists`}
               size="xs"
+              interactive={false}
             />
           ) : mode === 'venue' && selectedHub.slug in VENUE_TYPES ? (
             <VenueLabel
@@ -3476,6 +3495,10 @@ export function CloudGraph({ userId: propUserId }: { userId?: string } = {}) {
           artists={territoryArtists
             .slice(0, 3)
             .map(({ id, name }) => ({ id, name }))}
+          subgenres={popularSubgenres(
+            artistsData,
+            selectedTerritory.macro_slug,
+          )}
           venues={Object.entries(territoryVenueCounts)
             .filter(([, count]) => (count ?? 0) > 0)
             .map(([type, count]) => {

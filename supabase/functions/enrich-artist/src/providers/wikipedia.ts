@@ -1,9 +1,6 @@
 import { cachedJson, getIveLiveUserAgent, logProviderResult } from './http.ts';
-import type {
-  EnrichmentProvider,
-  ProviderContext,
-  ProviderResult,
-} from './types.ts';
+import type { EnrichmentProvider, ProviderContext } from './types.ts';
+import { isEnglishBio, stripBioMarkup } from './language.ts';
 
 type WikidataEntity = {
   entities?: Record<string, { sitelinks?: Record<string, { title?: string }> }>;
@@ -15,11 +12,33 @@ export function parseWikipediaSummary(summary: {
   originalimage?: { source?: string };
   lang?: string;
   title?: string;
+  type?: string;
 }) {
+  const bio = stripBioMarkup(summary.extract ?? '');
+  const pageUrl = summary.content_urls?.desktop?.page;
+  if (
+    summary.type !== 'standard' ||
+    summary.lang?.toLowerCase() !== 'en' ||
+    !isEnglishBio(bio) ||
+    (pageUrl &&
+      (() => {
+        try {
+          const parsed = new URL(pageUrl);
+          return (
+            parsed.protocol !== 'https:' ||
+            parsed.hostname.toLowerCase() !== 'en.wikipedia.org'
+          );
+        } catch {
+          return true;
+        }
+      })())
+  ) {
+    return null;
+  }
   return {
-    bio: summary.extract?.trim() || null,
-    bio_url: summary.content_urls?.desktop?.page ?? null,
-    bio_lang: summary.lang ?? null,
+    bio,
+    bio_url: pageUrl ?? null,
+    bio_lang: 'en',
     bio_attribution: 'CC BY-SA',
     wikipedia_title: summary.title ?? null,
     group_image_url: summary.originalimage?.source ?? null,
@@ -27,10 +46,10 @@ export function parseWikipediaSummary(summary: {
   };
 }
 
-async function resolveTitle(
+export async function resolveTitle(
   wikidataId: string,
-  languages: string[],
-): Promise<{ title: string; language: string } | null> {
+  userAgent = getIveLiveUserAgent(),
+): Promise<string | null> {
   const params = new URLSearchParams({
     action: 'wbgetentities',
     ids: wikidataId,
@@ -39,38 +58,24 @@ async function resolveTitle(
   });
   const data = await cachedJson<WikidataEntity>(
     `https://www.wikidata.org/w/api.php?${params}`,
-    { headers: { 'User-Agent': getIveLiveUserAgent() } },
+    { headers: { 'User-Agent': userAgent } },
     7 * 24 * 60 * 60 * 1000,
     'wikidata',
   );
   const entity = data.entities?.[wikidataId];
-  for (const language of languages) {
-    const title = entity?.sitelinks?.[`${language}wiki`]?.title;
-    if (title) return { title, language };
-  }
-  return null;
+  return entity?.sitelinks?.enwiki?.title ?? null;
 }
 
 export const wikipediaProvider: EnrichmentProvider = {
   name: 'wikipedia',
   timeoutMs: 5000,
   async run(context) {
-    const requested = context.language?.split('-').at(0)?.toLowerCase();
-    const languages = [
-      ...new Set(
-        [requested, 'ca', 'es', 'en'].filter(
-          (value): value is string => !!value,
-        ),
-      ),
-    ];
     let title = context.wikipediaTitle;
-    let language = languages[0] ?? 'en';
     if (context.wikidataId) {
       try {
-        const resolved = await resolveTitle(context.wikidataId, languages);
-        if (resolved) ({ title, language } = resolved);
+        title = (await resolveTitle(context.wikidataId)) ?? title;
       } catch {
-        // Keep the MusicBrainz Wikipedia title as a fallback if Wikidata is unavailable.
+        // Keep the English MusicBrainz Wikipedia title as a fallback.
       }
     }
     if (!title) {
@@ -78,40 +83,36 @@ export const wikipediaProvider: EnrichmentProvider = {
       return {};
     }
     const encodedTitle = encodeURIComponent(title.replaceAll(' ', '_'));
-    const attempts = context.wikidataId ? [language] : languages;
-    for (const attemptLanguage of attempts) {
-      try {
-        const summary = await cachedJson<Record<string, unknown>>(
-          `https://${attemptLanguage}.wikipedia.org/api/rest_v1/page/summary/${encodedTitle}`,
-          {
-            headers: {
-              Accept: 'application/json',
-              'User-Agent': getIveLiveUserAgent(),
-            },
+    try {
+      const summary = await cachedJson<Record<string, unknown>>(
+        `https://en.wikipedia.org/api/rest_v1/page/summary/${encodedTitle}`,
+        {
+          headers: {
+            Accept: 'application/json',
+            'User-Agent': getIveLiveUserAgent(),
           },
-          7 * 24 * 60 * 60 * 1000,
-          'wikipedia',
-        );
-        const parsed = parseWikipediaSummary(
-          summary as Parameters<typeof parseWikipediaSummary>[0],
-        );
-        logProviderResult('wikipedia', {
-          matchFound: !!parsed.bio,
-        });
-        return {
-          patch: {
-            ...parsed,
-            bio_url:
-              parsed.bio_url ??
-              `https://${attemptLanguage}.wikipedia.org/wiki/${encodedTitle}`,
-            bio_lang: parsed.bio_lang ?? attemptLanguage,
-          },
-        };
-      } catch {
-        // Try the next configured language before treating the source as unavailable.
+        },
+        7 * 24 * 60 * 60 * 1000,
+        'wikipedia',
+      );
+      const parsed = parseWikipediaSummary(
+        summary as Parameters<typeof parseWikipediaSummary>[0],
+      );
+      if (!parsed) {
+        logProviderResult('wikipedia', { matchFound: false });
+        return { patch: { wikipedia_title: title } };
       }
+      logProviderResult('wikipedia', { matchFound: true });
+      return {
+        patch: {
+          ...parsed,
+          bio_url:
+            parsed.bio_url ?? `https://en.wikipedia.org/wiki/${encodedTitle}`,
+        },
+      };
+    } catch {
+      logProviderResult('wikipedia', { matchFound: false });
+      return { patch: { wikipedia_title: title } };
     }
-    logProviderResult('wikipedia', { matchFound: false });
-    return {};
   },
 };

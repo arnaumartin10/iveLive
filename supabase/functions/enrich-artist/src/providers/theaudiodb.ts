@@ -4,9 +4,11 @@ import type {
   EnrichmentProvider,
   ProviderContext,
 } from './types.ts';
+import { isEnglishBio, stripBioMarkup } from './language.ts';
 
 export function parseTheAudioDbArtist(payload: {
   artists?: {
+    idArtist?: string;
     strBiographyEN?: string;
     strArtistFanart?: string;
     strArtistFanart2?: string;
@@ -19,6 +21,8 @@ export function parseTheAudioDbArtist(payload: {
 }) {
   const artist = payload.artists?.[0];
   if (!artist) return { patch: {}, images: [] as ArtistImageCandidate[] };
+  const bio = stripBioMarkup(artist.strBiographyEN ?? '');
+  const hasEnglishBio = isEnglishBio(bio);
   const imageFields: {
     key:
       | 'strArtistFanart'
@@ -96,8 +100,12 @@ export function parseTheAudioDbArtist(payload: {
     patch: {
       banner_image_url: artist.strArtistFanart || null,
       group_image_url: artist.strArtistThumb || null,
-      bio: artist.strBiographyEN || null,
-      bio_source: artist.strBiographyEN ? 'theaudiodb' : null,
+      bio: hasEnglishBio ? bio : null,
+      bio_source: hasEnglishBio ? 'theaudiodb' : null,
+      bio_url: artist.idArtist
+        ? `https://www.theaudiodb.com/artist/${encodeURIComponent(artist.idArtist)}`
+        : null,
+      bio_lang: hasEnglishBio ? 'en' : null,
     },
     images,
   };
@@ -122,6 +130,7 @@ export const theAudioDbProvider: EnrichmentProvider = {
     const query = encodeURIComponent(context.artist.name);
     const data = await cachedJson<{
       artists?: {
+        idArtist?: string;
         strBiographyEN?: string;
         strArtistFanart?: string;
         strArtistFanart2?: string;
@@ -138,6 +147,9 @@ export const theAudioDbProvider: EnrichmentProvider = {
       'theaudiodb',
     );
     const result = parseTheAudioDbArtist(data);
+    if (result.patch.bio && !result.patch.bio_url) {
+      result.patch.bio_url = `https://www.theaudiodb.com/search.php?s=${query}`;
+    }
     logProviderResult('theaudiodb', {
       matchFound:
         Object.values(result.patch).some((value) => !!value) ||

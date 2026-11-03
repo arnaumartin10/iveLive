@@ -1,0 +1,28 @@
+{
+  "slug": "synthwave",
+  "parent_slug": "electronic",
+  "title": "Synthwave",
+  "tagline": "Retro-futurist electronic music built from synthesizers and cinematic nostalgia.",
+  "summary": "Synthwave is an electronic style inspired by 1980s film scores, soundtracks, and synthesizer music. Producers use vintage-flavored synths, drum machines, and cinematic arrangements to create a nostalgic but contemporary sound. The genre's visual identity and online communities have helped it grow across music, games, and film.",
+  "origin_place": "France and United States",
+  "origin_years": "2000s",
+  "history": [],
+  "related_slugs": ["electronic", "synth-pop", "electro"],
+  "wikipedia_title": "Synthwave",
+  "content_version": 1,
+  "reviewed": false,
+  "pillars": [
+    { "name": "Kavinsky", "why": "Kavinsky's cinematic electronic releases became a widely recognized reference for synthwave's retro-futurist sound." },
+    { "name": "College", "why": "College helped shape the style's nostalgic synth textures and connection to visual storytelling." },
+    { "name": "Perturbator", "why": "Perturbator developed a darker, heavier synthwave approach associated with the genre's cyberpunk edge." }
+  ],
+  "examples": [
+    { "name": "Carpenter Brut" }, { "name": "Com Truise" },
+    { "name": "The Midnight" }, { "name": "FM-84" },
+    { "name": "Gunship" }, { "name": "Timecop1983" },
+    { "name": "Power Glove" }, { "name": "Lazerhawk" },
+    { "name": "Miami Nights 1984" }, { "name": "Dance with the Dead" },
+    { "name": "Waveshaper" }, { "name": "Mitch Murder" }
+  ],
+  "sources_to_verify": ["Synthwave", "Kavinsky", "College", "Perturbator"]
+}
