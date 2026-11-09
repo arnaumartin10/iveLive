@@ -5,6 +5,10 @@ import type { TimelineOrder } from './types';
 import type { VenueType } from '../venues/venueTypes';
 
 export interface TimelineFilterState {
+  venueId?: string;
+  venueName?: string;
+  city?: string;
+  country?: string;
   venueTypes: VenueType[];
   genres: string[];
   minRating: number | null;
@@ -97,6 +101,10 @@ export const useTimelineStore = create<TimelineStoreState>()(
       hasActiveFilters: () => {
         const { filters } = get();
         return (
+          filters.venueId !== undefined ||
+          filters.venueName !== undefined ||
+          filters.city !== undefined ||
+          filters.country !== undefined ||
           filters.venueTypes.length > 0 ||
           filters.genres.length > 0 ||
           filters.minRating !== null ||
@@ -110,6 +118,10 @@ export const useTimelineStore = create<TimelineStoreState>()(
       activeFilterCount: () => {
         const { filters } = get();
         let count = 0;
+        if (filters.venueId !== undefined) count += 1;
+        if (filters.venueName !== undefined) count += 1;
+        if (filters.city !== undefined || filters.country !== undefined)
+          count += 1;
         count += filters.venueTypes.length;
         count += filters.genres.length;
         if (filters.minRating !== null) count += 1;

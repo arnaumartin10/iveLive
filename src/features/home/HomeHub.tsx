@@ -1,25 +1,42 @@
 import { useMemo, useRef, useState } from 'react';
 import {
+  ActivityIndicator,
   Alert,
   Linking,
   Pressable,
   RefreshControl,
   ScrollView,
   StyleSheet,
+  TextInput,
   View,
 } from 'react-native';
 import { router, useScrollToTop } from 'expo-router';
 import { routes } from '../../navigation/routes';
-import { MapPin, Ticket as TicketIcon } from 'lucide-react-native';
+import {
+  Check,
+  MapPin,
+  Plus,
+  Search,
+  Ticket as TicketIcon,
+  X,
+} from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useMyLogs } from '../concerts/hooks';
 import { useFeed } from '../social/hooks';
 import { FeedCard } from '../../components/social/FeedCard';
 import { useMe } from '../auth/hooks';
 import { useArtistCard } from '../artists/ArtistCardProvider';
-import { useAddWishlistItem, useProfileOverview } from '../profile/hooks';
+import { ArtistSearchResultRow } from '../artists/ArtistSearchResultRow';
+import { useArtistSearch, useEnsureArtist } from '../artists/hooks';
+import type { ArtistRow, ArtistSearchResult } from '../artists/types';
+import {
+  useAddWishlistItem,
+  useDeleteWishlistItem,
+  useFullWishlist,
+  useProfileOverview,
+} from '../profile/hooks';
 import { useTheme } from '../../theme/ThemeProvider';
-import { hardShadow, spacing } from '../../theme/tokens';
+import { fontFamily, hardShadow, radius, spacing } from '../../theme/tokens';
 import {
   MACRO_GENRES,
   MACRO_GENRE_ORDER,
@@ -41,14 +58,23 @@ import {
   VenueLabel,
 } from '../../components/paper';
 import { useHomeLocation } from './useHomeLocation';
+import { countryNameFromCode } from './location';
 import { LocationPreferenceSheet } from './LocationPreferenceSheet';
+import { ConcertSearchFilters } from './ConcertSearchFilters';
 import {
   useArtistsOnTour,
   useTopRated,
   useTrendingGlobal,
   useTrendingInApp,
+  useConcertSearch,
 } from './hooks';
 import { selectUpcomingTourArtists } from './api';
+import {
+  concertWishlistDraft,
+  concertDateRangeError,
+  findWishlistConcert,
+  type OfficialConcertSearchResult,
+} from './concertSearch';
 import { selectTrendingDisplay } from './trending';
 import type { HomeArtist, TourScope } from './types';
 
@@ -70,7 +96,6 @@ const VENUE_LABELS: Record<VenueType, string> = {
   festa_major: 'Festa Major',
   other: 'Other',
 };
-
 function SectionError({ message }: { message: string }) {
   return (
     <Text variant="caption" color="danger">
@@ -97,6 +122,7 @@ export function HomeHub() {
   const profile = profileQuery.data;
   const overviewQuery = useProfileOverview(profile?.username ?? '');
   const profileOverview = overviewQuery.data;
+  const wishlistQuery = useFullWishlist(profile?.username ?? '', profile?.id);
   const logsQuery = useMyLogs();
   const allLogs = logsQuery.data?.pages.flatMap((page) => page) ?? [];
   const logs = allLogs.slice(0, 3);
@@ -106,9 +132,8 @@ export function HomeHub() {
   const {
     location,
     isLoading: isLocationLoading,
-    save: saveLocation,
     error: locationError,
-  } = useHomeLocation();
+  } = useHomeLocation(true);
   const [locationSheetVisible, setLocationSheetVisible] = useState(false);
   const [trendingMode, setTrendingMode] = useState('global');
   const [tourScope, setTourScope] = useState<TourScope>('all');
@@ -116,7 +141,39 @@ export function HomeHub() {
   const [venueType, setVenueType] = useState<VenueType | null>(null);
   const [genre, setGenre] = useState<string | null>(null);
   const [ratingPeriod, setRatingPeriod] = useState('all');
+  const [concertSearchText, setConcertSearchText] = useState('');
+  const [selectedConcertArtist, setSelectedConcertArtist] =
+    useState<ArtistRow | null>(null);
+  const [concertCountry, setConcertCountry] = useState<string | null>(null);
+  const [concertDateFrom, setConcertDateFrom] = useState('');
+  const [concertDateTo, setConcertDateTo] = useState('');
+  const [isChoosingNewArtist, setIsChoosingNewArtist] = useState(false);
+  const concertDateError = concertDateRangeError(
+    concertDateFrom,
+    concertDateTo,
+  );
+  const [savingConcertId, setSavingConcertId] = useState<string | null>(null);
+  const [concertActionError, setConcertActionError] = useState<string | null>(
+    null,
+  );
   const artistMutation = useAddWishlistItem(profile?.username ?? '');
+  const deleteWishlistMutation = useDeleteWishlistItem(profile?.username ?? '');
+  const artistSearch = useArtistSearch(concertSearchText);
+  const ensureArtist = useEnsureArtist();
+  const concertSearchQuery = useConcertSearch({
+    artistId:
+      isChoosingNewArtist || concertDateError
+        ? null
+        : (selectedConcertArtist?.id ?? null),
+    artistName:
+      isChoosingNewArtist || concertDateError
+        ? null
+        : (selectedConcertArtist?.name ?? null),
+    countryCode: concertCountry,
+    dateFrom: concertDateFrom || null,
+    dateTo: concertDateTo || null,
+    isValid: !concertDateError,
+  });
 
   const globalTrending = useTrendingGlobal(
     trendingMode === 'country' ? location.country : 'global',
@@ -154,6 +211,10 @@ export function HomeHub() {
   );
   const tourArtists = tourSelection.artists;
   const ratedArtists = ratedQuery.data ?? [];
+  const concertResults = concertSearchQuery.data ?? [];
+  const shouldShowArtistSearch = isChoosingNewArtist || !selectedConcertArtist;
+  const hasConcertQuery =
+    selectedConcertArtist !== null && !isChoosingNewArtist;
 
   const upcomingWish = useMemo(() => {
     const today = new Date().toISOString().slice(0, 10);
@@ -209,10 +270,55 @@ export function HomeHub() {
     }
   }
 
+  async function selectConcertArtist(result: ArtistSearchResult) {
+    try {
+      const artist = await ensureArtist.mutateAsync(result);
+      setSelectedConcertArtist(artist);
+      setConcertSearchText('');
+      setIsChoosingNewArtist(false);
+      setConcertActionError(null);
+    } catch (error) {
+      setConcertActionError(
+        error instanceof Error
+          ? error.message
+          : 'Could not select this artist.',
+      );
+    }
+  }
+
+  async function toggleConcertWishlist(concert: OfficialConcertSearchResult) {
+    if (!profile) {
+      setConcertActionError('Sign in to save shows to your Wishlist.');
+      return;
+    }
+
+    setSavingConcertId(concert.eventId);
+    setConcertActionError(null);
+    try {
+      const savedItem = findWishlistConcert(concert, wishlistQuery.data ?? []);
+      if (savedItem) {
+        await deleteWishlistMutation.mutateAsync(savedItem.id);
+        return;
+      }
+
+      await artistMutation.mutateAsync({
+        userId: profile.id,
+        draft: concertWishlistDraft(concert, concert.artistId),
+      });
+    } catch (error) {
+      setConcertActionError(
+        error instanceof Error ? error.message : 'Try again in a moment.',
+      );
+    } finally {
+      setSavingConcertId(null);
+    }
+  }
+
   return (
     <View style={[styles.root, { backgroundColor: colors.bg }]}>
       <ScrollView
         ref={scrollRef}
+        stickyHeaderIndices={[1]}
         contentContainerStyle={[
           styles.content,
           {
@@ -225,17 +331,21 @@ export function HomeHub() {
             refreshing={
               profileQuery.isRefetching ||
               overviewQuery.isRefetching ||
+              wishlistQuery.isRefetching ||
               logsQuery.isRefetching ||
               friendsFeed.isRefetching ||
               globalTrending.isRefetching ||
               appTrending.isRefetching ||
               tourQuery.isRefetching ||
-              ratedQuery.isRefetching
+              ratedQuery.isRefetching ||
+              (hasConcertQuery && concertSearchQuery.isRefetching)
             }
             onRefresh={() => {
+              if (hasConcertQuery) void concertSearchQuery.refetch();
               void Promise.all([
                 profileQuery.refetch(),
                 overviewQuery.refetch(),
+                wishlistQuery.refetch(),
                 logsQuery.refetch(),
                 friendsFeed.refetch(),
                 globalTrending.refetch(),
@@ -269,6 +379,184 @@ export function HomeHub() {
             />
           </Pressable>
         </View>
+        <View
+          style={[styles.concertSearchSticky, { backgroundColor: colors.bg }]}
+        >
+          <Text variant="overline" color="secondary">
+            OFFICIAL CONCERTS
+          </Text>
+          {selectedConcertArtist && !isChoosingNewArtist ? (
+            <View
+              style={[
+                styles.selectedArtistRow,
+                {
+                  backgroundColor: colors.surfaceRaised,
+                  borderColor: colors.line,
+                },
+              ]}
+            >
+              <Avatar
+                imageUrl={
+                  selectedConcertArtist.image_url_thumb ??
+                  selectedConcertArtist.image_url_large
+                }
+                name={selectedConcertArtist.name}
+                size="sm"
+              />
+              <View style={styles.selectedArtistCopy}>
+                <Text variant="caption" color="secondary">
+                  TOUR DATES FOR
+                </Text>
+                <Text variant="label" weight="bold" numberOfLines={1}>
+                  {selectedConcertArtist.name}
+                </Text>
+              </View>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="Choose a different artist"
+                onPress={() => {
+                  setIsChoosingNewArtist(true);
+                  setConcertSearchText(selectedConcertArtist.name);
+                }}
+                style={styles.concertSearchClear}
+              >
+                <Text variant="caption" color="accent" weight="bold">
+                  CHANGE
+                </Text>
+              </Pressable>
+            </View>
+          ) : (
+            <View
+              style={[
+                styles.concertSearchInputWrap,
+                {
+                  backgroundColor: colors.surfaceRaised,
+                  borderColor: colors.line,
+                },
+              ]}
+            >
+              <Search size={18} color={colors.inkMuted} />
+              <TextInput
+                accessibilityLabel="Search for an official artist"
+                value={concertSearchText}
+                onChangeText={(value) => {
+                  setConcertSearchText(value);
+                  setConcertActionError(null);
+                }}
+                placeholder="Find an artist"
+                placeholderTextColor={colors.inkMuted}
+                autoCorrect={false}
+                autoCapitalize="none"
+                returnKeyType="search"
+                style={[styles.concertSearchInput, { color: colors.ink }]}
+              />
+              {artistSearch.isLoading || ensureArtist.isPending ? (
+                <ActivityIndicator size="small" color={colors.accent} />
+              ) : concertSearchText.length > 0 ? (
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel="Clear artist search"
+                  hitSlop={8}
+                  onPress={() => setConcertSearchText('')}
+                  style={styles.concertSearchClear}
+                >
+                  <X size={17} color={colors.inkMuted} />
+                </Pressable>
+              ) : null}
+            </View>
+          )}
+        </View>
+        {shouldShowArtistSearch ? (
+          <View style={styles.section}>
+            <Text variant="caption" color="secondary">
+              Choose the artist from the catalog to exclude tribute acts.
+            </Text>
+            {concertActionError ? (
+              <SectionError message={concertActionError} />
+            ) : null}
+            {artistSearch.isError && !artistSearch.results.length ? (
+              <SectionError
+                message={artistSearch.error ?? 'Artist search is unavailable.'}
+              />
+            ) : null}
+            {concertSearchText.trim().length >= 2 &&
+            !artistSearch.isLoading &&
+            !artistSearch.results.length &&
+            !artistSearch.isError ? (
+              <Text variant="caption" color="secondary">
+                No artists found. Try another spelling.
+              </Text>
+            ) : null}
+            {artistSearch.results.map((result) => (
+              <ArtistSearchResultRow
+                key={`${result.source}-${result.spotifyId ?? result.artistId ?? result.name}`}
+                result={result}
+                onPress={(selected) => void selectConcertArtist(selected)}
+              />
+            ))}
+          </View>
+        ) : null}
+        {hasConcertQuery ? (
+          <View style={styles.section}>
+            <ConcertSearchFilters
+              countryCode={concertCountry}
+              dateFrom={concertDateFrom}
+              dateTo={concertDateTo}
+              onCountryChange={setConcertCountry}
+              onDateFromChange={setConcertDateFrom}
+              onDateToChange={setConcertDateTo}
+            />
+            {concertDateError ? (
+              <SectionError message={concertDateError} />
+            ) : null}
+            {concertActionError ? (
+              <SectionError message={concertActionError} />
+            ) : null}
+            {concertSearchQuery.isError && !concertSearchQuery.isDebouncing ? (
+              <SectionError message="Official concert dates are unavailable right now. Please try again." />
+            ) : null}
+            {wishlistQuery.isError ? (
+              <SectionError message="Your Wishlist could not be loaded. Refresh before changing saved shows." />
+            ) : null}
+            {concertSearchQuery.isDebouncing ||
+            (concertSearchQuery.isLoading && !concertResults.length) ? (
+              <SectionSkeleton />
+            ) : null}
+            {!concertDateError &&
+            !concertSearchQuery.isDebouncing &&
+            !concertSearchQuery.isError &&
+            !concertSearchQuery.isFetching &&
+            !concertResults.length ? (
+              <Text variant="caption" color="secondary">
+                No official upcoming dates found for{' '}
+                {selectedConcertArtist.name}.
+              </Text>
+            ) : null}
+            {!concertSearchQuery.isDebouncing
+              ? concertResults.map((concert) => {
+                  const savedItem = findWishlistConcert(
+                    concert,
+                    wishlistQuery.data ?? [],
+                  );
+                  return (
+                    <OfficialConcertCard
+                      key={concert.eventId}
+                      concert={concert}
+                      saved={!!savedItem}
+                      saving={savingConcertId === concert.eventId}
+                      busy={
+                        savingConcertId === concert.eventId ||
+                        wishlistQuery.isLoading ||
+                        wishlistQuery.isError
+                      }
+                      onToggle={() => void toggleConcertWishlist(concert)}
+                      onTickets={() => void openTickets(concert.ticketUrl)}
+                    />
+                  );
+                })
+              : null}
+          </View>
+        ) : null}
         {!location.country ? (
           <Pressable
             accessibilityRole="button"
@@ -345,7 +633,10 @@ export function HomeHub() {
           <SegmentedControl
             options={[
               TREND_OPTIONS[0]!,
-              { label: location.country || 'Country', value: 'country' },
+              {
+                label: countryNameFromCode(location.country) || 'Country',
+                value: 'country',
+              },
               TREND_OPTIONS[2]!,
             ]}
             value={trendingMode}
@@ -367,9 +658,7 @@ export function HomeHub() {
               description={
                 trendingMode === 'app'
                   ? 'The IveLive chart will appear as public concert logs are added.'
-                  : trendingMode === 'country' && !location.country
-                    ? 'Set your country to load its Last.fm chart.'
-                    : 'This Last.fm chart is not available yet. It will appear after its first successful refresh.'
+                  : 'Last.fm charts refresh daily. If this chart has never loaded, it will appear after the first successful refresh.'
               }
             />
           ) : null}
@@ -413,7 +702,9 @@ export function HomeHub() {
             >
               <MapPin size={15} color={colors.inkMuted} />
               <Text variant="caption" color="secondary">
-                {location.city || location.country || 'Location'}
+                {location.city ||
+                  countryNameFromCode(location.country) ||
+                  'Location'}
               </Text>
             </Pressable>
           </View>
@@ -631,14 +922,13 @@ export function HomeHub() {
                     log.event_date === featuredFriendPost.event_date,
                 )}
                 onPressLog={(logId) => router.navigate(routes.log(logId))}
-                onOpenComments={() =>
-                  router.navigate(routes.legacy.friends())
-                }
+                onOpenComments={() => router.navigate(routes.legacy.friends())}
                 onPressArtist={(artistId) => {
                   void openArtistCard({
                     artistId,
                     name: featuredFriendPost.artist.name,
-                    imageUrl: featuredFriendPost.artist.image_url_thumb ?? undefined,
+                    imageUrl:
+                      featuredFriendPost.artist.image_url_thumb ?? undefined,
                     macroGenres: featuredFriendPost.artist.macro_genres,
                     genres: [],
                   });
@@ -752,10 +1042,6 @@ export function HomeHub() {
       <LocationPreferenceSheet
         visible={locationSheetVisible}
         onDismiss={() => setLocationSheetVisible(false)}
-        onSaved={async (next) => {
-          await saveLocation(next);
-          setRadiusKm(null);
-        }}
         location={location}
         isLoading={isLocationLoading}
       />
@@ -768,6 +1054,120 @@ function SectionHeading({ title }: { title: string }) {
     <Text variant="label" weight="bold">
       {title}
     </Text>
+  );
+}
+
+function OfficialConcertCard({
+  concert,
+  saved,
+  saving,
+  busy,
+  onToggle,
+  onTickets,
+}: {
+  concert: OfficialConcertSearchResult;
+  saved: boolean;
+  saving: boolean;
+  busy: boolean;
+  onToggle: () => void;
+  onTickets: () => void;
+}) {
+  const { colors } = useTheme();
+  const date = new Date(`${concert.eventDate}T12:00:00Z`);
+  const eventDate = new Intl.DateTimeFormat(undefined, {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    timeZone: 'UTC',
+  }).format(date);
+  const location = [concert.venueName, concert.city, concert.country]
+    .filter(Boolean)
+    .join(' · ');
+
+  return (
+    <View
+      style={[
+        styles.officialConcertCard,
+        { backgroundColor: colors.surface, borderColor: colors.line },
+      ]}
+    >
+      <View style={styles.officialConcertHeader}>
+        <View style={styles.officialConcertCopy}>
+          <Text variant="label" weight="bold">
+            {concert.eventName}
+          </Text>
+          <Text variant="caption" color="secondary">
+            {location || 'Venue to be announced'}
+          </Text>
+        </View>
+        <View style={styles.officialConcertDate}>
+          <Text variant="mono" weight="bold" color="accent">
+            {eventDate}
+          </Text>
+        </View>
+      </View>
+      <Text variant="caption" color="secondary">
+        {concert.lineup.length > 1
+          ? `Line-up: ${concert.lineup.join(' · ')}`
+          : concert.artistName}
+      </Text>
+      <View style={styles.officialConcertActions}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={
+            saved
+              ? `Remove ${concert.artistName} on ${eventDate} from Wishlist`
+              : `Add ${concert.artistName} on ${eventDate} to Wishlist`
+          }
+          accessibilityState={{ disabled: busy }}
+          disabled={busy}
+          onPress={onToggle}
+          style={[
+            styles.wishlistAction,
+            {
+              backgroundColor: saved ? colors.surfaceRaised : colors.accent,
+              borderColor: saved ? colors.line : colors.accent,
+              opacity: busy ? 0.6 : 1,
+            },
+          ]}
+        >
+          {saved ? (
+            <Check size={16} color={colors.ink} />
+          ) : (
+            <Plus size={16} color={colors.accentInk} />
+          )}
+          <Text
+            variant="caption"
+            weight="bold"
+            color={saved ? 'secondary' : 'accent'}
+          >
+            {saving
+              ? 'Saving…'
+              : busy
+                ? 'Loading…'
+                : saved
+                  ? 'Saved · remove'
+                  : 'Add to Wishlist'}
+          </Text>
+        </Pressable>
+        {concert.ticketUrl ? (
+          <Pressable
+            accessibilityRole="link"
+            accessibilityLabel={`Official tickets for ${concert.artistName} on ${eventDate}`}
+            onPress={onTickets}
+            style={[
+              styles.ticketAction,
+              { borderColor: colors.line, backgroundColor: colors.bg },
+            ]}
+          >
+            <TicketIcon size={15} color={colors.ink} />
+            <Text variant="caption" weight="bold">
+              Tickets
+            </Text>
+          </Pressable>
+        ) : null}
+      </View>
+    </View>
   );
 }
 
@@ -804,11 +1204,7 @@ function PosterCard({
         name={artist.name}
         size="lg"
       />
-      <Text
-        variant="caption"
-        weight="bold"
-        style={styles.posterName}
-      >
+      <Text variant="caption" weight="bold" style={styles.posterName}>
         {artist.name}
       </Text>
       <View style={styles.posterFooter}>
@@ -930,6 +1326,85 @@ function daysUntil(date: string) {
 const styles = StyleSheet.create({
   root: { flex: 1 },
   content: { gap: spacing.xl, paddingHorizontal: spacing.md },
+  concertSearchSticky: {
+    gap: spacing.xs,
+    paddingBottom: spacing.sm,
+    paddingTop: spacing.xs,
+    zIndex: 2,
+  },
+  concertSearchInputWrap: {
+    alignItems: 'center',
+    borderRadius: radius.md,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: spacing.sm,
+    minHeight: 50,
+    paddingHorizontal: spacing.md,
+  },
+  concertSearchInput: {
+    flex: 1,
+    fontFamily: fontFamily.regular,
+    fontSize: 16,
+    height: 48,
+    minWidth: 0,
+  },
+  selectedArtistRow: {
+    alignItems: 'center',
+    borderRadius: radius.md,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: spacing.sm,
+    minHeight: 58,
+    paddingHorizontal: spacing.sm,
+  },
+  selectedArtistCopy: { flex: 1, gap: 2, minWidth: 0 },
+  concertSearchClear: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 36,
+    minWidth: 36,
+  },
+  officialConcertCard: {
+    borderWidth: 1,
+    gap: spacing.sm,
+    padding: spacing.md,
+  },
+  officialConcertHeader: {
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    gap: spacing.md,
+    justifyContent: 'space-between',
+  },
+  officialConcertCopy: { flex: 1, gap: spacing.xs, minWidth: 0 },
+  officialConcertDate: { alignItems: 'flex-end', flexShrink: 0 },
+  officialConcertActions: {
+    alignItems: 'stretch',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.sm,
+    marginTop: spacing.xs,
+  },
+  wishlistAction: {
+    alignItems: 'center',
+    borderRadius: radius.md,
+    borderWidth: 1,
+    flexDirection: 'row',
+    flexGrow: 1,
+    gap: spacing.xs,
+    justifyContent: 'center',
+    minHeight: 44,
+    paddingHorizontal: spacing.md,
+  },
+  ticketAction: {
+    alignItems: 'center',
+    borderRadius: radius.md,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: spacing.xs,
+    justifyContent: 'center',
+    minHeight: 44,
+    paddingHorizontal: spacing.md,
+  },
   masthead: {
     alignItems: 'center',
     flexDirection: 'row',

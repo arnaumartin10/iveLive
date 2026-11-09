@@ -1,6 +1,9 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { supabase } from '@lib/supabase';
-import { fetchStatsOverview } from '../src/features/stats/api';
+import {
+  fetchStatsOverview,
+  fetchVenueDeepStats,
+} from '../src/features/stats/api';
 
 jest.mock('@lib/supabase', () => ({
   supabase: { rpc: jest.fn() },
@@ -38,6 +41,27 @@ describe('stats RPC client contract', () => {
     expect(rpc).toHaveBeenCalledWith('user_stats_overview', {
       p_user: 'seed-user',
       p_year: 2024,
+    });
+  });
+
+  it('loads the all-time places and festival RPC for the requested user', async () => {
+    const data = {
+      venues: [],
+      cities: [],
+      countries: [],
+      festivals: {
+        distinct_festivals: 0,
+        top_recurring_festival: null,
+        avg_bands_per_festival_day: null,
+        festival_logs: 0,
+        club_logs: 0,
+      },
+    };
+    rpc.mockResolvedValueOnce({ data, error: null } as never);
+
+    await expect(fetchVenueDeepStats('seed-user')).resolves.toEqual(data);
+    expect(rpc).toHaveBeenCalledWith('user_venue_deep_stats', {
+      p_user: 'seed-user',
     });
   });
 });

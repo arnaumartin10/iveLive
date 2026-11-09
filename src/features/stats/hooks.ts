@@ -12,6 +12,8 @@ import {
   fetchLeaderboard,
   fetchStatsOverview,
   fetchVenueStats,
+  fetchVenueDeepStats,
+  fetchVenueMapPoints,
 } from './api';
 import { useStatsScopeStore } from './store';
 import type { StatsScope } from './types';
@@ -28,6 +30,8 @@ export const statsQueryKeys = {
     ['stats', 'subgenres', userId, year] as const,
   venues: (userId: string, year: StatsScope) =>
     ['stats', 'venues', userId, year] as const,
+  venueDeep: (userId: string) => ['stats', 'venue-deep', userId] as const,
+  venueMap: (userId: string) => ['stats', 'venue-map', userId] as const,
   exclusiveArtists: (userId: string, type: VenueType, year: StatsScope) =>
     ['stats', 'exclusive-artists', userId, type, year] as const,
   heatmap: (userId: string, year: StatsScope) =>
@@ -83,6 +87,26 @@ export function useVenueStats(userId?: string, year?: StatsScope) {
   return useQuery({
     queryKey: statsQueryKeys.venues(context.userId, context.year),
     queryFn: () => fetchVenueStats(context.userId, context.year),
+    enabled: !!context.userId,
+    staleTime: STALE_TIME,
+  });
+}
+
+export function useVenueDeepStats(userId?: string, enabled = true) {
+  const context = useStatsContext(userId);
+  return useQuery({
+    queryKey: statsQueryKeys.venueDeep(context.userId),
+    queryFn: () => fetchVenueDeepStats(context.userId),
+    enabled: !!context.userId && enabled,
+    staleTime: STALE_TIME,
+  });
+}
+
+export function useVenueMapPoints(userId?: string) {
+  const context = useStatsContext(userId);
+  return useQuery({
+    queryKey: statsQueryKeys.venueMap(context.userId),
+    queryFn: () => fetchVenueMapPoints(context.userId),
     enabled: !!context.userId,
     staleTime: STALE_TIME,
   });

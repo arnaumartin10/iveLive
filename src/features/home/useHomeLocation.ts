@@ -1,13 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
+  DEFAULT_HOME_COUNTRY,
+  initializeHomeLocationOnce,
   readHomeLocation,
   writeHomeLocation,
   type HomeLocation,
 } from './location';
 
-export function useHomeLocation() {
+export function useHomeLocation(promptOnFirstHomeVisit = false) {
   const [location, setLocation] = useState<HomeLocation>({
-    country: '',
+    country: DEFAULT_HOME_COUNTRY,
     city: '',
     latitude: null,
     longitude: null,
@@ -20,6 +22,10 @@ export function useHomeLocation() {
     void readHomeLocation()
       .then((saved) => {
         if (active) setLocation(saved);
+        if (!promptOnFirstHomeVisit) return;
+        return initializeHomeLocationOnce().then((detected) => {
+          if (active && detected) setLocation(detected);
+        });
       })
       .catch((cause: unknown) => {
         if (active) {
@@ -36,13 +42,13 @@ export function useHomeLocation() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [promptOnFirstHomeVisit]);
 
-  async function save(next: HomeLocation) {
+  const save = useCallback(async (next: HomeLocation) => {
     await writeHomeLocation(next);
     setLocation(next);
     setError(null);
-  }
+  }, []);
 
   return { location, isLoading, error, save };
 }

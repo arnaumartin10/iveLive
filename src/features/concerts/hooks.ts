@@ -13,6 +13,7 @@ import { cloudTerritoryStatsKey } from '../cloud/hooks';
 import {
   deleteConcert,
   fetchConcertById,
+  fetchPublicConcertById,
   fetchArtistConcertHistory,
   fetchMyLogs,
   fetchUserConcerts,
@@ -88,6 +89,7 @@ function validateLogInput(formData: LogConcertFormData): LogConcertFormData {
     artist_id: parsed.artist_id,
     artist_name: parsed.artist_name,
     spotify_artist_id: parsed.spotify_artist_id ?? null,
+    venue_id: parsed.venue_id ?? null,
     venue_type: parsed.venue_type,
     venue_name: parsed.venue_name,
     concert_date: parsed.concert_date,
@@ -275,11 +277,20 @@ export function useUserArtistSummary(userId: string) {
   });
 }
 
-export function useConcert(id: string) {
+export function useConcert(id: string, enabled = true) {
   return useQuery<ConcertWithRelations, Error>({
     queryKey: concertKeys.detail(id),
     queryFn: () => fetchConcertById(id),
-    enabled: !!id,
+    enabled: !!id && enabled,
+  });
+}
+
+export function usePublicConcert(id: string, enabled = true) {
+  return useQuery<ConcertWithRelations, Error>({
+    queryKey: ['concerts', 'public-share', id],
+    queryFn: () => fetchPublicConcertById(id),
+    enabled: !!id && enabled,
+    staleTime: 60_000,
   });
 }
 
@@ -349,6 +360,7 @@ export function useCreateLog() {
         artist_id: artist.id,
         event_date: formData.concert_date,
         venue_type: formData.venue_type,
+        venue_id: formData.venue_id ?? null,
         venue_name: formData.venue_name.trim() || null,
         rating: formData.rating,
         review: formData.notes.trim() || null,
@@ -452,6 +464,10 @@ export function useUpdateLog() {
           ...previousDetail,
           event_date: formData.concert_date ?? previousDetail.event_date,
           venue_type: formData.venue_type ?? previousDetail.venue_type,
+          venue_id:
+            formData.venue_id !== undefined
+              ? formData.venue_id
+              : previousDetail.venue_id,
           venue_name:
             formData.venue_name !== undefined
               ? formData.venue_name.trim() || null
@@ -486,6 +502,10 @@ export function useUpdateLog() {
                 ...item,
                 event_date: formData.concert_date ?? item.event_date,
                 venue_type: formData.venue_type ?? item.venue_type,
+                venue_id:
+                  formData.venue_id !== undefined
+                    ? formData.venue_id
+                    : item.venue_id,
                 venue_name:
                   formData.venue_name !== undefined
                     ? formData.venue_name.trim() || null
@@ -514,6 +534,10 @@ export function useUpdateLog() {
               ...item,
               event_date: formData.concert_date ?? item.event_date,
               venue_type: formData.venue_type ?? item.venue_type,
+              venue_id:
+                formData.venue_id !== undefined
+                  ? formData.venue_id
+                  : item.venue_id,
               venue_name:
                 formData.venue_name !== undefined
                   ? formData.venue_name.trim() || null

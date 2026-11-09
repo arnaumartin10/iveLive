@@ -156,6 +156,7 @@ export default function LogDoneScreen() {
   const territoryStatsQuery = useUserTerritoryStats(userId);
   const [particleSeeds] = useState(createParticleSeeds);
   const [shareError, setShareError] = useState<string | null>(null);
+  const [shareStatus, setShareStatus] = useState<string | null>(null);
   const progress = useSharedValue(0);
   const avatarScale = useSharedValue(0.92);
   const territoryStampScale = useSharedValue(0.65);
@@ -503,6 +504,7 @@ export default function LogDoneScreen() {
             </Pressable>
             {concert ? (
               <ShareConcertButton
+                logId={concert.id}
                 artistName={artist?.name ?? 'Live show'}
                 imageUri={
                   artist?.image_url_large ?? artist?.image_url_thumb ?? null
@@ -511,7 +513,14 @@ export default function LogDoneScreen() {
                 eventDate={concert.event_date}
                 venueName={concert.venue_name}
                 rating={concert.rating}
-                onError={setShareError}
+                onError={(message) => {
+                  setShareStatus(null);
+                  setShareError(message);
+                }}
+                onStatus={(message) => {
+                  setShareError(null);
+                  setShareStatus(message || null);
+                }}
               />
             ) : (
               <Pressable
@@ -542,6 +551,11 @@ export default function LogDoneScreen() {
                 {shareError}
               </Text>
             </Pressable>
+          ) : null}
+          {shareStatus ? (
+            <Text variant="caption" color="secondary" center>
+              {shareStatus}
+            </Text>
           ) : null}
         </View>
       </View>

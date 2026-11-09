@@ -68,6 +68,11 @@ function AppContent({ fontsReady }: { fontsReady: boolean }) {
   const firstSegment = segments[0];
   const secondSegment = segments[1];
   const publicDevRoute = __DEV__ && firstSegment === '(dev)';
+  const publicLogRoute =
+    firstSegment === 'log' &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+      secondSegment ?? '',
+    );
   const redirectKey = `${user?.id ?? 'signed-out'}:${firstSegment ?? ''}:${secondSegment ?? ''}`;
   const lastRedirectKey = useRef<string | null>(null);
 
@@ -82,6 +87,7 @@ function AppContent({ fontsReady }: { fontsReady: boolean }) {
       !fontsReady ||
       authLoading ||
       (user &&
+        !publicLogRoute &&
         (profileQuery.isLoading ||
           (alphaInviteOnly && alphaInviteQuery.isLoading)))
     ) {
@@ -96,6 +102,7 @@ function AppContent({ fontsReady }: { fontsReady: boolean }) {
     authLoading,
     fontsReady,
     profileQuery.isLoading,
+    publicLogRoute,
     user,
   ]);
 
@@ -108,6 +115,7 @@ function AppContent({ fontsReady }: { fontsReady: boolean }) {
         (secondSegment === 'welcome' || secondSegment === 'callback');
       if (
         !isPublicAuthRoute &&
+        !publicLogRoute &&
         !publicDevRoute &&
         String(firstSegment) !== 'legal'
       ) {
@@ -126,15 +134,16 @@ function AppContent({ fontsReady }: { fontsReady: boolean }) {
     }
 
     if (
-      profileQuery.isLoading ||
-      profileQuery.error ||
-      (alphaInviteOnly &&
-        (alphaInviteQuery.isLoading || alphaInviteQuery.isError))
+      !publicLogRoute &&
+      (profileQuery.isLoading ||
+        profileQuery.error ||
+        (alphaInviteOnly &&
+          (alphaInviteQuery.isLoading || alphaInviteQuery.isError)))
     ) {
       return;
     }
 
-    if (alphaInviteOnly && alphaInviteQuery.data !== true) {
+    if (!publicLogRoute && alphaInviteOnly && alphaInviteQuery.data !== true) {
       if (firstSegment !== '(auth)' || secondSegment !== 'onboarding') {
         if (lastRedirectKey.current !== redirectKey) {
           lastRedirectKey.current = redirectKey;
@@ -145,7 +154,8 @@ function AppContent({ fontsReady }: { fontsReady: boolean }) {
     }
 
     const needsOnboarding =
-      !profileQuery.data || profileQuery.data.username.startsWith('user_');
+      !publicLogRoute &&
+      (!profileQuery.data || profileQuery.data.username.startsWith('user_'));
 
     if (needsOnboarding) {
       if (firstSegment !== '(auth)' || secondSegment !== 'onboarding') {
@@ -190,6 +200,8 @@ function AppContent({ fontsReady }: { fontsReady: boolean }) {
     profileQuery.error,
     profileQuery.isLoading,
     pathname,
+    publicLogRoute,
+    publicDevRoute,
     redirectKey,
     secondSegment,
     user,
@@ -202,10 +214,12 @@ function AppContent({ fontsReady }: { fontsReady: boolean }) {
     !authLoading &&
     !user &&
     !publicAuthRoute &&
+    !publicLogRoute &&
     !publicDevRoute &&
     String(firstSegment) !== 'legal';
   const signedInRedirectPending =
     Boolean(user) &&
+    !publicLogRoute &&
     ((!profileQuery.isLoading &&
       !profileQuery.error &&
       !alphaInviteQuery.isLoading &&
@@ -223,6 +237,7 @@ function AppContent({ fontsReady }: { fontsReady: boolean }) {
       signedOutRedirectPending ||
       signedInRedirectPending ||
       (user &&
+        !publicLogRoute &&
         (profileQuery.isLoading ||
           (alphaInviteOnly && alphaInviteQuery.isLoading))) ? (
         <View style={[styles.loading, { backgroundColor: colors.bg }]}>
@@ -231,8 +246,8 @@ function AppContent({ fontsReady }: { fontsReady: boolean }) {
             Getting things ready
           </Text>
         </View>
-      ) : profileQuery.error ||
-        (alphaInviteOnly && alphaInviteQuery.isError) ? (
+      ) : (!publicLogRoute && profileQuery.error) ||
+        (!publicLogRoute && alphaInviteOnly && alphaInviteQuery.isError) ? (
         <View style={[styles.loading, { backgroundColor: colors.bg }]}>
           <Text variant="title">
             {profileQuery.error

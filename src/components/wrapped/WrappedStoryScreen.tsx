@@ -3,6 +3,7 @@ import {
   AccessibilityInfo,
   ActivityIndicator,
   Pressable,
+  Platform,
   StyleSheet,
   View,
   useWindowDimensions,
@@ -23,7 +24,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Share2, Sparkles, Star, X } from 'lucide-react-native';
+import { MessageCircle, Share2, Sparkles, Star, X } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import {
   BarChart,
@@ -781,6 +782,7 @@ export function WrappedStoryScreen() {
   const [reducedMotion, setReducedMotion] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
   const [shareError, setShareError] = useState<string | null>(null);
+  const [shareStatus, setShareStatus] = useState<string | null>(null);
   const slideCount = data?.slides.length ?? 1;
   const imagesReady = preloadedImageKey === imageKey;
   const loading =
@@ -872,12 +874,13 @@ export function WrappedStoryScreen() {
     .onFinalize(resumePlayback);
   const storyGesture = Gesture.Simultaneous(closeGesture, holdGesture);
 
-  async function handleShare() {
+  async function handleShare(target: 'default' | 'whatsapp' = 'default') {
     if (!data || isSharing) return;
     setShareError(null);
+    setShareStatus(null);
     setIsSharing(true);
     try {
-      await shareWrappedImage(data, {
+      const result = await shareWrappedImage(data, {
         slide,
         username: profileQuery.data?.username ?? 'ivelive',
         avatarUrl: profileQuery.data?.avatar_url,
@@ -885,7 +888,14 @@ export function WrappedStoryScreen() {
           .map((log) => log.artist?.image_url_large ?? '')
           .filter(Boolean),
         summary: slide === 'outro',
-      });
+      }, target);
+      if (result === 'downloaded') {
+        setShareStatus(
+          target === 'whatsapp'
+            ? 'Story image downloaded. WhatsApp opened with the link; attach the image in the chat.'
+            : 'Story image downloaded and link copied. Paste it into WhatsApp, or attach the image in Instagram.',
+        );
+      }
     } catch (error) {
       setShareError(
         error instanceof Error ? error.message : 'Could not share this image.',
@@ -1085,6 +1095,22 @@ export function WrappedStoryScreen() {
                   : 'Share slide'}
             </Text>
           </Pressable>
+          {Platform.OS === 'web' ? (
+            <Pressable
+              onPress={() => {
+                void handleShare('whatsapp');
+              }}
+              disabled={isSharing}
+              accessibilityRole="button"
+              accessibilityLabel="Share story on WhatsApp"
+              style={[
+                styles.whatsappButton,
+                { backgroundColor: colors.bgSunken, borderColor: colors.ink },
+              ]}
+            >
+              <MessageCircle size={17} color={colors.accentInk} />
+            </Pressable>
+          ) : null}
         </View>
         {shareError ? (
           <Text
@@ -1092,6 +1118,14 @@ export function WrappedStoryScreen() {
             style={[styles.errorText, { bottom: insets.bottom + 76 }]}
           >
             {shareError}
+          </Text>
+        ) : null}
+        {shareStatus ? (
+          <Text
+            variant="caption"
+            style={[styles.errorText, { bottom: insets.bottom + 76 }]}
+          >
+            {shareStatus}
           </Text>
         ) : null}
       </View>
@@ -1274,6 +1308,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 8,
     borderWidth: 1,
+  },
+  whatsappButton: {
+    alignItems: 'center',
+    borderWidth: 1,
+    height: 44,
+    justifyContent: 'center',
+    width: 44,
   },
   closeButton: {
     position: 'absolute',

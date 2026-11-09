@@ -67,6 +67,8 @@ export const routes = {
     const appScheme = Array.isArray(scheme) ? (scheme[0] ?? 'ivelive') : scheme;
     return `${appScheme}://log/${encodeURIComponent(id)}`;
   },
+  logPublicUrl: (id: string): string =>
+    `https://ivelive.app/log/${encodeURIComponent(id)}`,
   artist: (id: string): Href => ({
     pathname: '/artist/[id]',
     params: { id },

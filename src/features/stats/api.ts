@@ -2,6 +2,8 @@ import { supabase } from '@lib/supabase';
 import type { VenueType } from '../venues/venueTypes';
 import type {
   DiversityStats,
+  VenueDeepStats,
+  VenueMapPoint,
   ExclusiveArtist,
   GenreStat,
   HeatmapDay,
@@ -59,6 +61,31 @@ export async function fetchVenueStats(userId: string, year: StatsScope) {
   });
   if (error) throw new Error(error.message);
   return data as VenueStat[];
+}
+
+export async function fetchVenueDeepStats(
+  userId: string,
+): Promise<VenueDeepStats> {
+  const { data, error } = await supabase.rpc('user_venue_deep_stats', {
+    p_user: userId,
+  });
+  if (error) throw new Error(error.message);
+  return data as unknown as VenueDeepStats;
+}
+
+export async function fetchVenueMapPoints(
+  userId: string,
+): Promise<VenueMapPoint[]> {
+  const { data, error } = await supabase.rpc('user_venue_map_points', {
+    p_user: userId,
+  });
+  if (error) throw new Error(error.message);
+  return (data ?? []).map((point) => ({
+    ...point,
+    lat: Number(point.lat),
+    lng: Number(point.lng),
+    log_count: Number(point.log_count),
+  })) as VenueMapPoint[];
 }
 
 export async function fetchExclusiveArtists(

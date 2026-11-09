@@ -13,6 +13,7 @@ import {
 const chartLimit = 30;
 const newArtistLimit = 20;
 const lastFmTimeoutMs = 8000;
+const lastFmCountryGapMs = 250;
 const musicbrainzIdPattern =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const countryNames: Record<string, string> = {
@@ -265,11 +266,11 @@ async function searchAndUpsertArtist(
 }
 
 function requestedRegions(input: unknown): string[] {
-  if (input === undefined) return ['ES'];
+  if (input === undefined) return Object.keys(countryNames);
   if (
     !Array.isArray(input) ||
     input.length === 0 ||
-    input.length > 10 ||
+    input.length > Object.keys(countryNames).length ||
     input.some(
       (region) =>
         typeof region !== 'string' ||
@@ -281,6 +282,10 @@ function requestedRegions(input: unknown): string[] {
   return [
     ...new Set(input.map((region: string) => region.trim().toUpperCase())),
   ];
+}
+
+function wait(milliseconds: number) {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
 }
 
 Deno.serve(async (request: Request) => {
@@ -340,6 +345,7 @@ Deno.serve(async (request: Request) => {
     }
     for (const region of regions) {
       try {
+        await wait(lastFmCountryGapMs);
         charts.push({
           region,
           artists: await fetchLastFmArtists({
@@ -424,21 +430,21 @@ Deno.serve(async (request: Request) => {
         );
         if (error) throw error;
       }
-      const staleRows = database
-        .from('trending_global')
-        .delete()
-        .eq('source', 'lastfm')
-        .eq('region', chart.region)
-        .eq('period_kind', 'weekly')
-        .eq('period_start', periodStart);
-      const staleResult = rows.length
-        ? await staleRows.not(
+      if (rows.length) {
+        const { error: staleError } = await database
+          .from('trending_global')
+          .delete()
+          .eq('source', 'lastfm')
+          .eq('region', chart.region)
+          .eq('period_kind', 'weekly')
+          .eq('period_start', periodStart)
+          .not(
             'artist_id',
             'in',
             `(${rows.map((row) => row.artist_id).join(',')})`,
-          )
-        : await staleRows;
-      if (staleResult.error) throw staleResult.error;
+          );
+        if (staleError) throw staleError;
+      }
       processedRegions.push({
         region: chart.region,
         resolvedCount: rows.length,

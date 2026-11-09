@@ -91,3 +91,9 @@ verify_jwt = false
 
 [functions.refresh-tour-dates]
 verify_jwt = false
+
+[functions.venue-search]
+verify_jwt = true
+
+[functions.concert-search]
+verify_jwt = true

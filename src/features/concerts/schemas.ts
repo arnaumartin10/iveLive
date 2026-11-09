@@ -15,6 +15,7 @@ export const logConcertSchema = z.object({
     'festa_major',
     'other',
   ]),
+  venue_id: z.string().uuid().nullable().optional(),
   venue_name: z.string().max(120).optional().default(''),
   artist_id: z.string().uuid().optional(),
   concert_date: z

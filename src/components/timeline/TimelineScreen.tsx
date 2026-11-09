@@ -119,6 +119,10 @@ export function TimelineScreen({
   // Deep link params (e.g. from Stats screen)
   const searchParams = useLocalSearchParams<{
     genre?: string;
+    venue_id?: string;
+    venue_name?: string;
+    city?: string;
+    country?: string;
     venueType?: string;
     venue_type?: string;
     macro?: string;
@@ -133,6 +137,10 @@ export function TimelineScreen({
   useEffect(() => {
     const {
       genre,
+      venue_id,
+      venue_name,
+      city,
+      country,
       venueType,
       venue_type,
       macro,
@@ -144,6 +152,10 @@ export function TimelineScreen({
     } = searchParams;
     if (
       genre ||
+      venue_id ||
+      venue_name ||
+      city ||
+      country ||
       venueType ||
       venue_type ||
       macro ||
@@ -154,6 +166,10 @@ export function TimelineScreen({
       onlyMedia
     ) {
       const updates: Partial<TimelineFilterState> = {};
+      if (venue_id) updates.venueId = venue_id;
+      if (venue_name) updates.venueName = venue_name;
+      if (city) updates.city = city;
+      if (country) updates.country = country;
       if (genre || macro) updates.genres = [genre ?? macro!];
       if (venueType || venue_type)
         updates.venueTypes = [(venueType ?? venue_type)! as VenueType];

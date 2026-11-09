@@ -33,6 +33,7 @@ export default function StepReview() {
   const eventDate = useLogDraft((state) => state.eventDate);
   const venueType = useLogDraft((state) => state.venueType);
   const venueName = useLogDraft((state) => state.venueName);
+  const venueId = useLogDraft((state) => state.venueId);
   const rating = useLogDraft((state) => state.rating);
   const review = useLogDraft((state) => state.review);
   const isEditing = useLogDraft((state) => state.isEditing);
@@ -78,6 +79,7 @@ export default function StepReview() {
           id: editingConcertId,
           formData: {
             venue_type: venueType,
+            venue_id: venueId,
             venue_name: venueName.trim(),
             concert_date: format(eventDate, 'yyyy-MM-dd'),
             notes: review.trim(),

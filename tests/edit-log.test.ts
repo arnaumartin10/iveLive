@@ -8,6 +8,7 @@ const mockConcert: ConcertWithRelations = {
   artist_id: 'artist-789',
   event_date: '2026-05-18',
   venue_type: 'stadium',
+  venue_id: null,
   venue_name: 'Estadi Olímpic',
   rating: 4.5,
   review: 'Unbelievable production and sound quality.',

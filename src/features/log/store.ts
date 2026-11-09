@@ -4,6 +4,7 @@ import type { VenueType } from '../venues/venueTypes';
 import type { ConcertWithRelations } from '../concerts/types';
 import type { ProcessedKeepsake } from '../media/types';
 import type { ParsedSetlist } from '../setlist/parse';
+import type { VenueSearchResult } from '../venues/types';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -16,7 +17,9 @@ export interface LogDraftState {
   eventDate: Date;
   /** Step 3 */
   venueType: VenueType | null;
+  venueTypeLocked: boolean;
   /** Step 4 */
+  venueId: string | null;
   venueName: string;
   /** Step 5 */
   rating: number | null;
@@ -36,6 +39,7 @@ export interface LogDraftActions {
   setEventDate: (date: Date) => void;
   setVenueType: (venueType: VenueType | null) => void;
   setVenueName: (venueName: string) => void;
+  setVenueSelection: (venue: VenueSearchResult) => void;
   setRating: (rating: number | null) => void;
   setReview: (review: string) => void;
   stageKeepsake: (keepsake: ProcessedKeepsake) => void;
@@ -60,6 +64,8 @@ function initialState(): LogDraftState {
     artist: null,
     eventDate: new Date(),
     venueType: null,
+    venueTypeLocked: false,
+    venueId: null,
     venueName: '',
     rating: null,
     review: '',
@@ -89,11 +95,23 @@ export const useLogDraft = create<LogDraftStore>((set, get) => ({
   },
 
   setVenueType(venueType) {
-    set({ venueType });
+    set((state) => ({
+      venueType,
+      venueTypeLocked: venueType !== null,
+      ...(venueType !== state.venueType ? { venueId: null } : {}),
+    }));
   },
 
   setVenueName(venueName) {
-    set({ venueName });
+    set({ venueName, venueId: null });
+  },
+
+  setVenueSelection(venue) {
+    set((state) => ({
+      venueId: venue.id,
+      venueName: venue.name,
+      venueType: state.venueTypeLocked ? state.venueType : venue.venueType,
+    }));
   },
 
   setRating(rating) {
@@ -157,6 +175,8 @@ export const useLogDraft = create<LogDraftStore>((set, get) => ({
       artist: concert.artist,
       eventDate: dateObj,
       venueType: concert.venue_type,
+      venueTypeLocked: true,
+      venueId: concert.venue_id,
       venueName: concert.venue_name || '',
       rating: concert.rating,
       review: concert.review || '',

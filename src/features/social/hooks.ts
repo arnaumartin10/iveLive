@@ -524,7 +524,7 @@ export function useCommonArtists(userA: string, userB: string) {
 }
 
 // ─── Timeline Logs Social Stats ─────────────────────────────────────────────
-export function useLogsSocialStats(logIds: string[]) {
+export function useLogsSocialStats(logIds: string[], enabled = true) {
   const userId = useAuthStore((s) => s.user?.id);
   const sortedKey = logIds.slice().sort().join(',');
 
@@ -571,7 +571,7 @@ export function useLogsSocialStats(logIds: string[]) {
       }
       return statsMap;
     },
-    enabled: logIds.length > 0,
+    enabled: enabled && logIds.length > 0,
     staleTime: 20_000,
   });
 }

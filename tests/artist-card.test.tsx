@@ -200,6 +200,7 @@ const concert: ConcertWithRelations = {
   artist_id: 'artist-1',
   event_date: '2025-06-12',
   venue_type: 'festival',
+  venue_id: null,
   venue_name: 'Open Air Stage',
   rating: 4.5,
   review: 'A brilliant set from the first song to the encore.',

@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
-import Constants from 'expo-constants';
 import {
   Alert,
   Platform,
   Pressable,
   ScrollView,
-  Share,
   StyleSheet,
   View,
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
+import * as Linking from 'expo-linking';
 import { getLogFallback, routes } from '../../navigation/routes';
 import { useSafeBack } from '../../navigation/useSafeBack';
 import { returnToHref } from '../../navigation/returnTo';
@@ -20,13 +19,13 @@ import {
   MapPin,
   MessageCircle,
   Pencil,
-  Share2,
   Trash2,
 } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   useConcert,
   useDeleteConcert,
+  usePublicConcert,
 } from '../../features/concerts/hooks';
 import { useAuthStore } from '../../features/auth/store';
 import { useLogDraft } from '../../features/log/store';
@@ -48,6 +47,8 @@ import { SetlistImportPanel } from '../../features/setlist/SetlistImportPanel';
 import { VenueLabel } from '../../components/paper';
 import { format, parseISO } from 'date-fns';
 import { hardShadow, radius, spacing } from '../../theme/tokens';
+import { ShareConcertButton } from '../../components/log/ShareConcertButton';
+import { MACRO_GENRES } from '../../features/genres/macroGenres';
 
 export default function ConcertDetailScreen() {
   const { id, returnTo } = useLocalSearchParams<{
@@ -55,13 +56,23 @@ export default function ConcertDetailScreen() {
     returnTo?: string;
   }>();
   const currentUserId = useAuthStore((state) => state.user?.id ?? '');
-  const { data: concert, isLoading, error } = useConcert(id || '');
+  const signedInConcertQuery = useConcert(id || '', Boolean(currentUserId));
+  const publicConcertQuery = usePublicConcert(id || '', !currentUserId);
+  const { data: concert, isLoading, error } = currentUserId
+    ? signedInConcertQuery
+    : publicConcertQuery;
   const isMine = concert?.user_id === currentUserId;
-  const socialStatsQuery = useLogsSocialStats(id ? [id] : []);
+  const isPublicViewer = !currentUserId;
+  const socialStatsQuery = useLogsSocialStats(
+    id ? [id] : [],
+    Boolean(currentUserId),
+  );
   const toggleLike = useToggleLogLike();
   const deleteConcert = useDeleteConcert(currentUserId);
   const startEdit = useLogDraft((state) => state.startEdit);
   const [commentsVisible, setCommentsVisible] = useState(false);
+  const [shareError, setShareError] = useState<string | null>(null);
+  const [shareStatus, setShareStatus] = useState<string | null>(null);
   const safeBack = useSafeBack(
     returnToHref(returnTo) ??
       getLogFallback(
@@ -87,15 +98,6 @@ export default function ConcertDetailScreen() {
       { text: 'Delete', style: 'destructive', onPress: remove },
     ]);
   }
-
-  const handleShare = async () => {
-    if (!concert) return;
-    const artistName = concert.artist?.name || 'Live concert';
-    const scheme = Constants.expoConfig?.scheme ?? 'ivelive';
-    await Share.share({
-      message: `Checked out ${artistName} at ${concert.venue_name} on ${concert.event_date} via IveLive! ${routes.logDeepLink(concert.id, scheme)}`,
-    });
-  };
 
   if (isLoading) {
     return (
@@ -151,7 +153,42 @@ export default function ConcertDetailScreen() {
 
   const artistName = concert.artist?.name || 'Unknown Artist';
   const artistPhoto =
-    concert.artist?.image_url_thumb || concert.artist?.image_url_large;
+    concert.artist?.image_url_large || concert.artist?.image_url_thumb;
+  const concertId = concert.id;
+  const artistMacro =
+    concert.artist?.primary_macro ??
+    concert.artist?.macro_genres[0] ??
+    null;
+  const genreColor =
+    artistMacro && artistMacro in MACRO_GENRES
+      ? MACRO_GENRES[artistMacro as keyof typeof MACRO_GENRES].color
+      : colors.accent;
+
+  function openAppLink() {
+    void Linking.openURL(
+      Linking.createURL(`log/${encodeURIComponent(concertId)}`),
+    ).catch(
+      (linkError: unknown) => {
+        setShareError(
+          linkError instanceof Error
+            ? linkError.message
+            : 'Could not open IveLive.',
+        );
+      },
+    );
+  }
+
+  function openDownloadPage() {
+    void Linking.openURL('https://ivelive.app').catch(
+      (linkError: unknown) => {
+        setShareError(
+          linkError instanceof Error
+            ? linkError.message
+            : 'Could not open the IveLive website.',
+        );
+      },
+    );
+  }
 
   return (
     <>
@@ -172,14 +209,26 @@ export default function ConcertDetailScreen() {
           Concert Log
         </Text>
         <View style={styles.navActions}>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Share concert"
-            onPress={handleShare}
-            style={styles.navBtn}
-          >
-            <Share2 color={colors.ink} size={20} />
-          </Pressable>
+          <ShareConcertButton
+            compact
+            logId={concert.id}
+            artistName={artistName}
+            imageUri={artistPhoto ?? null}
+            macroGenre={artistMacro}
+            genreColor={genreColor}
+            eventDate={concert.event_date}
+            venueName={concert.venue_name}
+            rating={concert.rating}
+            review={concert.review}
+            onError={(message) => {
+              setShareStatus(null);
+              setShareError(message);
+            }}
+            onStatus={(message) => {
+              setShareError(null);
+              setShareStatus(message || null);
+            }}
+          />
           {isMine ? (
             <>
               <Pressable
@@ -206,6 +255,16 @@ export default function ConcertDetailScreen() {
           ) : null}
         </View>
       </View>
+      {shareError ? (
+        <Text variant="caption" color="danger" center>
+          {shareError}
+        </Text>
+      ) : null}
+      {shareStatus ? (
+        <Text variant="caption" color="secondary" center>
+          {shareStatus}
+        </Text>
+      ) : null}
 
       <ScrollView
         contentContainerStyle={styles.scrollContent}
@@ -326,46 +385,66 @@ export default function ConcertDetailScreen() {
             </Text>
           </Card>
         ) : null}
-        <KeepsakeFrames
-          logId={concert.id}
-          mode="view"
-          media={concert.media}
-        />
-        <SetlistImportPanel concert={concert} editable={isMine} />
-        <View style={[styles.socialCard, { borderColor: colors.line }]}>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={`Like this log. ${socialStats?.likeCount ?? 0} likes.`}
-            disabled={toggleLike.isPending || socialStatsQuery.isLoading}
-            onPress={() =>
-              toggleLike.mutate({
-                logId: concert.id,
-                liked: socialStats?.likedByMe ?? false,
-              })
-            }
-            style={styles.socialAction}
-          >
-            <Heart
-              size={19}
-              color={socialStats?.likedByMe ? colors.danger : colors.inkMuted}
-              fill={socialStats?.likedByMe ? colors.danger : 'transparent'}
+        {!isPublicViewer ? (
+          <KeepsakeFrames
+            logId={concert.id}
+            mode="view"
+            media={concert.media}
+          />
+        ) : null}
+        {!isPublicViewer ? (
+          <SetlistImportPanel concert={concert} editable={isMine} />
+        ) : null}
+        {isPublicViewer ? (
+          <Card style={styles.publicActions}>
+            <Text variant="title" weight="bold">
+              Keep your live music story going
+            </Text>
+            <Button label="Open in IveLive App" onPress={openAppLink} />
+            <Button
+              label="Download IveLive"
+              variant="secondary"
+              onPress={openDownloadPage}
             />
-            <Text variant="caption" weight="bold">
-              {socialStats?.likeCount ?? 0} likes
-            </Text>
-          </Pressable>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={`Open comments. ${socialStats?.commentCount ?? 0} comments.`}
-            onPress={() => setCommentsVisible(true)}
-            style={styles.socialAction}
-          >
-            <MessageCircle size={19} color={colors.inkMuted} />
-            <Text variant="caption" weight="bold">
-              {socialStats?.commentCount ?? 0} comments
-            </Text>
-          </Pressable>
-        </View>
+          </Card>
+        ) : (
+          <View style={[styles.socialCard, { borderColor: colors.line }]}>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={`Like this log. ${socialStats?.likeCount ?? 0} likes.`}
+              disabled={toggleLike.isPending || socialStatsQuery.isLoading}
+              onPress={() =>
+                toggleLike.mutate({
+                  logId: concert.id,
+                  liked: socialStats?.likedByMe ?? false,
+                })
+              }
+              style={styles.socialAction}
+            >
+              <Heart
+                size={19}
+                color={
+                  socialStats?.likedByMe ? colors.danger : colors.inkMuted
+                }
+                fill={socialStats?.likedByMe ? colors.danger : 'transparent'}
+              />
+              <Text variant="caption" weight="bold">
+                {socialStats?.likeCount ?? 0} likes
+              </Text>
+            </Pressable>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={`Open comments. ${socialStats?.commentCount ?? 0} comments.`}
+              onPress={() => setCommentsVisible(true)}
+              style={styles.socialAction}
+            >
+              <MessageCircle size={19} color={colors.inkMuted} />
+              <Text variant="caption" weight="bold">
+                {socialStats?.commentCount ?? 0} comments
+              </Text>
+            </Pressable>
+          </View>
+        )}
         {concert.owner_username && !isMine ? (
           <Button
             label={`More from @${concert.owner_username}`}
@@ -382,11 +461,13 @@ export default function ConcertDetailScreen() {
         ) : null}
       </ScrollView>
       </SafeAreaView>
-      <CommentsSheet
-        logId={concert.id}
-        visible={commentsVisible}
-        onDismiss={() => setCommentsVisible(false)}
-      />
+      {!isPublicViewer ? (
+        <CommentsSheet
+          logId={concert.id}
+          visible={commentsVisible}
+          onDismiss={() => setCommentsVisible(false)}
+        />
+      ) : null}
     </>
   );
 }
@@ -415,6 +496,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     flexShrink: 0,
+  },
+  publicActions: {
+    gap: spacing.md,
+    padding: spacing.md,
   },
   navBtn: {
     alignItems: 'center',

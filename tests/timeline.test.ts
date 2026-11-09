@@ -71,6 +71,7 @@ function createMockLog(
       ...enrichmentFields,
     },
     ...overrides,
+    venue_id: overrides.venue_id ?? null,
   };
 }
 
@@ -316,9 +317,11 @@ describe('Timeline Zustand Store', () => {
     store.setMinRating(4.5);
     expect(useTimelineStore.getState().filters.minRating).toBe(4.5);
     expect(useTimelineStore.getState().activeFilterCount()).toBe(3);
-    store.setFilters({ maxRating: 4.75 });
+    store.setFilters({ maxRating: 4.75, city: 'London', country: 'GB' });
     expect(useTimelineStore.getState().filters.maxRating).toBe(4.75);
-    expect(useTimelineStore.getState().activeFilterCount()).toBe(4);
+    expect(useTimelineStore.getState().filters.city).toBe('London');
+    expect(useTimelineStore.getState().filters.country).toBe('GB');
+    expect(useTimelineStore.getState().activeFilterCount()).toBe(5);
     expect(useTimelineStore.getState().hasActiveFilters()).toBe(true);
 
     store.resetFilters();
@@ -327,5 +330,7 @@ describe('Timeline Zustand Store', () => {
     expect(useTimelineStore.getState().filters.genres).toHaveLength(0);
     expect(useTimelineStore.getState().filters.minRating).toBeNull();
     expect(useTimelineStore.getState().filters.maxRating).toBeNull();
+    expect(useTimelineStore.getState().filters.city).toBeUndefined();
+    expect(useTimelineStore.getState().filters.country).toBeUndefined();
   });
 });

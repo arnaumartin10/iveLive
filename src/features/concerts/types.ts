@@ -58,6 +58,7 @@ export interface LogConcertFormData {
   artist_id?: string;
   artist_name: string;
   spotify_artist_id: string | null;
+  venue_id?: string | null;
   venue_type: VenueType;
   venue_name: string;
   concert_date: string;
@@ -68,6 +69,10 @@ export interface LogConcertFormData {
 export type TimelineOrder = 'newest' | 'oldest';
 
 export interface TimelineFilters {
+  venueId?: string;
+  venueName?: string;
+  city?: string;
+  country?: string;
   venueTypes?: VenueType[];
   genres?: string[];
   minRating?: number | null;

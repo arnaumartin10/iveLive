@@ -67,6 +67,19 @@ export function SetlistImportPanel({
   const [selectedSongIndex, setSelectedSongIndex] = useState<number | null>(
     null,
   );
+  const searchVenue = concert?.venue_name ?? logContext?.venueName ?? '';
+  const searchYear = (concert?.event_date ?? logContext?.eventDate)?.slice(
+    0,
+    4,
+  );
+  const setlistFmSearchUrl = [
+    'https://www.setlist.fm/search',
+    searchVenue || searchYear
+      ? `?query=${encodeURIComponent(
+          [searchVenue, searchYear].filter(Boolean).join(' '),
+        )}`
+      : '',
+  ].join('');
   const savedQuery = useQuery({
     queryKey: queryKey(concert?.id ?? 'new-log'),
     queryFn: () =>
@@ -528,6 +541,32 @@ export function SetlistImportPanel({
               contentContainerStyle={styles.sheetContent}
               keyboardShouldPersistTaps="handled"
             >
+              <View
+                style={[
+                  styles.quickGuide,
+                  {
+                    borderColor: colors.line,
+                    backgroundColor: colors.surfaceRaised,
+                  },
+                ]}
+              >
+                <Text variant="subtitle" weight="bold">
+                  Find the show on setlist.fm
+                </Text>
+                <Text variant="caption" color="secondary">
+                  1. Search for the venue or location and the year.
+                </Text>
+                <Text variant="caption" color="secondary">
+                  2. Open the matching show and scroll below the setlist.
+                </Text>
+                <Text variant="caption" color="secondary">
+                  3. Copy the embed HTML and paste it here.
+                </Text>
+                <AttributionLink
+                  url={setlistFmSearchUrl}
+                  label="Search this show on setlist.fm"
+                />
+              </View>
               <Text variant="body" color="secondary">
                 Paste setlist.fm embed HTML, a link, JSON, CSV, or one song per
                 line.
@@ -910,6 +949,11 @@ const styles = StyleSheet.create({
     paddingTop: spacing.md,
     paddingBottom: spacing['3xl'],
     gap: spacing.md,
+  },
+  quickGuide: {
+    borderWidth: 1,
+    padding: spacing.md,
+    gap: spacing.xs,
   },
   multiline: { minHeight: 112, paddingTop: spacing.sm },
   actionRow: { flexDirection: 'row', gap: spacing.sm },

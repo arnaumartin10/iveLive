@@ -45,6 +45,7 @@ import {
   useStatsOverview,
   useSubgenreStats,
   useVenueStats,
+  useVenueDeepStats,
 } from '../../features/stats/hooks';
 import { useStatsScopeStore } from '../../features/stats/store';
 import { MACRO_GENRES } from '../../features/genres/macroGenres';
@@ -56,6 +57,7 @@ import { GenreLabel, VenueLabel } from '../paper';
 import { useMusicIdentity, IdentitySheet } from '../../features/identity';
 import { useOptionalArtistCard } from '../../features/artists/ArtistCardProvider';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
+import { PlacesAndFestivals } from './PlacesAndFestivals';
 
 const TAB_OPTIONS = [
   { label: 'Overview', value: 'overview' },
@@ -169,6 +171,7 @@ export function StatsScreen() {
   const genresQuery = useGenreStats();
   const subgenresQuery = useSubgenreStats();
   const venuesQuery = useVenueStats();
+  const venueDeepQuery = useVenueDeepStats(undefined, tab === 'places');
   const heatmapQuery = useHeatmap();
   const diversityQuery = useDiversity();
   const identityQuery = useMusicIdentity();
@@ -396,7 +399,17 @@ export function StatsScreen() {
         </View>
       ) : null}
 
-      <SegmentedControl options={TAB_OPTIONS} value={tab} onChange={setTab} />
+      <SegmentedControl
+        options={[
+          ...TAB_OPTIONS,
+          {
+            label: compactLayout ? 'Places' : 'Places & Festivals',
+            value: 'places',
+          },
+        ]}
+        value={tab}
+        onChange={setTab}
+      />
       {statsErrors.length ? (
         <Card style={[styles.errorCard, { borderColor: colors.danger }]}>
           <Text variant="title" weight="bold">
@@ -1263,6 +1276,25 @@ export function StatsScreen() {
               </Text>
             )}
           </Card>
+        </View>
+      ) : null}
+
+      {overview && overview.total_shows > 0 && tab === 'places' ? (
+        <View style={styles.tabContent}>
+          <PlacesAndFestivals
+            data={venueDeepQuery.data}
+            isLoading={venueDeepQuery.isLoading}
+            error={venueDeepQuery.error?.message}
+            onRetry={() => void venueDeepQuery.refetch()}
+            onOpenVenue={({ venueId, name }) =>
+              openTimeline(
+                venueId ? { venue_id: venueId } : { venue_name: name },
+              )
+            }
+            onOpenCity={(city, country) =>
+              openTimeline({ city, ...(country ? { country } : {}) })
+            }
+          />
         </View>
       ) : null}
 

@@ -589,6 +589,7 @@ export type Database = {
           review: string | null
           updated_at: string
           user_id: string
+          venue_id: string | null
           venue_name: string | null
           venue_type: Database["public"]["Enums"]["venue_type"]
         }
@@ -601,6 +602,7 @@ export type Database = {
           review?: string | null
           updated_at?: string
           user_id: string
+          venue_id?: string | null
           venue_name?: string | null
           venue_type: Database["public"]["Enums"]["venue_type"]
         }
@@ -613,6 +615,7 @@ export type Database = {
           review?: string | null
           updated_at?: string
           user_id?: string
+          venue_id?: string | null
           venue_name?: string | null
           venue_type?: Database["public"]["Enums"]["venue_type"]
         }
@@ -622,6 +625,13 @@ export type Database = {
             columns: ["artist_id"]
             isOneToOne: false
             referencedRelation: "artists"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "concert_logs_venue_id_fkey"
+            columns: ["venue_id"]
+            isOneToOne: false
+            referencedRelation: "venues"
             referencedColumns: ["id"]
           },
           {
@@ -1650,6 +1660,48 @@ export type Database = {
           },
         ]
       }
+      venues: {
+        Row: {
+          city: string | null
+          country: string | null
+          created_at: string
+          external_id: string | null
+          id: string
+          lat: number | null
+          lng: number | null
+          name: string
+          name_normalized: string
+          source: string
+          venue_type: Database["public"]["Enums"]["venue_type"]
+        }
+        Insert: {
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          external_id?: string | null
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          name: string
+          name_normalized?: never
+          source: string
+          venue_type: Database["public"]["Enums"]["venue_type"]
+        }
+        Update: {
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          external_id?: string | null
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          name?: string
+          name_normalized?: never
+          source?: string
+          venue_type?: Database["public"]["Enums"]["venue_type"]
+        }
+        Relationships: []
+      }
       wishlist_items: {
         Row: {
           artist_id: string
@@ -2091,6 +2143,14 @@ export type Database = {
         Args: { p_artist_id: string }
         Returns: undefined
       }
+      claim_musicbrainz_search: {
+        Args: { p_minimum_gap_ms?: number }
+        Returns: boolean
+      }
+      defer_musicbrainz_search: {
+        Args: { p_cooldown_seconds: number }
+        Returns: undefined
+      }
       search_profiles: {
         Args: { p_limit?: number; p_query: string }
         Returns: {
@@ -2101,6 +2161,21 @@ export type Database = {
           id: string
           is_following: boolean
           username: string
+        }[]
+      }
+      search_venues: {
+        Args: {
+          p_limit?: number
+          p_query: string
+          p_type?: Database["public"]["Enums"]["venue_type"] | null
+        }
+        Returns: {
+          city: string | null
+          country: string | null
+          external_id: string | null
+          id: string
+          name: string
+          venue_type: Database["public"]["Enums"]["venue_type"]
         }[]
       }
       send_follow_request: { Args: { p_followee: string }; Returns: string }
@@ -2266,6 +2341,28 @@ export type Database = {
           top_artist: Json
           venue_type: Database["public"]["Enums"]["venue_type"]
         }[]
+      }
+      user_venue_deep_stats: {
+        Args: { p_user: string }
+        Returns: Json
+      }
+      user_venue_map_points: {
+        Args: { p_user: string }
+        Returns: {
+          city: string | null
+          lat: number
+          log_count: number
+          lng: number
+          venue_name: string | null
+        }[]
+      }
+      user_venue_city_log_ids: {
+        Args: { p_city: string; p_country?: string; p_user: string }
+        Returns: string[]
+      }
+      get_public_concert_log_share: {
+        Args: { p_log_id: string }
+        Returns: Json
       }
     }
     Enums: {

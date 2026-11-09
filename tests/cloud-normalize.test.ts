@@ -36,6 +36,7 @@ describe('Cloud response normalization', () => {
         artist_id: 'legacy-artist',
         event_date: '2025-06-10',
         venue_type: 'concert_hall_club',
+        venue_id: null,
         venue_name: 'Local Club',
         rating: 5,
         review: null,

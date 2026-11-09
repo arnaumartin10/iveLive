@@ -40,6 +40,7 @@ import { routes } from '../../navigation/routes';
 import { useSafeBack } from '../../navigation/useSafeBack';
 import { LocationPreferenceSheet } from '../../features/home/LocationPreferenceSheet';
 import { useHomeLocation } from '../../features/home/useHomeLocation';
+import { countryNameFromCode } from '../../features/home/location';
 import { supabase } from '../../lib/supabase';
 import { useTheme } from '../../theme/ThemeProvider';
 import type { ThemeMode } from '../../theme/store';
@@ -69,7 +70,6 @@ export default function SettingsScreen() {
   const {
     location,
     isLoading: isLocationLoading,
-    save: saveLocation,
     error: locationError,
   } = useHomeLocation();
   const [displayName, setDisplayName] = useState(
@@ -248,8 +248,13 @@ export default function SettingsScreen() {
       try {
         await clearSessionData();
       } catch (cleanupError) {
-        console.error('[auth] Could not clear all local session data.', cleanupError);
-        setMessage('You are signed out, but some local media could not be cleared.');
+        console.error(
+          '[auth] Could not clear all local session data.',
+          cleanupError,
+        );
+        setMessage(
+          'You are signed out, but some local media could not be cleared.',
+        );
       }
       router.replace(routes.welcome());
     } finally {
@@ -270,8 +275,13 @@ export default function SettingsScreen() {
       try {
         await clearSessionData();
       } catch (cleanupError) {
-        console.error('[auth] Could not clear all local session data.', cleanupError);
-        setMessage('Your account was deleted, but some local media could not be cleared.');
+        console.error(
+          '[auth] Could not clear all local session data.',
+          cleanupError,
+        );
+        setMessage(
+          'Your account was deleted, but some local media could not be cleared.',
+        );
       }
       setDeleteVisible(false);
       router.replace(routes.welcome());
@@ -441,7 +451,9 @@ export default function SettingsScreen() {
             <View style={styles.preferenceCopy}>
               <Text variant="label">Tour discovery location</Text>
               <Text variant="caption" color="secondary">
-                {location.city || location.country || 'No location set'}
+                {location.city ||
+                  countryNameFromCode(location.country) ||
+                  'No location set'}
                 {' · Stored on this device only'}
               </Text>
               {locationError ? (
@@ -451,7 +463,7 @@ export default function SettingsScreen() {
               ) : null}
             </View>
             <Button
-              label="Change"
+              label="Details"
               size="sm"
               variant="secondary"
               leftIcon={<MapPin color={colors.ink} size={15} />}
@@ -585,7 +597,6 @@ export default function SettingsScreen() {
         <LocationPreferenceSheet
           visible={locationSheetVisible}
           onDismiss={() => setLocationSheetVisible(false)}
-          onSaved={saveLocation}
           location={location}
           isLoading={isLocationLoading}
         />

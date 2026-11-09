@@ -74,6 +74,7 @@ const sampleLog = {
   user_id: 'layout-user',
   event_date: '2026-01-01',
   venue_type: 'festival',
+  venue_id: null,
   venue_name:
     'Auditori Internacional de Barcelona amb un nom molt llarg per comprovar el salt de línia',
   rating: 4.5,

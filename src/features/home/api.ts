@@ -2,29 +2,27 @@ import { supabase } from '../../lib/supabase';
 import type { VenueType } from '../venues/venueTypes';
 import type { ArtistRatingSummary, HomeArtist, TourScope } from './types';
 
-function currentWeekStart() {
-  const date = new Date();
-  const weekday = (date.getUTCDay() + 6) % 7;
-  date.setUTCDate(date.getUTCDate() - weekday);
-  return date.toISOString().slice(0, 10);
-}
-
 export async function fetchTrendingGlobal(
   region: string,
 ): Promise<HomeArtist[]> {
-  const periodStart = currentWeekStart();
   const { data, error } = await supabase
     .from('trending_global')
-    .select('id, source, region, rank, artist_id, artist_name, fetched_at')
+    .select(
+      'id, source, region, period_start, rank, artist_id, artist_name, fetched_at',
+    )
     .eq('source', 'lastfm')
     .eq('region', region)
     .eq('period_kind', 'weekly')
-    .eq('period_start', periodStart)
+    .order('period_start', { ascending: false })
     .order('rank', { ascending: true })
     .limit(30);
   if (error) throw new Error(error.message);
 
-  const rows = data ?? [];
+  const allRows = data ?? [];
+  const latestPeriod = allRows[0]?.period_start;
+  const rows = latestPeriod
+    ? allRows.filter((row) => row.period_start === latestPeriod)
+    : [];
   const artistIds = rows.flatMap((row) =>
     row.artist_id ? [row.artist_id] : [],
   );

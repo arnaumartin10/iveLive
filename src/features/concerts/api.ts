@@ -26,6 +26,20 @@ export async function fetchMyLogs({
   filters,
 }: FetchMyLogsParams): Promise<ConcertWithRelations[]> {
   const isAscending = order === 'oldest';
+  let cityLogIds: string[] | null = null;
+  if (filters?.city) {
+    const { data: ids, error: cityError } = await supabase.rpc(
+      'user_venue_city_log_ids',
+      {
+        p_user: userId,
+        p_city: filters.city,
+        p_country: filters.country,
+      },
+    );
+    if (cityError) throw new Error(cityError.message);
+    cityLogIds = ids ?? [];
+    if (!cityLogIds.length) return [];
+  }
 
   // Use !inner join when filtering on artist fields so parent rows without match are filtered
   const hasGenreFilter = (filters?.genres?.length ?? 0) > 0;
@@ -42,6 +56,9 @@ export async function fetchMyLogs({
     .select(selectClause)
     .eq('user_id', userId);
 
+  if (filters?.venueId) query = query.eq('venue_id', filters.venueId);
+  if (filters?.venueName) query = query.eq('venue_name', filters.venueName);
+  if (cityLogIds) query = query.in('id', cityLogIds);
   if (filters?.venueTypes && filters.venueTypes.length > 0) {
     query = query.in('venue_type', filters.venueTypes);
   }
@@ -158,6 +175,18 @@ export async function fetchConcertById(
   };
 }
 
+export async function fetchPublicConcertById(
+  id: string,
+): Promise<ConcertWithRelations> {
+  const { data, error } = await supabase.rpc(
+    'get_public_concert_log_share',
+    { p_log_id: id },
+  );
+  if (error) throw new Error(error.message);
+  if (!data) throw new Error('This log is private or no longer exists.');
+  return data as unknown as ConcertWithRelations;
+}
+
 async function signConcertMedia(
   concerts: (Omit<ConcertWithRelations, 'media'> & {
     media?: (Omit<LogMedia, 'kind'> & { kind: string })[];
@@ -198,6 +227,7 @@ export async function updateConcert(
   if (formData.venue_name !== undefined) {
     updatePayload.venue_name = formData.venue_name.trim() || null;
   }
+  if (formData.venue_id !== undefined) updatePayload.venue_id = formData.venue_id;
   if (formData.notes !== undefined) {
     updatePayload.review = formData.notes.trim() || null;
   }
@@ -300,6 +330,7 @@ export async function logConcert(
     artist_id: artistId,
     event_date: formData.concert_date,
     venue_type: formData.venue_type,
+    venue_id: formData.venue_id ?? null,
     venue_name: formData.venue_name || null,
     review: formData.notes || null,
     rating: formData.rating ?? null,
@@ -312,6 +343,7 @@ export async function logConcert(
     artist_id: artistId,
     event_date: formData.concert_date,
     venue_type: formData.venue_type,
+    venue_id: formData.venue_id ?? null,
     venue_name: formData.venue_name || null,
     rating: formData.rating ?? null,
     review: formData.notes || null,

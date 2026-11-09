@@ -36,6 +36,7 @@ export default function StepKeepsakes() {
   const eventDate = useLogDraft((state) => state.eventDate);
   const venueType = useLogDraft((state) => state.venueType);
   const venueName = useLogDraft((state) => state.venueName);
+  const venueId = useLogDraft((state) => state.venueId);
   const rating = useLogDraft((state) => state.rating);
   const review = useLogDraft((state) => state.review);
   const importedSetlist = useLogDraft((state) => state.importedSetlist);
@@ -130,6 +131,7 @@ export default function StepKeepsakes() {
           artist_name: artist.name,
           spotify_artist_id: artist.spotify_id,
           venue_type: venueType,
+          venue_id: venueId,
           venue_name: venueName.trim(),
           concert_date: format(eventDate, 'yyyy-MM-dd'),
           notes: review.trim(),

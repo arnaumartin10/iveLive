@@ -8,6 +8,7 @@ import {
   screen,
   waitFor,
 } from '@testing-library/react-native';
+import { Linking } from 'react-native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from '../src/theme/ThemeProvider';
 import { SetlistImportPanel } from '../src/features/setlist/SetlistImportPanel';
@@ -106,6 +107,35 @@ describe('Setlist import screen', () => {
     useAuthStore.setState({
       user: { id: 'user-1' } as User,
     });
+  });
+
+  it('links to a venue-and-year search with quick embed instructions', async () => {
+    const openUrl = jest.spyOn(Linking, 'openURL').mockResolvedValue(undefined);
+    renderPanel();
+    fireEvent.press(screen.getByRole('button', { name: 'Import setlist' }));
+
+    expect(await screen.findByText('Find the show on setlist.fm')).toBeTruthy();
+    expect(
+      screen.getByText('1. Search for the venue or location and the year.'),
+    ).toBeTruthy();
+    expect(
+      screen.getByText(
+        '2. Open the matching show and scroll below the setlist.',
+      ),
+    ).toBeTruthy();
+    expect(
+      screen.getByText('3. Copy the embed HTML and paste it here.'),
+    ).toBeTruthy();
+
+    fireEvent.press(
+      screen.getByRole('link', { name: 'Search this show on setlist.fm' }),
+    );
+    await waitFor(() =>
+      expect(openUrl).toHaveBeenCalledWith(
+        'https://www.setlist.fm/search?query=Hollywood%20Bowl%202026',
+      ),
+    );
+    openUrl.mockRestore();
   });
 
   it('looks up the real fixture, shows an editable song preview and date mismatch warning', async () => {

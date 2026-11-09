@@ -1,14 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import {
   Alert,
   Platform,
   Pressable,
-  Share,
   StyleSheet,
   View,
 } from 'react-native';
-import { Calendar, Edit3, MapPin, Share2, Trash2 } from 'lucide-react-native';
+import { Calendar, Edit3, MapPin, Trash2 } from 'lucide-react-native';
 import { format, parseISO } from 'date-fns';
 import { router } from 'expo-router';
 import { routes } from '../../navigation/routes';
@@ -27,6 +26,7 @@ import type { ConcertWithRelations } from '../../features/concerts/types';
 import { useOptionalArtistCard } from '../../features/artists/ArtistCardProvider';
 import { KeepsakeFrames } from '../media/KeepsakeFrames';
 import { SetlistImportPanel } from '../../features/setlist/SetlistImportPanel';
+import { ShareConcertButton } from '../log/ShareConcertButton';
 
 interface LogDetailSheetProps {
   concert: ConcertWithRelations | null;
@@ -49,6 +49,8 @@ export function LogDetailSheet({
 }: LogDetailSheetProps) {
   const { colors } = useTheme();
   const artistCard = useOptionalArtistCard();
+  const [shareError, setShareError] = useState<string | null>(null);
+  const [shareStatus, setShareStatus] = useState<string | null>(null);
 
   if (!concert) return null;
 
@@ -62,17 +64,6 @@ export function LogDetailSheet({
     formattedDate = format(parseISO(concert.event_date), 'EEEE, MMMM d, yyyy');
   } catch {
     // fallback
-  }
-
-  async function handleShare() {
-    if (!concert) return;
-    try {
-      await Share.share({
-        message: `I saw ${artistName} live at ${concert.venue_name || 'an awesome venue'} on ${concert.event_date} via IveLive!`,
-      });
-    } catch {
-      // ignore
-    }
   }
 
   function confirmDelete() {
@@ -286,11 +277,31 @@ export function LogDetailSheet({
           ) : null}
           <View style={styles.secondaryActionsRow}>
             <View style={styles.secondaryBtnWrap}>
-              <Button
-                label="Share"
-                variant="secondary"
-                leftIcon={<Share2 size={16} color={colors.ink} />}
-                onPress={handleShare}
+              <ShareConcertButton
+                logId={concert.id}
+                artistName={artistName}
+                imageUri={
+                  concert.artist?.image_url_large ?? artistPhoto ?? null
+                }
+                macroGenre={
+                  concert.artist?.primary_macro ??
+                  concert.artist?.macro_genres[0] ??
+                  null
+                }
+                genreColor={genreInfo.color}
+                eventDate={concert.event_date}
+                venueName={concert.venue_name}
+                rating={concert.rating}
+                review={concert.review}
+                showWhatsApp={false}
+                onError={(message) => {
+                  setShareStatus(null);
+                  setShareError(message);
+                }}
+                onStatus={(message) => {
+                  setShareError(null);
+                  setShareStatus(message || null);
+                }}
               />
             </View>
             {editable ? (
@@ -304,6 +315,16 @@ export function LogDetailSheet({
               </View>
             ) : null}
           </View>
+          {shareError ? (
+            <Text variant="caption" color="danger">
+              {shareError}
+            </Text>
+          ) : null}
+          {shareStatus ? (
+            <Text variant="caption" color="secondary">
+              {shareStatus}
+            </Text>
+          ) : null}
         </View>
       </BottomSheetScrollView>
     </Sheet>

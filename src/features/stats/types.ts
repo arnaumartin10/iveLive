@@ -81,6 +81,59 @@ export type VenueStat = {
   } | null;
 };
 
+export type DeepVenueStat = {
+  venue_id: string | null;
+  name: string;
+  venue_type: VenueType;
+  log_count: number;
+  first_seen: string;
+  last_seen: string;
+  lat: number | null;
+  lng: number | null;
+  city: string | null;
+  country: string | null;
+};
+
+export type VenueCityStat = {
+  city: string;
+  country: string | null;
+  log_count: number;
+  venue_count: number;
+};
+
+export type VenueCountryStat = {
+  country: string;
+  log_count: number;
+  city_count: number;
+};
+
+export type VenueFestivalStats = {
+  distinct_festivals: number;
+  top_recurring_festival: {
+    venue_id: string | null;
+    name: string;
+    log_count: number;
+  } | null;
+  avg_bands_per_festival_day: number | null;
+  festival_logs: number;
+  club_logs: number;
+};
+
+export type VenueDeepStats = {
+  venues: DeepVenueStat[];
+  cities: VenueCityStat[];
+  countries: VenueCountryStat[];
+  festivals: VenueFestivalStats;
+};
+
+export type VenueMapPoint = {
+  lat: number;
+  lng: number;
+  venue_name: string;
+  city: string | null;
+  log_count: number;
+};
+
 export type ExclusiveArtist = {
   artist_id: string;
   name: string;

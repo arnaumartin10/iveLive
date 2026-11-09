@@ -2,20 +2,34 @@ import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { supabase } from '@lib/supabase';
 import {
   fetchArtistsOnTour,
+  fetchTrendingGlobal,
   selectUpcomingTourArtists,
 } from '../src/features/home/api';
 import type { HomeArtist } from '../src/features/home/types';
 
 jest.mock('@lib/supabase', () => ({
-  supabase: { rpc: jest.fn() },
+  supabase: { from: jest.fn(), rpc: jest.fn() },
 }));
 
 const rpc = jest.mocked(supabase.rpc);
+const from = jest.mocked(supabase.from);
+
+function queryBuilder(result: { data: unknown; error: null }) {
+  const builder = {
+    select: jest.fn(() => builder),
+    eq: jest.fn(() => builder),
+    order: jest.fn(() => builder),
+    limit: jest.fn(async () => result),
+    in: jest.fn(async () => result),
+  };
+  return builder;
+}
 
 describe('Home tour query', () => {
   beforeEach(() => {
     rpc.mockReset();
     rpc.mockResolvedValue({ data: [], error: null } as never);
+    from.mockReset();
   });
 
   it('does not restrict nearby results to the saved country', async () => {
@@ -24,13 +38,74 @@ describe('Home tour query', () => {
     expect(rpc).toHaveBeenCalledWith(
       'artists_on_tour',
       expect.objectContaining({
-        p_country: null,
+        p_country: undefined,
         p_lat: 41.39,
         p_lng: 2.17,
         p_radius_km: 150,
         p_limit: 100,
       }),
     );
+  });
+
+  it('uses the latest available weekly chart rather than requiring this week', async () => {
+    const trendQuery = queryBuilder({
+      data: [
+        {
+          id: 'latest-row',
+          source: 'lastfm',
+          region: 'GB',
+          period_start: '2026-11-02',
+          rank: 1,
+          artist_id: 'latest-artist',
+          artist_name: 'Latest Artist',
+          fetched_at: '2026-11-09T04:17:00.000Z',
+        },
+        {
+          id: 'old-row',
+          source: 'lastfm',
+          region: 'GB',
+          period_start: '2026-10-26',
+          rank: 1,
+          artist_id: 'old-artist',
+          artist_name: 'Old Artist',
+          fetched_at: '2026-11-02T04:17:00.000Z',
+        },
+      ],
+      error: null,
+    });
+    const artistsQuery = queryBuilder({
+      data: [
+        {
+          id: 'latest-artist',
+          name: 'Latest Artist',
+          image_url_large: null,
+          image_url_thumb: null,
+          primary_macro: null,
+          macro_genres: [],
+        },
+        {
+          id: 'old-artist',
+          name: 'Old Artist',
+          image_url_large: null,
+          image_url_thumb: null,
+          primary_macro: null,
+          macro_genres: [],
+        },
+      ],
+      error: null,
+    });
+    from.mockImplementation(
+      (table: string) =>
+        (table === 'trending_global' ? trendQuery : artistsQuery) as never,
+    );
+
+    await expect(fetchTrendingGlobal('GB')).resolves.toEqual([
+      expect.objectContaining({ id: 'latest-artist', rank: 1 }),
+    ]);
+    expect(trendQuery.eq).toHaveBeenCalledWith('region', 'GB');
+    expect(trendQuery.order).toHaveBeenCalledWith('period_start', {
+      ascending: false,
+    });
   });
 
   it('keeps the country filter for non-radius tour browsing', async () => {
@@ -41,7 +116,7 @@ describe('Home tour query', () => {
       expect.objectContaining({
         p_scope: 'popular',
         p_country: 'ES',
-        p_radius_km: null,
+        p_radius_km: undefined,
       }),
     );
   });
