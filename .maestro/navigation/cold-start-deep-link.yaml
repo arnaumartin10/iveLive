@@ -1,0 +1,9 @@
+appId: com.ivelive.app
+---
+- launchApp:
+    clearState: false
+    deepLink: ${APP_SCHEME}://artist/${ARTIST_ID}
+- assertVisible:
+    text: ${ARTIST_NAME}
+- tapOn:
+    text: Back

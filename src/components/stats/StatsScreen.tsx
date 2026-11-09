@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
+import { routes } from '../../navigation/routes';
 import {
   BarChart3,
   ChevronRight,
@@ -54,6 +55,7 @@ import { hardShadow, radius, spacing } from '../../theme/tokens';
 import { GenreLabel, VenueLabel } from '../paper';
 import { useMusicIdentity, IdentitySheet } from '../../features/identity';
 import { useOptionalArtistCard } from '../../features/artists/ArtistCardProvider';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 
 const TAB_OPTIONS = [
   { label: 'Overview', value: 'overview' },
@@ -100,8 +102,9 @@ function Metric({
   precision?: number;
 }) {
   const { colors } = useTheme();
+  const compact = useBreakpoint() !== 'wide';
   return (
-    <View style={styles.metric}>
+    <View style={[styles.metric, compact && styles.compactMetric]}>
       <CountUp value={value} suffix={suffix} />
       <Text variant="caption" color="secondary">
         {label}
@@ -127,6 +130,7 @@ function Record({ label, value }: { label: string; value: string }) {
 
 export function StatsScreen() {
   const { colors } = useTheme();
+  const compactLayout = useBreakpoint() !== 'wide';
   const userId = useAuthStore((state) => state.user?.id ?? '');
   const scope = useStatsScopeStore((state) => state.scope);
   const currentYear = new Date().getFullYear();
@@ -157,10 +161,7 @@ export function StatsScreen() {
         imageUrl: artist.image_url,
       });
     } else {
-      router.push({
-        pathname: '/artist/[id]',
-        params: { id: artist.artist_id },
-      });
+      router.navigate(routes.artist(artist.artist_id));
     }
   }
 
@@ -232,14 +233,12 @@ export function StatsScreen() {
 
   function openTimeline(params: Record<string, string>) {
     const { venueType, ...timelineParams } = params;
-    router.push({
-      pathname: '/user/[username]/diary',
-      params: {
-        username: 'me',
+    router.navigate(
+      routes.diary('me', {
         ...timelineParams,
         ...(venueType ? { venueType } : {}),
-      },
-    });
+      }),
+    );
   }
 
   const scopeOptions = [null, ...(overview?.years ?? [])] as const;
@@ -299,10 +298,7 @@ export function StatsScreen() {
       <Pressable
         accessibilityRole="button"
         onPress={() =>
-          router.push({
-            pathname: '/wrapped',
-            params: { year: scope ?? 'all' },
-          })
+          router.navigate(routes.wrapped(String(scope ?? 'all')))
         }
       >
         <View
@@ -372,7 +368,10 @@ export function StatsScreen() {
                   });
                 }
               }}
-              style={styles.mostSeenMetric}
+              style={[
+                styles.mostSeenMetric,
+                compactLayout && styles.compactMostSeenMetric,
+              ]}
             >
               <Avatar
                 name={overview.most_seen_artist?.artist ?? 'Artist'}
@@ -380,7 +379,7 @@ export function StatsScreen() {
                 size="sm"
               />
               <View style={styles.flexOne}>
-                <Text variant="caption" weight="bold" numberOfLines={1}>
+                <Text variant="caption" weight="bold">
                   {overview.most_seen_artist?.artist ?? 'No artist yet'}
                 </Text>
                 <Text variant="caption" color="secondary">
@@ -438,7 +437,7 @@ export function StatsScreen() {
             <Button
               label="Log a concert"
               leftIcon={<Plus color={colors.accentInk} size={17} />}
-              onPress={() => router.push('/log')}
+              onPress={() => router.navigate(routes.logWizard())}
             />
           }
         />
@@ -537,7 +536,7 @@ export function StatsScreen() {
           </Card>
           <Card style={styles.chartCard}>
             <SectionTitle
-              action={() => router.push('/stats/wall-of-fame' as never)}
+              action={() => router.navigate(routes.wallOfFame())}
             >
               YOUR CALENDAR
             </SectionTitle>
@@ -671,7 +670,6 @@ export function StatsScreen() {
                 <Text
                   variant="body"
                   weight="semibold"
-                  numberOfLines={1}
                   style={styles.flexOne}
                 >
                   {artist.artist}
@@ -838,7 +836,7 @@ export function StatsScreen() {
               <Text variant="title" weight="bold">
                 {identityQuery.computed?.eraLabel ?? 'Your Live Music Identity'}
               </Text>
-              <Text variant="caption" color="secondary" numberOfLines={2}>
+              <Text variant="caption" color="secondary">
                 {identityQuery.computed?.prototype?.tagline ??
                   'Tap to explore your musical eras, venue persona, and identity card.'}
               </Text>
@@ -1099,10 +1097,7 @@ export function StatsScreen() {
                       hitSlop={8}
                       onPress={(event) => {
                         event.stopPropagation();
-                        router.push({
-                          pathname: '/genre/[slug]',
-                          params: { slug: genre.macro_genre },
-                        });
+                        router.navigate(routes.genre(genre.macro_genre));
                       }}
                       style={styles.genreAbout}
                     >
@@ -1225,7 +1220,7 @@ export function StatsScreen() {
                       imageUrl={artist.image_url}
                       size="md"
                     />
-                    <Text variant="caption" weight="semibold" numberOfLines={1}>
+                    <Text variant="caption" weight="semibold">
                       {artist.name}
                     </Text>
                     <Text variant="caption" color="secondary">
@@ -1282,7 +1277,7 @@ export function StatsScreen() {
             </View>
             <Pressable
               accessibilityRole="button"
-              onPress={() => router.push('/stats/wall-of-fame' as never)}
+              onPress={() => router.navigate(routes.wallOfFame())}
             >
               <ChevronRight size={20} color={colors.inkMuted} />
             </Pressable>
@@ -1385,6 +1380,7 @@ const styles = StyleSheet.create({
   summaryBlock: { gap: 12 },
   summaryGrid: { flexDirection: 'row', flexWrap: 'wrap', rowGap: 12 },
   metric: { width: '33.333%', minHeight: 68, gap: 2 },
+  compactMetric: { width: '50%', minHeight: 76 },
   metricRule: { height: 1, width: '78%', marginTop: 8 },
   mostSeenMetric: {
     width: '33.333%',
@@ -1393,6 +1389,7 @@ const styles = StyleSheet.create({
     gap: 7,
     paddingRight: 4,
   },
+  compactMostSeenMetric: { width: '50%', minWidth: 0 },
   flexOne: { flex: 1, minWidth: 0 },
   tabContent: { gap: spacing.md },
   loadingCard: { padding: spacing.lg },
@@ -1427,7 +1424,8 @@ const styles = StyleSheet.create({
   artistHeader: { gap: 8 },
   artistGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
   artistTile: {
-    width: '29%',
+    flexBasis: '29%',
+    flexGrow: 1,
     alignItems: 'center',
     gap: 4,
     paddingVertical: 6,
@@ -1447,7 +1445,9 @@ const styles = StyleSheet.create({
   spacerSmall: { height: 6 },
   recordsStrip: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   record: {
-    width: '48%',
+    flexBasis: '48%',
+    flexGrow: 1,
+    minWidth: 0,
     minHeight: 78,
     padding: spacing.md,
     borderRadius: radius.sm,
@@ -1488,7 +1488,12 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   genreTitle: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  genreMeta: { flexDirection: 'row', justifyContent: 'space-between', gap: 6 },
+  genreMeta: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    gap: 6,
+  },
   genreAbout: {
     alignSelf: 'flex-end',
     minHeight: 44,

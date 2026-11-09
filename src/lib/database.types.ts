@@ -1916,6 +1916,17 @@ export type Database = {
           username: string
         }[]
       }
+      friends_who_saw_artist: {
+        Args: { p_artist: string; p_limit?: number }
+        Returns: {
+          avatar_url: string
+          display_name: string
+          id: string
+          logs: Json
+          logs_count: number
+          username: string
+        }[]
+      }
       get_feed: {
         Args: { p_cursor: string; p_limit: number }
         Returns: {

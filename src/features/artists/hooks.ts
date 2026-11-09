@@ -185,7 +185,7 @@ export function useEnrichArtist() {
 export function useArtistFriends(artistId: string, userId: string) {
   return useQuery({
     queryKey: ['artist-friends', artistId, userId],
-    queryFn: () => fetchArtistFriends(artistId, userId),
+    queryFn: () => fetchArtistFriends(artistId),
     enabled: !!artistId && !!userId,
     staleTime: 60 * 1000,
   });

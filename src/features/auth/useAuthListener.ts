@@ -17,18 +17,29 @@ export function useAuthListener() {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
-      setLoading(false);
     });
 
     let mounted = true;
-    void supabase.auth.getSession().then(({ data }) => {
-      if (!mounted) return;
-      setSession(data.session);
-      setLoading(false);
-    });
+
+    function isWebAuthRedirect(url: string): boolean {
+      try {
+        const parsed = new URL(url);
+        const fragment = new URLSearchParams(parsed.hash.slice(1));
+        return (
+          parsed.searchParams.has('code') ||
+          parsed.searchParams.has('token_hash') ||
+          (fragment.has('access_token') && fragment.has('refresh_token'))
+        );
+      } catch {
+        return false;
+      }
+    }
 
     async function handleUrl(url: string | null) {
-      if (!url || (Platform.OS !== 'web' && !url.includes('callback'))) return;
+      if (!url) return;
+      if (Platform.OS === 'web' ? !isWebAuthRedirect(url) : !url.includes('callback')) {
+        return;
+      }
       try {
         await completeAuthRedirect(url);
       } catch (error) {
@@ -36,14 +47,29 @@ export function useAuthListener() {
       }
     }
 
-    if (Platform.OS === 'web' && typeof window !== 'undefined') {
-      void handleUrl(window.location.href);
-    } else {
-      void Linking.getInitialURL().then(handleUrl);
-    }
     const linkSubscription = Linking.addEventListener('url', ({ url }) => {
       void handleUrl(url);
     });
+
+    async function initializeSession() {
+      try {
+        const initialUrl =
+          Platform.OS === 'web' && typeof window !== 'undefined'
+            ? window.location.href
+            : await Linking.getInitialURL();
+        await handleUrl(initialUrl);
+        const { data, error } = await supabase.auth.getSession();
+        if (error) throw error;
+        if (mounted) setSession(data.session);
+      } catch (error) {
+        console.error('[IveLive] Could not restore the auth session.', error);
+        if (mounted) setSession(null);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    }
+
+    void initializeSession();
 
     return () => {
       mounted = false;

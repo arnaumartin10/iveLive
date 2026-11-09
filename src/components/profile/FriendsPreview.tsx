@@ -1,5 +1,6 @@
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
+import { routes } from '../../navigation/routes';
 import { ArrowRight, Users } from 'lucide-react-native';
 import { Avatar } from '../ui/Avatar';
 import { EmptyState } from '../ui/EmptyState';
@@ -79,10 +80,7 @@ export function FriendsPreview({
               accessibilityRole="button"
               accessibilityLabel={`Open @${friend.username}`}
               onPress={() =>
-                router.push({
-                  pathname: '/user/[username]',
-                  params: { username: friend.username },
-                })
+                router.navigate(routes.user(friend.username))
               }
               style={styles.friend}
             >

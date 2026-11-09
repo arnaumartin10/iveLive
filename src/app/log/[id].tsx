@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Constants from 'expo-constants';
 import {
+  Alert,
+  Platform,
   Pressable,
   ScrollView,
   Share,
@@ -7,35 +10,90 @@ import {
   View,
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
+import { getLogFallback, routes } from '../../navigation/routes';
+import { useSafeBack } from '../../navigation/useSafeBack';
+import { returnToHref } from '../../navigation/returnTo';
 import {
   ArrowLeft,
   Calendar,
+  Heart,
   MapPin,
+  MessageCircle,
+  Pencil,
   Share2,
-  Star,
+  Trash2,
 } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useConcert } from '../../features/concerts/hooks';
+import {
+  useConcert,
+  useDeleteConcert,
+} from '../../features/concerts/hooks';
+import { useAuthStore } from '../../features/auth/store';
+import { useLogDraft } from '../../features/log/store';
+import {
+  useLogsSocialStats,
+  useToggleLogLike,
+} from '../../features/social/hooks';
 import { useTheme } from '../../theme/ThemeProvider';
 import { Text } from '../../components/ui/Text';
 import { Avatar } from '../../components/ui/Avatar';
 import { Card } from '../../components/ui/Card';
-import { Chip } from '../../components/ui/Chip';
 import { EmptyState } from '../../components/ui/EmptyState';
 import { Skeleton } from '../../components/ui/Skeleton';
 import { Button } from '../../components/ui/Button';
-import { radius, spacing } from '../../theme/tokens';
+import { StarRating } from '../../components/ui/StarRating';
+import { KeepsakeFrames } from '../../components/media/KeepsakeFrames';
+import { CommentsSheet } from '../../components/social/CommentsSheet';
+import { SetlistImportPanel } from '../../features/setlist/SetlistImportPanel';
+import { VenueLabel } from '../../components/paper';
+import { format, parseISO } from 'date-fns';
+import { hardShadow, radius, spacing } from '../../theme/tokens';
 
 export default function ConcertDetailScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
-  const { colors } = useTheme();
+  const { id, returnTo } = useLocalSearchParams<{
+    id: string;
+    returnTo?: string;
+  }>();
+  const currentUserId = useAuthStore((state) => state.user?.id ?? '');
   const { data: concert, isLoading, error } = useConcert(id || '');
+  const isMine = concert?.user_id === currentUserId;
+  const socialStatsQuery = useLogsSocialStats(id ? [id] : []);
+  const toggleLike = useToggleLogLike();
+  const deleteConcert = useDeleteConcert(currentUserId);
+  const startEdit = useLogDraft((state) => state.startEdit);
+  const [commentsVisible, setCommentsVisible] = useState(false);
+  const safeBack = useSafeBack(
+    returnToHref(returnTo) ??
+      getLogFallback(
+        concert?.owner_username,
+        concert?.user_id === currentUserId,
+      ),
+  );
+  const { colors } = useTheme();
+  const socialStats = id ? socialStatsQuery.data?.[id] : undefined;
+
+  function showDeleteConfirmation() {
+    if (!concert) return;
+    const remove = () =>
+      deleteConcert.mutate(concert.id, { onSuccess: safeBack });
+    if (Platform.OS === 'web' && typeof window !== 'undefined') {
+      if (window.confirm('Delete this concert log? This cannot be undone.')) {
+        remove();
+      }
+      return;
+    }
+    Alert.alert('Delete concert log', 'This cannot be undone.', [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Delete', style: 'destructive', onPress: remove },
+    ]);
+  }
 
   const handleShare = async () => {
     if (!concert) return;
     const artistName = concert.artist?.name || 'Live concert';
+    const scheme = Constants.expoConfig?.scheme ?? 'ivelive';
     await Share.share({
-      message: `Checked out ${artistName} at ${concert.venue_name} on ${concert.event_date} via IveLive! ivelive://log/${concert.id}`,
+      message: `Checked out ${artistName} at ${concert.venue_name} on ${concert.event_date} via IveLive! ${routes.logDeepLink(concert.id, scheme)}`,
     });
   };
 
@@ -48,7 +106,7 @@ export default function ConcertDetailScreen() {
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Back"
-            onPress={() => router.back()}
+            onPress={safeBack}
             style={styles.navBtn}
           >
             <ArrowLeft color={colors.ink} size={22} />
@@ -72,7 +130,7 @@ export default function ConcertDetailScreen() {
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Back"
-            onPress={() => router.back()}
+            onPress={safeBack}
             style={styles.navBtn}
           >
             <ArrowLeft color={colors.ink} size={22} />
@@ -80,10 +138,10 @@ export default function ConcertDetailScreen() {
         </View>
         <View style={styles.emptyWrap}>
           <EmptyState
-            title="Concert not found"
-            description="The concert you are looking for may have been deleted or does not exist."
+            title="This log is private or no longer exists"
+            description="It may have been deleted, or the owner may have changed who can see it."
             action={
-              <Button label="Go back" onPress={() => router.back()} />
+              <Button label="Go back" onPress={safeBack} />
             }
           />
         </View>
@@ -96,15 +154,16 @@ export default function ConcertDetailScreen() {
     concert.artist?.image_url_thumb || concert.artist?.image_url_large;
 
   return (
-    <SafeAreaView
-      style={[styles.safeArea, { backgroundColor: colors.bg }]}
-    >
+    <>
+      <SafeAreaView
+        style={[styles.safeArea, { backgroundColor: colors.bg }]}
+      >
       {/* Navigation Bar */}
       <View style={styles.navBar}>
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Back"
-          onPress={() => router.back()}
+          onPress={safeBack}
           style={styles.navBtn}
         >
           <ArrowLeft color={colors.ink} size={22} />
@@ -112,27 +171,71 @@ export default function ConcertDetailScreen() {
         <Text variant="label" weight="bold">
           Concert Log
         </Text>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Share concert"
-          onPress={handleShare}
-          style={styles.navBtn}
-        >
-          <Share2 color={colors.ink} size={20} />
-        </Pressable>
+        <View style={styles.navActions}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Share concert"
+            onPress={handleShare}
+            style={styles.navBtn}
+          >
+            <Share2 color={colors.ink} size={20} />
+          </Pressable>
+          {isMine ? (
+            <>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="Edit concert log"
+                onPress={() => {
+                  startEdit(concert);
+                  router.navigate(routes.logWizard());
+                }}
+                style={styles.navBtn}
+              >
+                <Pencil color={colors.ink} size={19} />
+              </Pressable>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="Delete concert log"
+                disabled={deleteConcert.isPending}
+                onPress={showDeleteConfirmation}
+                style={styles.navBtn}
+              >
+                <Trash2 color={colors.danger} size={19} />
+              </Pressable>
+            </>
+          ) : null}
+        </View>
       </View>
 
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         keyboardShouldPersistTaps="handled"
       >
+        {concert.owner_username ? (
+          <View style={styles.ownerRow}>
+            <Avatar
+              imageUrl={concert.owner_avatar_url}
+              name={concert.owner_display_name ?? concert.owner_username}
+              size="sm"
+            />
+            <View style={styles.ownerCopy}>
+              <Text variant="caption" weight="bold">
+                @{concert.owner_username}
+              </Text>
+              <Text variant="caption" color="secondary">
+                {formatDate(concert.event_date)}
+              </Text>
+            </View>
+          </View>
+        ) : null}
+
         {/* Artist Header Card */}
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={`View ${artistName} artist profile`}
           onPress={() => {
             if (concert.artist_id) {
-              router.push(`/artist/${concert.artist_id}`);
+              router.navigate(routes.artist(concert.artist_id));
             }
           }}
         >
@@ -143,7 +246,7 @@ export default function ConcertDetailScreen() {
               size="lg"
             />
             <View style={styles.artistCopy}>
-              <Text variant="title" weight="bold" numberOfLines={1}>
+              <Text variant="title" weight="bold" style={styles.artistName}>
                 {artistName}
               </Text>
               <Text variant="caption" color="accent" weight="bold">
@@ -162,13 +265,19 @@ export default function ConcertDetailScreen() {
                 VENUE
               </Text>
             </View>
-            <Text variant="body" weight="bold">
-              {concert.venue_name}
-            </Text>
             {concert.venue_type ? (
               <View style={styles.chipWrap}>
-                <Chip>{concert.venue_type.replace('_', ' ')}</Chip>
+                <VenueLabel
+                  venue={concert.venue_type}
+                  size="sm"
+                  variant="solid"
+                />
               </View>
+            ) : null}
+            {concert.venue_name ? (
+              <Text variant="body" weight="bold">
+                {concert.venue_name}
+              </Text>
             ) : null}
           </View>
 
@@ -182,11 +291,11 @@ export default function ConcertDetailScreen() {
               </Text>
             </View>
             <Text variant="body">
-              {concert.event_date}
+              {formatDate(concert.event_date)}
             </Text>
           </View>
 
-          {concert.rating ? (
+          {concert.rating !== null ? (
             <>
               <View
                 style={[styles.separator, { backgroundColor: colors.line }]}
@@ -196,14 +305,10 @@ export default function ConcertDetailScreen() {
                   RATING
                 </Text>
                 <View style={styles.starsRow}>
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star
-                      key={star}
-                      size={20}
-                      color={star <= concert.rating! ? colors.accent : colors.inkMuted}
-                      fill={star <= concert.rating! ? colors.accent : 'transparent'}
-                    />
-                  ))}
+                  <StarRating value={concert.rating} size={20} />
+                  <Text variant="mono" weight="bold">
+                    {concert.rating.toFixed(1)}
+                  </Text>
                 </View>
               </View>
             </>
@@ -221,9 +326,77 @@ export default function ConcertDetailScreen() {
             </Text>
           </Card>
         ) : null}
+        <KeepsakeFrames
+          logId={concert.id}
+          mode="view"
+          media={concert.media}
+        />
+        <SetlistImportPanel concert={concert} editable={isMine} />
+        <View style={[styles.socialCard, { borderColor: colors.line }]}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={`Like this log. ${socialStats?.likeCount ?? 0} likes.`}
+            disabled={toggleLike.isPending || socialStatsQuery.isLoading}
+            onPress={() =>
+              toggleLike.mutate({
+                logId: concert.id,
+                liked: socialStats?.likedByMe ?? false,
+              })
+            }
+            style={styles.socialAction}
+          >
+            <Heart
+              size={19}
+              color={socialStats?.likedByMe ? colors.danger : colors.inkMuted}
+              fill={socialStats?.likedByMe ? colors.danger : 'transparent'}
+            />
+            <Text variant="caption" weight="bold">
+              {socialStats?.likeCount ?? 0} likes
+            </Text>
+          </Pressable>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={`Open comments. ${socialStats?.commentCount ?? 0} comments.`}
+            onPress={() => setCommentsVisible(true)}
+            style={styles.socialAction}
+          >
+            <MessageCircle size={19} color={colors.inkMuted} />
+            <Text variant="caption" weight="bold">
+              {socialStats?.commentCount ?? 0} comments
+            </Text>
+          </Pressable>
+        </View>
+        {concert.owner_username && !isMine ? (
+          <Button
+            label={`More from @${concert.owner_username}`}
+            variant="secondary"
+            onPress={() =>
+              router.navigate(routes.diary(concert.owner_username!))
+            }
+          />
+        ) : null}
+        {deleteConcert.isError ? (
+          <Text variant="caption" color="danger">
+            {deleteConcert.error.message}
+          </Text>
+        ) : null}
       </ScrollView>
-    </SafeAreaView>
+      </SafeAreaView>
+      <CommentsSheet
+        logId={concert.id}
+        visible={commentsVisible}
+        onDismiss={() => setCommentsVisible(false)}
+      />
+    </>
   );
+}
+
+function formatDate(value: string) {
+  try {
+    return format(parseISO(value), 'MMMM d, yyyy');
+  } catch {
+    return value;
+  }
 }
 
 const styles = StyleSheet.create({
@@ -231,16 +404,23 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   navBar: {
-    flexDirection: 'row',
     alignItems: 'center',
+    flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingVertical: 12,
+    minHeight: 56,
+  },
+  navActions: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    flexShrink: 0,
   },
   navBtn: {
-    padding: 6,
     alignItems: 'center',
     justifyContent: 'center',
+    minHeight: 44,
+    minWidth: 44,
   },
   scrollContent: {
     paddingHorizontal: 16,
@@ -269,7 +449,11 @@ const styles = StyleSheet.create({
   artistCopy: {
     flex: 1,
     gap: 4,
+    minWidth: 0,
   },
+  artistName: { flexShrink: 1, minWidth: 0 },
+  ownerRow: { alignItems: 'center', flexDirection: 'row', gap: spacing.sm },
+  ownerCopy: { flex: 1, minWidth: 0 },
   detailsCard: {
     padding: spacing.md,
     gap: spacing.md,
@@ -291,6 +475,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 4,
     marginTop: 4,
+    flexWrap: 'wrap',
   },
   separator: {
     height: StyleSheet.hairlineWidth,
@@ -302,5 +487,21 @@ const styles = StyleSheet.create({
   },
   reviewText: {
     lineHeight: 22,
+  },
+  socialCard: {
+    alignItems: 'center',
+    borderWidth: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.md,
+    padding: spacing.md,
+    ...hardShadow.sm,
+  },
+  socialAction: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: spacing.xs,
+    minHeight: 44,
+    minWidth: 44,
   },
 });

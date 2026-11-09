@@ -10,6 +10,9 @@ export type ConcertLogUpdate =
 export type ConcertWithRelations = ConcertLog & {
   artist: Artist | null;
   media?: SignedLogMedia[];
+  owner_username?: string | null;
+  owner_display_name?: string | null;
+  owner_avatar_url?: string | null;
 };
 
 type UserArtistSummaryRow =

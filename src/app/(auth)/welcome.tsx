@@ -7,7 +7,8 @@ import {
   isAvailableAsync as isAppleAuthenticationAvailableAsync,
 } from 'expo-apple-authentication';
 import * as Haptics from 'expo-haptics';
-import { Link, router, type Href } from 'expo-router';
+import { Link } from 'expo-router';
+import { routes } from '../../navigation/routes';
 import { Mail } from 'lucide-react-native';
 import {
   useWindowDimensions,
@@ -157,7 +158,6 @@ export default function WelcomeScreen() {
     setError('');
     try {
       await verifyEmailOtp(email.trim(), code.trim());
-      router.replace('/(tabs)');
     } catch (cause) {
       setError(
         cause instanceof Error
@@ -431,7 +431,7 @@ export default function WelcomeScreen() {
             </Text>
           ) : null}
           <View style={styles.legalLinks}>
-            <Link href={'/legal/terms' as Href} asChild>
+            <Link href={routes.terms()} asChild>
               <Pressable accessibilityRole="link">
                 <Text variant="caption" style={{ color: colors.accent }}>
                   Terms
@@ -441,7 +441,7 @@ export default function WelcomeScreen() {
             <Text variant="mono" style={{ color: colors.inkMuted }}>
               ·
             </Text>
-            <Link href={'/legal/privacy' as Href} asChild>
+            <Link href={routes.privacy()} asChild>
               <Pressable accessibilityRole="link">
                 <Text variant="caption" style={{ color: colors.accent }}>
                   Privacy

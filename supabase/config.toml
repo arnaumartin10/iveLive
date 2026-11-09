@@ -71,6 +71,12 @@ verify_jwt = true
 [functions.spotify-upsert-artist]
 verify_jwt = true
 
+[functions.resolve-artist]
+verify_jwt = true
+
+[functions.catalog-drip]
+verify_jwt = false
+
 [functions.genre-autopage]
 verify_jwt = true
 

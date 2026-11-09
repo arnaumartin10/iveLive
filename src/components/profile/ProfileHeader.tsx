@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
   identity: {
     alignItems: 'center',
     gap: 5,
-    paddingHorizontal: spacing.xl,
+    paddingHorizontal: spacing.md,
     paddingTop: spacing.sm,
   },
   name: { marginTop: spacing.xs },
@@ -300,8 +300,9 @@ const styles = StyleSheet.create({
     marginTop: spacing.lg,
     paddingHorizontal: spacing.xs,
     paddingTop: spacing.md,
+    flexWrap: 'wrap',
   },
-  count: { alignItems: 'center', gap: 2, minWidth: 64 },
+  count: { alignItems: 'center', flexBasis: '25%', flexGrow: 1, gap: 2, minWidth: 64 },
   prototypeBadge: {
     flexDirection: 'row',
     alignItems: 'center',

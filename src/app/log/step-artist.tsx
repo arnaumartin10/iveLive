@@ -30,6 +30,7 @@ import {
 import * as Haptics from 'expo-haptics';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
+import { routes } from '../../navigation/routes';
 
 import { useLogDraft } from '../../features/log/store';
 import { useArtistCard } from '../../features/artists/ArtistCardProvider';
@@ -214,7 +215,7 @@ export default function StepArtist() {
   );
 
   function handleAddManually() {
-    router.push('/artist/new');
+    router.navigate(routes.artistNew());
   }
 
   function handleRetry() {
@@ -298,7 +299,7 @@ export default function StepArtist() {
           accessibilityRole="link"
           accessibilityLabel="Browse music genres"
           hitSlop={8}
-          onPress={() => router.push('/genres')}
+          onPress={() => router.navigate(routes.genres())}
           style={styles.browseGenresLink}
         >
           <Text variant="caption" color="accent" weight="bold">

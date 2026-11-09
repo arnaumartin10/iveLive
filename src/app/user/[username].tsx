@@ -1,4 +1,5 @@
 import { Redirect, Stack, useLocalSearchParams } from 'expo-router';
+import { routes } from '../../navigation/routes';
 import { useMe } from '../../features/auth/hooks';
 import { ProfileScreen } from '../../components/profile/ProfileScreen';
 
@@ -28,16 +29,19 @@ export default function UserProfileScreen() {
   }>();
   const me = useMe();
   const routeUsername = Array.isArray(username) ? username[0] : username;
+  const profileTab =
+    tab === 'timeline' || tab === 'diary' || tab === 'friends' || tab === 'wishlist'
+      ? tab === 'diary'
+        ? 'timeline'
+        : tab
+      : 'profile';
   if (
     routeUsername === 'me' ||
     (me.data?.username && routeUsername === me.data.username)
   ) {
     return (
       <Redirect
-        href={{
-          pathname: '/(tabs)/profile',
-          params: {
-            tab: tab ?? 'profile',
+        href={routes.profile(profileTab, {
             friendsTab,
             year,
             venue_type,
@@ -46,8 +50,7 @@ export default function UserProfileScreen() {
             maxRating,
             date,
             highlight,
-          },
-        }}
+          })}
       />
     );
   }

@@ -23,6 +23,7 @@ import {
   removeLogMedia,
   updateMediaCaption,
 } from '../../features/media/api';
+import { getLocalBlob } from '../../features/media/localFiles';
 import {
   useLogMedia,
   useMediaQueue,
@@ -41,6 +42,7 @@ import type {
   LogMedia,
   MediaSlot,
   SignedLogMedia,
+  ProcessedKeepsake,
 } from '../../features/media/types';
 import {
   KeepsakeMediaError,
@@ -66,21 +68,56 @@ export function KeepsakeFrames({
   mode,
   media: mediaProp,
   onMediaChange,
+  stagedKeepsakes,
+  onStageKeepsake,
+  onRemoveStagedKeepsake,
 }: {
   logId: string;
   mode: 'edit' | 'view';
   media?: FrameMedia[];
   onMediaChange?: (media: FrameMedia[]) => void;
+  stagedKeepsakes?: ProcessedKeepsake[];
+  onStageKeepsake?: (keepsake: ProcessedKeepsake) => void;
+  onRemoveStagedKeepsake?: (slot: MediaSlot) => void;
 }) {
   const { colors } = useTheme();
   const { width } = useWindowDimensions();
   const userId = useAuthStore((state) => state.user?.id ?? '');
   const client = useQueryClient();
-  const { data: fromQueryData = [], refetch: refetchLogMedia } =
-    useLogMedia(logId);
-  const queue = useMediaQueue(logId);
+  const { data: fromQueryData = [], refetch: refetchLogMedia } = useLogMedia(
+    stagedKeepsakes ? '' : logId,
+  );
+  const queue = useMediaQueue(logId || 'draft-keepsakes');
   const fromQuery = fromQueryData;
-  const media: FrameMedia[] = mediaProp ?? fromQuery;
+  const [stagedPreviewUrls, setStagedPreviewUrls] = useState<
+    Record<string, string>
+  >({});
+  const stagedMedia = useMemo<FrameMedia[] | undefined>(
+    () =>
+      stagedKeepsakes?.map((item) => ({
+        id: `draft:${item.slot}`,
+        log_id: logId,
+        user_id: userId,
+        slot: item.slot,
+        kind: item.kind,
+        storage_path: item.localPath,
+        thumb_path: item.thumbLocalPath,
+        poster_path: item.posterLocalPath,
+        width: item.width,
+        height: item.height,
+        duration_ms: item.durationMs,
+        size_bytes: item.sizeBytes,
+        mime: item.mime,
+        caption: item.caption,
+        created_at: '',
+        thumb_url: stagedPreviewUrls[item.slot],
+        poster_url:
+          item.kind === 'video' ? stagedPreviewUrls[item.slot] : null,
+      })),
+    [logId, stagedKeepsakes, stagedPreviewUrls, userId],
+  );
+  const media: FrameMedia[] =
+    stagedMedia ?? mediaProp ?? fromQuery;
   const queuedCount = queue.items.length;
   const [viewerIndex, setViewerIndex] = useState<number | null>(null);
   const [pendingDelete, setPendingDelete] = useState<LogMedia | null>(null);
@@ -101,6 +138,44 @@ export function KeepsakeFrames({
   >({});
   const deleteTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const previousQueueCount = useRef(queuedCount);
+  useEffect(() => {
+    if (!stagedKeepsakes || Platform.OS !== 'web') {
+      setStagedPreviewUrls({});
+      return;
+    }
+
+    let active = true;
+    const objectUrls: string[] = [];
+    void Promise.all(
+      stagedKeepsakes.map(async (item) => {
+        try {
+          const blob = await getLocalBlob(item.thumbLocalPath);
+          const uri = URL.createObjectURL(blob);
+          objectUrls.push(uri);
+          return [item.slot, uri] as const;
+        } catch (error) {
+          console.error('[keepsake] Could not preview the staged photo.', error);
+          return null;
+        }
+      }),
+    ).then((previews) => {
+      if (active) {
+        setStagedPreviewUrls(
+          Object.fromEntries(
+            previews.filter(
+              (preview): preview is readonly [MediaSlot, string] =>
+                preview !== null,
+            ),
+          ),
+        );
+      }
+    });
+
+    return () => {
+      active = false;
+      objectUrls.forEach((uri) => URL.revokeObjectURL(uri));
+    };
+  }, [stagedKeepsakes]);
   const mediaPaths = media.flatMap((item) =>
     item.thumb_url
       ? []
@@ -183,7 +258,11 @@ export function KeepsakeFrames({
         );
         return;
       }
-      queue.enqueue(userId, logId, processed);
+      if (stagedKeepsakes && onStageKeepsake) {
+        onStageKeepsake(processed);
+      } else {
+        queue.enqueue(userId, logId, processed);
+      }
       setPreparationFailures((current) => ({ ...current, [slot]: undefined }));
     } catch (error) {
       const message = keepsakeErrorMessage(error);
@@ -224,7 +303,11 @@ export function KeepsakeFrames({
         );
         return;
       }
-      queue.enqueue(userId, logId, processed);
+      if (stagedKeepsakes && onStageKeepsake) {
+        onStageKeepsake(processed);
+      } else {
+        queue.enqueue(userId, logId, processed);
+      }
       await releaseKeepsakeSelection(failure.selection);
       setPreparationFailures((current) => ({ ...current, [slot]: undefined }));
     } catch (error) {
@@ -257,6 +340,10 @@ export function KeepsakeFrames({
   }
 
   function scheduleDelete(item: FrameMedia) {
+    if (isDraftMedia(item)) {
+      onRemoveStagedKeepsake?.(item.slot);
+      return;
+    }
     if (!isStoredMedia(item)) return;
     setPendingDelete(item);
     deleteTimer.current = setTimeout(() => {
@@ -310,6 +397,7 @@ export function KeepsakeFrames({
   function openOrManage(slot: MediaSlot) {
     const match = orderedMedia.find((entry) => entry.media.slot === slot);
     if (match) {
+      if (isDraftMedia(match.media)) return;
       setViewerIndex(match.index);
     } else {
       void choose(slot);
@@ -635,7 +723,11 @@ export function KeepsakeFrames({
 }
 
 function isStoredMedia(item: FrameMedia): item is SignedLogMedia {
-  return 'id' in item && typeof item.id === 'string';
+  return 'id' in item && typeof item.id === 'string' && !isDraftMedia(item);
+}
+
+function isDraftMedia(item: FrameMedia): boolean {
+  return 'id' in item && typeof item.id === 'string' && item.id.startsWith('draft:');
 }
 
 function Print({

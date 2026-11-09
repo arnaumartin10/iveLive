@@ -1,0 +1,14 @@
+appId: com.ivelive.app
+---
+- launchApp:
+    clearState: false
+- tapOn:
+    text: Cloud
+- tapOn:
+    text: ${ARTIST_NAME}
+- assertVisible:
+    text: Back
+- tapOn:
+    text: Back
+- assertVisible:
+    text: Cloud

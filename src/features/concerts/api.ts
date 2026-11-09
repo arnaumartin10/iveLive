@@ -139,7 +139,23 @@ export async function fetchConcertById(
   if (error) throw new Error(error.message);
   const [signed] = await signConcertMedia([data]);
   if (!signed) throw new Error('Could not load keepsake details.');
-  return signed;
+  const { data: owner, error: ownerError } = await supabase
+    .from('profiles')
+    .select('username,display_name,avatar_url')
+    .eq('id', data.user_id)
+    .maybeSingle();
+  if (ownerError) {
+    console.error(
+      '[concert] Could not resolve the log owner for navigation.',
+      ownerError,
+    );
+  }
+  return {
+    ...signed,
+    owner_username: owner?.username ?? null,
+    owner_display_name: owner?.display_name ?? null,
+    owner_avatar_url: owner?.avatar_url ?? null,
+  };
 }
 
 async function signConcertMedia(

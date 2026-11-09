@@ -1,0 +1,11 @@
+appId: com.ivelive.app
+---
+- launchApp:
+    clearState: false
+- tapOn: Home
+- tapOn:
+    accessibilityLabel: Open the ${GENRE_LABEL} page
+- assertVisible:
+    text: Go back
+- tapOn:
+    text: Go back

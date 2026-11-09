@@ -291,6 +291,37 @@ describe('FeedCard', () => {
     expect(handlePressUser).toHaveBeenCalledWith('thom_fan');
   });
 
+  it('opens a friend log from the feed action', () => {
+    const handlePressLog = jest.fn();
+
+    renderWithClient(
+      <FeedCard
+        item={mockFeedItem}
+        onOpenComments={jest.fn()}
+        onPressLog={handlePressLog}
+      />,
+    );
+
+    fireEvent.press(screen.getByLabelText('Open Radiohead log'));
+    expect(handlePressLog).toHaveBeenCalledWith(mockFeedItem.id);
+  });
+
+  it('marks a friend log when the viewer went to the same artist on the date', () => {
+    const handlePressLog = jest.fn();
+
+    renderWithClient(
+      <FeedCard
+        item={mockFeedItem}
+        onOpenComments={jest.fn()}
+        onPressLog={handlePressLog}
+        youWentToo
+      />,
+    );
+
+    fireEvent.press(screen.getByLabelText('You went too. Open this log.'));
+    expect(handlePressLog).toHaveBeenCalledWith(mockFeedItem.id);
+  });
+
   it('uses a wide frame and the banner source for artist activity photos', () => {
     renderWithClient(
       <FeedCard

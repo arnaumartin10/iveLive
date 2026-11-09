@@ -5,6 +5,8 @@ import { useQuery } from '@tanstack/react-query';
 import * as ImageManipulator from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
 import { router } from 'expo-router';
+import { routes } from '../../navigation/routes';
+import { consumeReturnTo, returnToHref } from '../../navigation/returnTo';
 import {
   ArrowLeft,
   ArrowRight,
@@ -148,7 +150,11 @@ export default function OnboardingScreen() {
         display_name: displayName.trim(),
         avatar_url: avatarUrl,
       });
-      router.replace(openLog ? '/log' : '/(tabs)');
+      const returnTo = await consumeReturnTo();
+      router.replace(
+        returnToHref(returnTo) ??
+          (openLog ? routes.logWizard() : routes.home()),
+      );
     } catch (cause) {
       const message =
         cause instanceof Error ? cause.message : 'Could not save your profile.';

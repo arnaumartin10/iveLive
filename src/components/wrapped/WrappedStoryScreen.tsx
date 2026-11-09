@@ -8,7 +8,9 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import { Image } from 'expo-image';
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
+import { routes } from '../../navigation/routes';
+import { useSafeBack } from '../../navigation/useSafeBack';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   cancelAnimation,
@@ -725,6 +727,7 @@ function StoryProgressSegment({
 }
 
 export function WrappedStoryScreen() {
+  const safeBack = useSafeBack(routes.home());
   const { colors } = useTheme();
   const { width, height } = useWindowDimensions();
   const insets = useSafeAreaInsets();
@@ -832,9 +835,8 @@ export function WrappedStoryScreen() {
   ]);
 
   const close = useCallback(() => {
-    if (router.canGoBack()) router.back();
-    else router.replace('/(tabs)');
-  }, []);
+    safeBack();
+  }, [safeBack]);
 
   const advance = useCallback(() => {
     if (slideIndex >= slideCount - 1) {

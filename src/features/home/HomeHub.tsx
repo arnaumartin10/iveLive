@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import {
   Alert,
   Linking,
@@ -8,7 +8,8 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { router } from 'expo-router';
+import { router, useScrollToTop } from 'expo-router';
+import { routes } from '../../navigation/routes';
 import { MapPin, Ticket as TicketIcon } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useMyLogs } from '../concerts/hooks';
@@ -19,7 +20,11 @@ import { useArtistCard } from '../artists/ArtistCardProvider';
 import { useAddWishlistItem, useProfileOverview } from '../profile/hooks';
 import { useTheme } from '../../theme/ThemeProvider';
 import { hardShadow, spacing } from '../../theme/tokens';
-import { MACRO_GENRES } from '../genres/macroGenres';
+import {
+  MACRO_GENRES,
+  MACRO_GENRE_ORDER,
+  type MacroGenre,
+} from '../genres/macroGenres';
 import { VENUE_TYPE_ORDER, type VenueType } from '../venues/venueTypes';
 import { Avatar } from '../../components/ui/Avatar';
 import { Button } from '../../components/ui/Button';
@@ -84,6 +89,8 @@ function SectionSkeleton() {
 }
 
 export function HomeHub() {
+  const scrollRef = useRef<ScrollView>(null);
+  useScrollToTop(scrollRef);
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   const profileQuery = useMe();
@@ -91,8 +98,10 @@ export function HomeHub() {
   const overviewQuery = useProfileOverview(profile?.username ?? '');
   const profileOverview = overviewQuery.data;
   const logsQuery = useMyLogs();
-  const logs = logsQuery.data?.pages.flatMap((page) => page).slice(0, 3) ?? [];
+  const allLogs = logsQuery.data?.pages.flatMap((page) => page) ?? [];
+  const logs = allLogs.slice(0, 3);
   const friendsFeed = useFeed();
+  const featuredFriendPost = friendsFeed.data?.pages[0]?.[0];
   const { openArtistCard } = useArtistCard();
   const {
     location,
@@ -203,6 +212,7 @@ export function HomeHub() {
   return (
     <View style={[styles.root, { backgroundColor: colors.bg }]}>
       <ScrollView
+        ref={scrollRef}
         contentContainerStyle={[
           styles.content,
           {
@@ -249,7 +259,7 @@ export function HomeHub() {
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Open your profile"
-            onPress={() => router.push('/user/me')}
+            onPress={() => router.navigate(routes.user('me'))}
             style={styles.avatarButton}
           >
             <Avatar
@@ -259,20 +269,6 @@ export function HomeHub() {
             />
           </Pressable>
         </View>
-        <Pressable
-          accessibilityRole="link"
-          accessibilityLabel="Browse music genres"
-          onPress={() => router.push('/genres')}
-          style={[styles.browseGenresLink, { borderColor: colors.ink }]}
-        >
-          <Text variant="caption" weight="bold">
-            BROWSE GENRES
-          </Text>
-          <Text variant="caption" color="secondary">
-            Explore the sounds behind your live diary
-          </Text>
-        </Pressable>
-
         {!location.country ? (
           <Pressable
             accessibilityRole="button"
@@ -334,10 +330,9 @@ export function HomeHub() {
                   size="sm"
                   variant="secondary"
                   onPress={() =>
-                    router.push({
-                      pathname: '/user/[username]/wishlist',
-                      params: { username: profile?.username ?? '' },
-                    })
+                    router.navigate(
+                      routes.legacy.userWishlist(profile?.username ?? ''),
+                    )
                   }
                 />
               </View>
@@ -596,7 +591,7 @@ export function HomeHub() {
                 size="sm"
               />
               <View style={styles.ratingCopy}>
-                <Text variant="label" weight="bold" numberOfLines={1}>
+                <Text variant="label" weight="bold">
                   {artist.name}
                 </Text>
                 <Text variant="caption" color="secondary">
@@ -615,83 +610,41 @@ export function HomeHub() {
 
         <View style={styles.section}>
           <View style={styles.headingRow}>
-            <SectionHeading title="PICK UP WHERE YOU LEFT OFF" />
-            <Stamp label="LOG A SHOW" tilt={false} style={styles.logStamp} />
+            <SectionHeading title="FROM YOUR FRIENDS" />
+            <Pressable
+              accessibilityRole="link"
+              onPress={() => router.navigate(routes.legacy.friends())}
+              style={styles.seeAllButton}
+            >
+              <Text variant="caption" color="accent" weight="bold">
+                SEE ALL
+              </Text>
+            </Pressable>
           </View>
-          <Button
-            label="Log a show"
-            size="sm"
-            onPress={() => router.push('/log')}
-          />
-          {logsQuery.isLoading ? <SectionSkeleton /> : null}
-          {logsQuery.isError ? (
-            <SectionError message={logsQuery.error.message} />
-          ) : null}
-          {!logsQuery.isLoading && !logsQuery.isError && !logs.length ? (
-            <EmptyState
-              title="Your live history starts here"
-              description="Log a show and keep the night with you."
-              action={
-                <Button
-                  label="Log a show"
-                  onPress={() => router.push('/log')}
-                />
-              }
-            />
-          ) : null}
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.stubRack}
-          >
-            {logs.map((log) => (
-              <Pressable
-                key={log.id}
-                accessibilityRole="button"
-                accessibilityLabel={`Open ${log.artist?.name ?? 'show'} log`}
-                onPress={() => router.push(`/log/${log.id}`)}
-                style={styles.logStub}
-              >
-                <Stub id={log.id}>
-                  <Text variant="label" weight="bold" numberOfLines={1}>
-                    {log.artist?.name ?? 'Live show'}
-                  </Text>
-                  <Text variant="caption" color="secondary">
-                    {new Date(
-                      `${log.event_date}T12:00:00`,
-                    ).toLocaleDateString()}
-                  </Text>
-                  {log.rating ? (
-                    <Text variant="caption" color="accent">
-                      {'★'.repeat(Math.round(log.rating))}
-                    </Text>
-                  ) : null}
-                </Stub>
-              </Pressable>
-            ))}
-          </ScrollView>
           <View style={styles.friendsFeed}>
-            <SectionHeading title="From your friends" />
-            {friendsFeed.data?.pages[0]?.[0] ? (
+            {featuredFriendPost ? (
               <FeedCard
-                item={friendsFeed.data.pages[0][0]}
-                onOpenComments={() => router.push('/friends')}
+                item={featuredFriendPost}
+                youWentToo={allLogs.some(
+                  (log) =>
+                    log.artist_id === featuredFriendPost.artist_id &&
+                    log.event_date === featuredFriendPost.event_date,
+                )}
+                onPressLog={(logId) => router.navigate(routes.log(logId))}
+                onOpenComments={() =>
+                  router.navigate(routes.legacy.friends())
+                }
                 onPressArtist={(artistId) => {
-                  const item = friendsFeed.data?.pages[0]?.[0];
-                  if (!item) return;
                   void openArtistCard({
                     artistId,
-                    name: item.artist.name,
-                    imageUrl: item.artist.image_url_thumb ?? undefined,
-                    macroGenres: item.artist.macro_genres,
+                    name: featuredFriendPost.artist.name,
+                    imageUrl: featuredFriendPost.artist.image_url_thumb ?? undefined,
+                    macroGenres: featuredFriendPost.artist.macro_genres,
                     genres: [],
                   });
                 }}
                 onPressUser={(username) =>
-                  router.push({
-                    pathname: '/user/[username]',
-                    params: { username, tab: 'timeline' },
-                  })
+                  router.navigate(routes.user(username, { tab: 'timeline' }))
                 }
               />
             ) : friendsFeed.isLoading ? (
@@ -708,6 +661,88 @@ export function HomeHub() {
               </Text>
             )}
           </View>
+        </View>
+
+        <View style={styles.section}>
+          <View style={styles.headingRow}>
+            <SectionHeading title="PICK UP WHERE YOU LEFT OFF" />
+            <Stamp label="LOG A SHOW" tilt={false} style={styles.logStamp} />
+          </View>
+          <Button
+            label="Log a show"
+            size="sm"
+            onPress={() => router.navigate(routes.logWizard())}
+          />
+          {logsQuery.isLoading ? <SectionSkeleton /> : null}
+          {logsQuery.isError ? (
+            <SectionError message={logsQuery.error.message} />
+          ) : null}
+          {!logsQuery.isLoading && !logsQuery.isError && !logs.length ? (
+            <EmptyState
+              title="Your live history starts here"
+              description="Log a show and keep the night with you."
+              action={
+                <Button
+                  label="Log a show"
+                  onPress={() => router.navigate(routes.logWizard())}
+                />
+              }
+            />
+          ) : null}
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.stubRack}
+          >
+            {logs.map((log) => (
+              <Pressable
+                key={log.id}
+                accessibilityRole="button"
+                accessibilityLabel={`Open ${log.artist?.name ?? 'show'} log`}
+                onPress={() => router.navigate(routes.log(log.id))}
+                style={styles.logStub}
+              >
+                <Stub id={log.id}>
+                  <Text variant="label" weight="bold">
+                    {log.artist?.name ?? 'Live show'}
+                  </Text>
+                  <Text variant="caption" color="secondary">
+                    {new Date(
+                      `${log.event_date}T12:00:00`,
+                    ).toLocaleDateString()}
+                  </Text>
+                  {log.rating ? (
+                    <Text variant="caption" color="accent">
+                      {'★'.repeat(Math.round(log.rating))}
+                    </Text>
+                  ) : null}
+                </Stub>
+              </Pressable>
+            ))}
+          </ScrollView>
+        </View>
+        <View style={styles.section}>
+          <View style={styles.headingRow}>
+            <SectionHeading title="EXPLORE GENRES" />
+            <Pressable
+              accessibilityRole="link"
+              onPress={() => router.navigate(routes.genres())}
+              style={styles.seeAllButton}
+            >
+              <Text variant="caption" color="accent" weight="bold">
+                SEE ALL GENRES
+              </Text>
+            </Pressable>
+          </View>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.genreStrip}
+          >
+            {MACRO_GENRE_ORDER.map((slug) => (
+              <GenreLabel key={slug} genre={slug as MacroGenre} size="xs" />
+            ))}
+          </ScrollView>
         </View>
         <Text variant="mono" color="secondary" center>
           CHARTS: LAST.FM · TOUR DATES: TICKETMASTER
@@ -772,7 +807,6 @@ function PosterCard({
       <Text
         variant="caption"
         weight="bold"
-        numberOfLines={2}
         style={styles.posterName}
       >
         {artist.name}
@@ -830,10 +864,10 @@ function TourCard({
           size="md"
         />
         <View style={styles.tourCopy}>
-          <Text variant="title" weight="bold" numberOfLines={1}>
+          <Text variant="title" weight="bold">
             {artist.name}
           </Text>
-          <Text variant="caption" color="secondary" numberOfLines={1}>
+          <Text variant="caption" color="secondary">
             {[artist.nearest_venue, artist.nearest_city, artist.nearest_country]
               .filter(Boolean)
               .join(' · ') || 'Upcoming date'}
@@ -903,12 +937,6 @@ const styles = StyleSheet.create({
     gap: spacing.md,
   },
   mastheadCopy: { flex: 1, gap: spacing.xs },
-  browseGenresLink: {
-    borderWidth: 1.5,
-    gap: 2,
-    paddingHorizontal: 12,
-    paddingVertical: 9,
-  },
   avatarButton: {
     alignItems: 'center',
     height: 48,
@@ -924,7 +952,7 @@ const styles = StyleSheet.create({
     minHeight: 48,
     paddingHorizontal: spacing.md,
   },
-  flexOne: { flex: 1 },
+  flexOne: { flex: 1, minWidth: 0 },
   section: { gap: spacing.md },
   headingRow: {
     alignItems: 'center',
@@ -941,6 +969,17 @@ const styles = StyleSheet.create({
   },
   skeletonRack: { flexDirection: 'row', gap: spacing.sm },
   friendsFeed: { gap: spacing.sm },
+  genreStrip: {
+    alignItems: 'center',
+    gap: spacing.xs,
+    paddingVertical: spacing.xs,
+  },
+  seeAllButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 44,
+    paddingHorizontal: spacing.xs,
+  },
   artistRack: {
     gap: spacing.md,
     paddingHorizontal: spacing.xs,
@@ -995,7 +1034,7 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.xs,
   },
   rank: { fontSize: 28, minWidth: 38 },
-  ratingCopy: { flex: 1, gap: 2 },
+  ratingCopy: { flex: 1, gap: 2, minWidth: 0 },
   stars: { alignItems: 'flex-end' },
   stubRack: {
     alignItems: 'flex-start',

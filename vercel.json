@@ -2,5 +2,10 @@
   "buildCommand": "npm run build:web",
   "outputDirectory": "dist",
   "cleanUrls": true,
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "rewrites": [
+    {
+      "source": "/:path((?!assets(?:/|$)|_expo/static(?:/|$)|.*\\.[^/]+$).*)",
+      "destination": "/index.html"
+    }
+  ]
 }

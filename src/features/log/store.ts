@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import type { ArtistRow } from '../artists/types';
 import type { VenueType } from '../venues/venueTypes';
 import type { ConcertWithRelations } from '../concerts/types';
+import type { ProcessedKeepsake } from '../media/types';
+import type { ParsedSetlist } from '../setlist/parse';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -24,6 +26,8 @@ export interface LogDraftState {
   /** Edit mode */
   isEditing: boolean;
   editingConcertId: string | null;
+  pendingKeepsakes: ProcessedKeepsake[];
+  importedSetlist: ParsedSetlist | null;
 }
 
 export interface LogDraftActions {
@@ -34,6 +38,10 @@ export interface LogDraftActions {
   setVenueName: (venueName: string) => void;
   setRating: (rating: number | null) => void;
   setReview: (review: string) => void;
+  stageKeepsake: (keepsake: ProcessedKeepsake) => void;
+  removeStagedKeepsake: (slot: ProcessedKeepsake['slot']) => void;
+  setImportedSetlist: (setlist: ParsedSetlist | null) => void;
+  clearPendingKeepsakes: () => void;
   setStep: (step: WizardStep) => void;
   goNext: () => void;
   goBack: () => void;
@@ -58,6 +66,8 @@ function initialState(): LogDraftState {
     step: 1,
     isEditing: false,
     editingConcertId: null,
+    pendingKeepsakes: [],
+    importedSetlist: null,
   };
 }
 
@@ -92,6 +102,31 @@ export const useLogDraft = create<LogDraftStore>((set, get) => ({
 
   setReview(review) {
     set({ review });
+  },
+
+  stageKeepsake(keepsake) {
+    set((state) => ({
+      pendingKeepsakes: [
+        ...state.pendingKeepsakes.filter((item) => item.slot !== keepsake.slot),
+        keepsake,
+      ],
+    }));
+  },
+
+  removeStagedKeepsake(slot) {
+    set((state) => ({
+      pendingKeepsakes: state.pendingKeepsakes.filter(
+        (item) => item.slot !== slot,
+      ),
+    }));
+  },
+
+  setImportedSetlist(importedSetlist) {
+    set({ importedSetlist });
+  },
+
+  clearPendingKeepsakes() {
+    set({ pendingKeepsakes: [] });
   },
 
   setStep(step) {

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   Alert,
   Pressable,
@@ -7,7 +7,9 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { router, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams, useScrollToTop } from 'expo-router';
+import { routes } from '../../navigation/routes';
+import { useSafeBack } from '../../navigation/useSafeBack';
 import {
   ArrowLeft,
   ArrowRight,
@@ -150,6 +152,9 @@ const PROFILE_SECTIONS = [
 export function ProfileScreen({
   username: usernameProp,
 }: { username?: string } = {}) {
+  const safeBack = useSafeBack(routes.fallback.user());
+  const scrollRef = useRef<ScrollView>(null);
+  useScrollToTop(scrollRef);
   const {
     username: rawUsername,
     tab: rawTab,
@@ -285,7 +290,7 @@ export function ProfileScreen({
       setVenueType(item.venue_type ?? 'concert_hall_club');
       setVenueName(item.venue_name ?? item.event_name ?? '');
       setStep(2);
-      router.push({ pathname: '/log', params: { wishlistId: item.id } });
+      router.navigate(routes.logWizard({ wishlistId: item.id }));
     } catch (error) {
       Alert.alert(
         'Could not open log wizard',
@@ -330,6 +335,11 @@ export function ProfileScreen({
             label="Try again"
             onPress={() => void overviewQuery.refetch()}
           />
+          <Button
+            label="Go back"
+            variant="secondary"
+            onPress={safeBack}
+          />
         </View>
       </SafeAreaView>
     );
@@ -353,9 +363,9 @@ export function ProfileScreen({
       backdropColor={backdropColor}
       isOwn={isOwner}
       shareable={!profile.is_private}
-      onEdit={() => router.push('/(tabs)/settings')}
+      onEdit={() => router.navigate(routes.settings())}
       onChangeBanner={() => setBannerSheetVisible(true)}
-      onWrapped={() => router.push('/wrapped')}
+      onWrapped={() => router.navigate(routes.wrapped())}
       onShare={() => void shareProfile()}
       onCountPress={(section) =>
         router.setParams({
@@ -399,7 +409,7 @@ export function ProfileScreen({
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Go back"
-          onPress={() => router.back()}
+          onPress={safeBack}
           style={styles.navButton}
         >
           <ArrowLeft color={colors.ink} size={21} />
@@ -412,7 +422,7 @@ export function ProfileScreen({
             <Pressable
               accessibilityRole="button"
               accessibilityLabel={`Notifications. ${unreadQuery.data ?? 0} unread.`}
-              onPress={() => router.push('/notifications')}
+              onPress={() => router.navigate(routes.notifications())}
               style={styles.navButton}
             >
               <Bell color={colors.ink} size={20} />
@@ -432,7 +442,7 @@ export function ProfileScreen({
             <Pressable
               accessibilityRole="button"
               accessibilityLabel="Profile settings"
-              onPress={() => router.push('/(tabs)/settings')}
+              onPress={() => router.navigate(routes.settings())}
               style={styles.navButton}
             >
               <Settings color={colors.ink} size={21} />
@@ -489,6 +499,7 @@ export function ProfileScreen({
         </>
       ) : (
         <ScrollView
+          ref={scrollRef}
           refreshControl={
             <RefreshControl
               refreshing={overviewQuery.isRefetching}
@@ -608,10 +619,9 @@ export function ProfileScreen({
                     action={
                       data.wishlist?.total
                         ? () =>
-                            router.push({
-                              pathname: '/user/[username]/wishlist',
-                              params: { username: profile.username },
-                            } as never)
+                            router.navigate(
+                              routes.legacy.userWishlist(profile.username),
+                            )
                         : undefined
                     }
                     actionLabel="See all"
@@ -697,7 +707,13 @@ export function ProfileScreen({
                           key={log.id}
                           accessibilityRole="button"
                           accessibilityLabel={`Open ${log.artist_name} show`}
-                          onPress={() => router.push(`/log/${log.id}`)}
+                          onPress={() =>
+                            router.navigate(
+                              routes.log(log.id, {
+                                returnTo: routes.profilePath('timeline'),
+                              }),
+                            )
+                          }
                           style={[
                             styles.showCard,
                             { backgroundColor: colors.surface },
@@ -715,7 +731,6 @@ export function ProfileScreen({
                           <Text
                             variant="caption"
                             weight="bold"
-                            numberOfLines={1}
                           >
                             {log.artist_name}
                           </Text>
@@ -791,10 +806,7 @@ export function ProfileScreen({
                           accessibilityRole="button"
                           accessibilityLabel={`Open ${item.artist_name}`}
                           onPress={() =>
-                            router.push({
-                              pathname: '/artist/[id]',
-                              params: { id: item.artist_id },
-                            })
+                            router.navigate(routes.artist(item.artist_id))
                           }
                         >
                           <Avatar
@@ -810,7 +822,7 @@ export function ProfileScreen({
                           size="sm"
                           variant="secondary"
                           onPress={() =>
-                            router.push('/stats/wall-of-fame' as never)
+                            router.navigate(routes.wallOfFame())
                           }
                         />
                       ) : null}
@@ -1038,7 +1050,7 @@ const styles = StyleSheet.create({
     minHeight: 44,
     paddingHorizontal: spacing.xs,
   },
-  flexOne: { flex: 1 },
+  flexOne: { flex: 1, minWidth: 0 },
   pickRow: {
     alignItems: 'flex-start',
     gap: spacing.md,

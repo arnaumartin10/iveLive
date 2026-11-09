@@ -7,6 +7,7 @@ import * as WebBrowser from 'expo-web-browser';
 import type { EmailOtpType } from '@supabase/supabase-js';
 import { Platform } from 'react-native';
 import { supabase } from '../../lib/supabase';
+import { peekReturnTo, saveReturnTo } from '../../navigation/returnTo';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -23,25 +24,33 @@ export const AUTH_REDIRECT_URI = makeRedirectUri({
 export function getAuthRedirectUri(
   platform: typeof Platform.OS = Platform.OS,
   webOrigin?: string,
+  returnTo?: string | null,
 ) {
   if (platform === 'web') {
     const origin =
       webOrigin ??
       (typeof window !== 'undefined' ? window.location.origin : undefined);
     if (!origin) throw new Error('The web sign-in origin is unavailable.');
-    return new URL('/', origin).toString();
+    const url = new URL('/', origin);
+    if (returnTo) url.searchParams.set('returnTo', returnTo);
+    return url.toString();
   }
 
-  return AUTH_REDIRECT_URI;
+  return makeRedirectUri({
+    scheme: appScheme,
+    path: 'callback',
+    ...(returnTo ? { queryParams: { returnTo } } : {}),
+  });
 }
 
 const handledRedirects = new Set<string>();
 
 export async function sendEmailOtp(email: string) {
+  const returnTo = await peekReturnTo();
   const { error } = await supabase.auth.signInWithOtp({
     email,
     options: {
-      emailRedirectTo: getAuthRedirectUri(),
+      emailRedirectTo: getAuthRedirectUri(Platform.OS, undefined, returnTo),
       shouldCreateUser: true,
     },
   });
@@ -61,7 +70,11 @@ export async function verifyEmailOtp(email: string, token: string) {
 }
 
 export async function signInWithGoogle() {
-  const redirectTo = getAuthRedirectUri();
+  const redirectTo = getAuthRedirectUri(
+    Platform.OS,
+    undefined,
+    await peekReturnTo(),
+  );
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
@@ -128,6 +141,8 @@ export async function completeAuthRedirect(url: string) {
   try {
     const parsed = Linking.parse(url);
     const params = parsed.queryParams ?? {};
+    const returnTo = firstParam(params.returnTo);
+    if (returnTo) await saveReturnTo(returnTo);
     const code = firstParam(params.code);
 
     if (code) {

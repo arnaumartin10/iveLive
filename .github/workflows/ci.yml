@@ -23,4 +23,6 @@ jobs:
       - run: npm run typecheck
       - run: npx expo lint
       - run: npm test -- --runInBand
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e -- --grep "dev layout harness" --project=mobile-320-layout --project=mobile-360-layout --project=iphone-se-layout --project=iphone-13-layout --project=pixel-7-layout --project=mobile-430-layout
       - run: npm run build:web

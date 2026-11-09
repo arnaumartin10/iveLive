@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { Image } from 'expo-image';
 import { FlashList } from '@shopify/flash-list';
 import { router } from 'expo-router';
+import { routes } from '../../navigation/routes';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Star } from 'lucide-react-native';
 import { CollapsibleHeaderLayout } from '../../components/navigation/CollapsibleHeaderLayout';
@@ -80,10 +81,11 @@ export default function WallOfFameScreen() {
                 accessibilityRole="button"
                 accessibilityLabel={`${item.artist?.name ?? 'Show'}, five stars, ${item.event_date}`}
                 onPress={() =>
-                  router.push({
-                    pathname: '/log/[id]',
-                    params: { id: item.id },
-                  })
+                  router.navigate(
+                    routes.log(item.id, {
+                      returnTo: routes.profilePath('timeline'),
+                    }),
+                  )
                 }
                 style={[styles.tile, { backgroundColor: colors.surface }]}
               >

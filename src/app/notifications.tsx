@@ -7,6 +7,8 @@ import {
   View,
 } from 'react-native';
 import { router, Stack } from 'expo-router';
+import { routes } from '../navigation/routes';
+import { useSafeBack } from '../navigation/useSafeBack';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   ArrowLeft,
@@ -25,6 +27,7 @@ import { Avatar } from '../components/ui/Avatar';
 import { Text } from '../components/ui/Text';
 
 export default function NotificationsScreen() {
+  const safeBack = useSafeBack(routes.profile());
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   const { data: notifications, isLoading, refetch } = useNotifications();
@@ -70,14 +73,12 @@ export default function NotificationsScreen() {
   };
 
   const handlePressItem = (item: NotificationItem) => {
-    router.push({
-      pathname: '/user/[username]',
-      params: {
-        username: item.actor_username,
-        tab: item.log_id ? 'diary' : 'profile',
+    router.navigate(
+      routes.user(item.actor_username, {
+        tab: item.log_id ? 'timeline' : 'profile',
         ...(item.log_id ? { highlight: item.log_id } : {}),
-      },
-    });
+      }),
+    );
   };
 
   return (
@@ -98,7 +99,7 @@ export default function NotificationsScreen() {
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Go back"
-          onPress={() => router.back()}
+          onPress={safeBack}
           hitSlop={8}
           style={styles.backBtn}
         >

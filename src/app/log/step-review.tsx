@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, TextInput, View } from 'react-native';
-import { router, useLocalSearchParams, type Href } from 'expo-router';
+import { routes } from '../../navigation/routes';
+import { useSafeBack } from '../../navigation/useSafeBack';
 import { useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { Crown } from 'lucide-react-native';
@@ -17,25 +18,17 @@ import { Toast } from '../../components/ui/Toast';
 import { Text } from '../../components/ui/Text';
 import { WizardStepView } from '../../components/log/WizardStepView';
 import { SetlistImportPanel } from '../../features/setlist/SetlistImportPanel';
-import { saveConcertSetlist } from '../../features/setlist/api';
-import type { ParsedSetlist } from '../../features/setlist/parse';
-import { useCreateLog, useUpdateLog } from '../../features/concerts/hooks';
-import { fetchUserTerritoryStats } from '../../features/cloud/api';
-import {
-  cloudTerritoryBeforeLogKey,
-  cloudTerritoryStatsKey,
-} from '../../features/cloud/hooks';
+import { useUpdateLog } from '../../features/concerts/hooks';
 import { useLogDraft } from '../../features/log/store';
-import { useAuthStore } from '../../features/auth/store';
-import { markWishlistItemSeen } from '../../features/profile/api';
 import { useTheme } from '../../theme/ThemeProvider';
 import { fontFamily, radius, spacing, spring } from '../../theme/tokens';
 
 export default function StepReview() {
+  const safeBack = useSafeBack(routes.profile('timeline'), {
+    handleHardwareBack: false,
+  });
   const { colors } = useTheme();
-  const { wishlistId } = useLocalSearchParams<{ wishlistId?: string }>();
   const queryClient = useQueryClient();
-  const userId = useAuthStore((state) => state.user?.id ?? '');
   const artist = useLogDraft((state) => state.artist);
   const eventDate = useLogDraft((state) => state.eventDate);
   const venueType = useLogDraft((state) => state.venueType);
@@ -48,14 +41,12 @@ export default function StepReview() {
   const setRating = useLogDraft((state) => state.setRating);
   const setReview = useLogDraft((state) => state.setReview);
   const setStep = useLogDraft((state) => state.setStep);
-  const createLog = useCreateLog();
+  const importedSetlist = useLogDraft((state) => state.importedSetlist);
+  const setImportedSetlist = useLogDraft((state) => state.setImportedSetlist);
   const updateLog = useUpdateLog();
   const [toastVisible, setToastVisible] = useState(false);
   const [toastMessage, setToastMessage] = useState(
     'Could not save this show. Try again.',
-  );
-  const [importedSetlist, setImportedSetlist] = useState<ParsedSetlist | null>(
-    null,
   );
   const ratingScale = useSharedValue(1);
 
@@ -96,77 +87,11 @@ export default function StepReview() {
         void queryClient.invalidateQueries({ queryKey: ['profile-overview'] });
         void queryClient.invalidateQueries({ queryKey: ['profile-wishlist'] });
         reset();
-        router.back();
+        safeBack();
         return;
       }
 
-      let territorySnapshot = queryClient.getQueryData(
-        cloudTerritoryStatsKey(userId),
-      );
-      if (!territorySnapshot && userId) {
-        try {
-          territorySnapshot = await queryClient.fetchQuery({
-            queryKey: cloudTerritoryStatsKey(userId),
-            queryFn: () => fetchUserTerritoryStats(userId),
-            staleTime: 0,
-          });
-        } catch (error) {
-          console.warn(
-            '[cloud] Previous territory stats unavailable for discovery comparison.',
-            error,
-          );
-        }
-      }
-
-      const newConcert = await createLog.mutateAsync({
-        artist,
-        formData: {
-          artist_id: artist.id,
-          artist_name: artist.name,
-          spotify_artist_id: artist.spotify_id,
-          venue_type: venueType,
-          venue_name: venueName.trim(),
-          concert_date: format(eventDate, 'yyyy-MM-dd'),
-          notes: review.trim(),
-          rating,
-        },
-      });
-      if (territorySnapshot) {
-        queryClient.setQueryData(
-          cloudTerritoryBeforeLogKey(newConcert.id),
-          territorySnapshot,
-        );
-      }
-      let setlistSaveFailed = false;
-      if (importedSetlist) {
-        try {
-          await saveConcertSetlist(newConcert.id, userId, importedSetlist);
-        } catch {
-          setlistSaveFailed = true;
-        }
-      }
-      void queryClient.invalidateQueries({ queryKey: ['profile-overview'] });
-      void queryClient.invalidateQueries({ queryKey: ['profile-wishlist'] });
-      if (wishlistId) {
-        try {
-          await markWishlistItemSeen(wishlistId);
-          void queryClient.invalidateQueries({
-            queryKey: ['profile-overview'],
-          });
-          void queryClient.invalidateQueries({
-            queryKey: ['profile-wishlist'],
-          });
-        } catch {
-          Alert.alert(
-            'Show saved',
-            'The show was saved, but the wishlist status could not be updated.',
-          );
-        }
-      }
       setStep(6);
-      router.replace(
-        `/log/step-keepsakes?id=${encodeURIComponent(newConcert.id)}${setlistSaveFailed ? '&setlistSaveFailed=true' : ''}` as Href,
-      );
     } catch (error) {
       setToastMessage(
         error instanceof Error
@@ -177,14 +102,12 @@ export default function StepReview() {
     }
   }
 
-  const isPending = createLog.isPending || updateLog.isPending;
+  const isPending = updateLog.isPending;
   const continueLabel = isPending
-    ? isEditing
-      ? 'Saving changes...'
-      : 'Adding to archive...'
+    ? 'Saving changes...'
     : isEditing
       ? 'Save changes'
-      : 'Add to my archive';
+      : 'Continue to photos';
 
   return (
     <WizardStepView

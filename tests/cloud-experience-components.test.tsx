@@ -53,6 +53,7 @@ describe('Cloud experience components', () => {
         unexplored
         discoveries={['Artist A', 'Artist B']}
         onLogShow={onLogShow}
+        onOpenArtist={jest.fn()}
         onClose={onClose}
       />,
     );
@@ -77,6 +78,7 @@ describe('Cloud experience components', () => {
         artists={[{ id: 'a1', name: 'Artist One' }]}
         venues={[{ id: 'festival', label: 'Festival 3', venue: 'festival' }]}
         onLogShow={jest.fn()}
+        onOpenArtist={jest.fn()}
         onClose={jest.fn()}
       />,
     );

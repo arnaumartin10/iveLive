@@ -1,4 +1,5 @@
 import { Redirect, useLocalSearchParams } from 'expo-router';
+import { routes } from '../../../navigation/routes';
 
 export default function UserDiaryAlias() {
   const params = useLocalSearchParams<{
@@ -16,14 +17,7 @@ export default function UserDiaryAlias() {
     : (params.username ?? '');
   return (
     <Redirect
-      href={{
-        pathname: '/user/[username]',
-        params: {
-          ...params,
-          username,
-          tab: 'timeline',
-        },
-      }}
+      href={routes.diary(username, params)}
     />
   );
 }

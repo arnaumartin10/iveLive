@@ -11,6 +11,7 @@ import {
 import { Calendar, Edit3, MapPin, Share2, Trash2 } from 'lucide-react-native';
 import { format, parseISO } from 'date-fns';
 import { router } from 'expo-router';
+import { routes } from '../../navigation/routes';
 import { useTheme } from '../../theme/ThemeProvider';
 import { radius, spacing } from '../../theme/tokens';
 import { Avatar } from '../ui/Avatar';
@@ -147,10 +148,7 @@ export function LogDetailSheet({
                 genres: concert.artist?.genres ?? [],
               });
             } else {
-              router.push({
-                pathname: '/artist/[id]',
-                params: { id: concert.artist_id },
-              });
+              router.navigate(routes.artist(concert.artist_id));
             }
           }}
           style={styles.artistHeader}

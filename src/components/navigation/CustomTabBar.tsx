@@ -8,6 +8,7 @@ import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { router } from 'expo-router';
+import { routes } from '../../navigation/routes';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
   useAnimatedStyle,
@@ -147,7 +148,7 @@ function CenterPlusButton() {
       withTiming(2, { duration: 60 }),
       withSpring(0, spring.snappy),
     );
-    router.push('/log');
+    router.navigate(routes.logWizard());
   };
 
   return (
@@ -217,7 +218,21 @@ export function CustomTabBar({
         canPreventDefault: true,
       });
 
-      if (!isFocused && !event.defaultPrevented) {
+      if (event.defaultPrevented) return;
+
+      if (isFocused) {
+        const nestedState = route.state;
+        if (
+          nestedState?.type === 'stack' &&
+          nestedState.index > 0 &&
+          nestedState.key
+        ) {
+          navigation.dispatch({
+            type: 'POP_TO_TOP',
+            target: nestedState.key,
+          });
+        }
+      } else {
         navigation.navigate(route.name, route.params);
       }
     };

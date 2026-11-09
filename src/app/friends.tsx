@@ -1,5 +1,6 @@
 import { Redirect } from 'expo-router';
+import { routes } from '../navigation/routes';
 
 export default function LegacyFriendsRoute() {
-  return <Redirect href="/(tabs)/profile?tab=friends" />;
+  return <Redirect href={routes.profile('friends')} />;
 }

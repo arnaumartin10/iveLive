@@ -1,6 +1,7 @@
 import * as Crypto from 'expo-crypto';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { supabase } from '../../lib/supabase';
+import type { Json } from '../../lib/database.types';
 import type { Database } from '../../lib/database.types';
 import type {
   ArtistManagePermissions,
@@ -10,6 +11,7 @@ import type {
   ArtistSearchResponse,
   ArtistSearchResult,
   ArtistWithAlbums,
+  ArtistFriend,
   ArtistFriendLog,
   CreateManualArtistInput,
   SimilarArtistMatch,
@@ -279,42 +281,51 @@ export async function saveUserArtistImageOverride(input: {
 
 export async function fetchArtistFriends(
   artistId: string,
-  userId: string,
-): Promise<ArtistFriendLog[]> {
-  const { data: follows, error: followsError } = await supabase
-    .from('follows')
-    .select('followee_id')
-    .eq('follower_id', userId);
-  if (followsError) throw new Error(followsError.message);
-  const followeeIds = (follows ?? []).map((row) => row.followee_id);
-  if (followeeIds.length === 0) return [];
+): Promise<ArtistFriend[]> {
+  const { data, error } = await supabase.rpc('friends_who_saw_artist', {
+    p_artist: artistId,
+    p_limit: 50,
+  });
+  if (error) throw new Error(error.message);
+  return (data ?? []).map((friend) => ({
+    id: friend.id,
+    username: friend.username,
+    display_name: friend.display_name,
+    avatar_url: friend.avatar_url,
+    logs_count: friend.logs_count,
+    logs: parseArtistFriendLogs(friend.logs),
+  }));
+}
 
-  const { data: logs, error: logsError } = await supabase
-    .from('concert_logs')
-    .select('id,user_id,event_date,venue_type,venue_name,rating')
-    .eq('artist_id', artistId)
-    .in('user_id', followeeIds)
-    .order('event_date', { ascending: false })
-    .limit(40);
-  if (logsError) throw new Error(logsError.message);
-  const userIds = [...new Set((logs ?? []).map((log) => log.user_id))];
-  if (userIds.length === 0) return [];
-
-  const { data: profiles, error: profilesError } = await supabase
-    .from('profiles')
-    .select('id,username,display_name,avatar_url')
-    .in('id', userIds);
-  if (profilesError) throw new Error(profilesError.message);
-  const profileById = new Map(
-    (profiles ?? []).map((profile) => [profile.id, profile]),
-  );
-  const seen = new Set<string>();
-  return (logs ?? []).flatMap((log) => {
-    if (seen.has(log.user_id)) return [];
-    const profile = profileById.get(log.user_id);
-    if (!profile) return [];
-    seen.add(log.user_id);
-    return [{ ...log, ...profile }];
+function parseArtistFriendLogs(value: Json): ArtistFriendLog[] {
+  if (!Array.isArray(value)) {
+    throw new Error('Artist friends response included invalid log data.');
+  }
+  return value.map((entry) => {
+    if (typeof entry !== 'object' || entry === null || Array.isArray(entry)) {
+      throw new Error('Artist friends response included an invalid log.');
+    }
+    const row = entry as { [key: string]: Json | undefined };
+    if (
+      typeof row.id !== 'string' ||
+      typeof row.event_date !== 'string' ||
+      typeof row.venue_type !== 'string' ||
+      typeof row.media_count !== 'number' ||
+      typeof row.has_setlist !== 'boolean'
+    ) {
+      throw new Error('Artist friends response included an incomplete log.');
+    }
+    return {
+      id: row.id,
+      event_date: row.event_date,
+      venue_type: row.venue_type,
+      venue_name: typeof row.venue_name === 'string' ? row.venue_name : null,
+      rating: typeof row.rating === 'number' ? row.rating : null,
+      review: typeof row.review === 'string' ? row.review : null,
+      media_count: row.media_count,
+      has_setlist: row.has_setlist,
+      top_song: typeof row.top_song === 'string' ? row.top_song : null,
+    };
   });
 }
 

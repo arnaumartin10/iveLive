@@ -2,6 +2,8 @@ import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
+import { routes } from '../../navigation/routes';
+import { useSafeBack } from '../../navigation/useSafeBack';
 import { ArrowLeft } from 'lucide-react-native';
 import { CustomArtistForm } from '../../features/artists/CustomArtistForm';
 import { Text } from '../../components/ui/Text';
@@ -11,20 +13,15 @@ import type { ArtistRow, SimilarArtistMatch } from '../../features/artists/types
 
 export default function CreateCustomArtistScreen() {
   const { colors } = useTheme();
+  const safeBack = useSafeBack(routes.fallback.artist());
   const params = useLocalSearchParams<{ initialName?: string }>();
 
   function handleSuccess(artist: ArtistRow) {
-    router.replace({
-      pathname: '/artist/[id]' as any,
-      params: { id: artist.id },
-    });
+    router.replace(routes.artist(artist.id));
   }
 
   function handleSelectExisting(match: SimilarArtistMatch) {
-    router.replace({
-      pathname: '/artist/[id]' as any,
-      params: { id: match.id },
-    });
+    router.replace(routes.artist(match.id));
   }
 
   return (
@@ -35,7 +32,7 @@ export default function CreateCustomArtistScreen() {
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Go back"
-          onPress={() => router.back()}
+          onPress={safeBack}
           style={styles.backBtn}
         >
           <ArrowLeft color={colors.ink} size={20} />
@@ -56,7 +53,7 @@ export default function CreateCustomArtistScreen() {
       <CustomArtistForm
         initialName={params.initialName ?? ''}
         onSuccess={handleSuccess}
-        onCancel={() => router.back()}
+        onCancel={safeBack}
         onSelectExisting={handleSelectExisting}
       />
     </SafeAreaView>

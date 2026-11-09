@@ -1,11 +1,13 @@
-import React, { type ReactNode } from 'react';
+import React, { useRef, type ReactNode } from 'react';
 import {
   Pressable,
   RefreshControl,
+  ScrollView,
   StyleSheet,
   View,
 } from 'react-native';
-import { router } from 'expo-router';
+import { router, useScrollToTop } from 'expo-router';
+import { routes } from '../../navigation/routes';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
   Extrapolation,
@@ -39,6 +41,8 @@ export function CollapsibleHeaderLayout({
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   const scrollY = useSharedValue(0);
+  const scrollRef = useRef<ScrollView>(null);
+  useScrollToTop(scrollRef);
   const profileQuery = useMe();
 
   const scrollHandler = useAnimatedScrollHandler({
@@ -149,7 +153,7 @@ export function CollapsibleHeaderLayout({
               <Pressable
                 accessibilityRole="button"
                 accessibilityLabel="Open your profile"
-                onPress={() => router.push('/user/me')}
+                onPress={() => router.navigate(routes.user('me'))}
                 style={styles.avatarButton}
               >
                 <Avatar
@@ -165,6 +169,7 @@ export function CollapsibleHeaderLayout({
 
       {/* Main Content with Large Title */}
       <Animated.ScrollView
+        ref={scrollRef}
         onScroll={scrollHandler}
         scrollEventThrottle={16}
         contentContainerStyle={[

@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { hardShadow, radius } from '../../theme/tokens';
 import { Text } from '../ui/Text';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 
 interface TimelineAxisItemProps {
   dayNumber: string;
@@ -16,15 +17,26 @@ export function TimelineAxisItem({
   currentColor,
 }: TimelineAxisItemProps) {
   const { colors } = useTheme();
+  const compact = useBreakpoint() !== 'wide';
 
   return (
-    <View style={styles.axisContainer} pointerEvents="none">
-      <View style={[styles.axisLine, { backgroundColor: colors.line }]} />
+    <View
+      style={[styles.axisContainer, compact && styles.compactAxisContainer]}
+      pointerEvents="none"
+    >
+      <View
+        style={[
+          styles.axisLine,
+          compact && styles.compactAxisLine,
+          { backgroundColor: colors.line },
+        ]}
+      />
 
       {/* Date badge sitting on the axis */}
       <View
         style={[
           styles.badge,
+          compact && styles.compactBadge,
           {
             backgroundColor: colors.surface,
             borderColor: colors.ink,
@@ -52,6 +64,7 @@ export function TimelineAxisItem({
       <View
         style={[
           styles.connectorLine,
+          compact && styles.compactConnectorLine,
           { backgroundColor: currentColor },
         ]}
       />
@@ -65,6 +78,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     position: 'relative',
   },
+  compactAxisContainer: { width: 42 },
   axisLine: {
     position: 'absolute',
     top: 0,
@@ -72,6 +86,7 @@ const styles = StyleSheet.create({
     left: 26,
     width: 2.5,
   },
+  compactAxisLine: { left: 20 },
   badge: {
     position: 'absolute',
     top: 14,
@@ -83,6 +98,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 2,
+  },
+  compactBadge: {
+    left: 1,
+    width: 38,
   },
   dayText: {
     fontSize: 15,
@@ -101,4 +120,5 @@ const styles = StyleSheet.create({
     height: 2,
     zIndex: 1,
   },
+  compactConnectorLine: { left: 39, width: 3 },
 });

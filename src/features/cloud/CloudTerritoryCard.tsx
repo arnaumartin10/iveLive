@@ -1,5 +1,6 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
+import { routes } from '../../navigation/routes';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { Text } from '../../components/ui/Text';
@@ -34,6 +35,7 @@ type CloudTerritoryCardProps = {
   discoveriesUnavailable?: boolean;
   onClose: () => void;
   onLogShow: () => void;
+  onOpenArtist: (artist: TerritoryCardArtist) => void;
 };
 
 export function CloudTerritoryCard({
@@ -52,6 +54,7 @@ export function CloudTerritoryCard({
   discoveriesUnavailable = false,
   onClose,
   onLogShow,
+  onOpenArtist,
 }: CloudTerritoryCardProps) {
   const { colors } = useTheme();
   return (
@@ -78,7 +81,7 @@ export function CloudTerritoryCard({
         accessibilityLabel={`About ${label}`}
         hitSlop={8}
         onPress={() =>
-          router.push({ pathname: '/genre/[slug]', params: { slug: genre } })
+          router.navigate(routes.genre(genre))
         }
         style={styles.aboutGenre}
       >
@@ -166,7 +169,13 @@ export function CloudTerritoryCard({
           </View>
           <View style={styles.artistRow}>
             {artists.slice(0, 3).map((artist) => (
-              <View key={artist.id} style={styles.artist}>
+              <Pressable
+                key={artist.id}
+                accessibilityRole="button"
+                accessibilityLabel={`Open ${artist.name} artist card`}
+                onPress={() => onOpenArtist(artist)}
+                style={styles.artist}
+              >
                 <Sticker id={`territory-${artist.id}`} size={36}>
                   <View
                     style={[
@@ -182,7 +191,7 @@ export function CloudTerritoryCard({
                 <Text variant="caption" numberOfLines={1}>
                   {artist.name}
                 </Text>
-              </View>
+              </Pressable>
             ))}
           </View>
           <View style={styles.stampRow}>
@@ -222,7 +231,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   artistRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
-  artist: { alignItems: 'center', gap: 4, maxWidth: 95 },
+  artist: {
+    alignItems: 'center',
+    gap: 4,
+    maxWidth: 95,
+    minHeight: 44,
+  },
   artistInitial: { alignItems: 'center', flex: 1, justifyContent: 'center' },
   stampRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   discoveries: { gap: 4 },

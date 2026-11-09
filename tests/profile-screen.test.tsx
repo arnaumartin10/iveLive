@@ -240,7 +240,7 @@ describe('profile screen sections', () => {
     expect(screen.getByText('Radiohead')).toBeTruthy();
     expect(screen.getByText(/Date TBD/)).toBeTruthy();
     fireEvent.press(screen.getByLabelText('Profile settings'));
-    expect(router.push).toHaveBeenCalledWith('/(tabs)/settings');
+    expect(router.navigate).toHaveBeenCalledWith('/(tabs)/settings');
   });
 
   it('shows empty sections to the owner', () => {

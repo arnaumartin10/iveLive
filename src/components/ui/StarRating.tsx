@@ -24,6 +24,7 @@ export function StarRating({
   const { colors } = useTheme();
   const boundedValue = Math.max(0, Math.min(max, value));
   const lastRatingRef = useRef(boundedValue);
+  const ratingAtPressStart = useRef(boundedValue);
   const ratingRowRef = useRef<View | null>(null);
   const ratingRowLeft = useRef(0);
   const gap = 4;
@@ -113,8 +114,16 @@ export function StarRating({
         accessibilityLabel={`${index + 1} ${index === 0 ? 'star' : 'stars'}`}
         hitSlop={4}
         onPressIn={(event) => {
-          const isHalf = event.nativeEvent.locationX < size / 2;
+          ratingAtPressStart.current = lastRatingRef.current;
+          const locationX = event.nativeEvent.locationX;
+          const isHalf =
+            typeof locationX === 'number' && locationX < size / 2;
           commitRating(Math.min(max, index + (isHalf ? 0.5 : 1)));
+        }}
+        onPress={() => {
+          if (lastRatingRef.current === ratingAtPressStart.current) {
+            commitRating(index + 1);
+          }
         }}
         style={[styles.starButton, { height: size + 8, width: size }]}
       >

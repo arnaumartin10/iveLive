@@ -6,9 +6,11 @@ import React, {
   useState,
 } from 'react';
 import { Pressable, RefreshControl, StyleSheet, View } from 'react-native';
-import { router, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams, useScrollToTop } from 'expo-router';
+import { routes } from '../../navigation/routes';
 import { FlashList, type FlashListRef } from '@shopify/flash-list';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { CalendarDays, Filter, FilterX, Plus, X } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import { useAuthStore } from '../../features/auth/store';
@@ -71,6 +73,7 @@ export function TimelineScreen({
   canEdit?: boolean;
 }) {
   const { colors } = useTheme();
+  const compactLayout = useBreakpoint() !== 'wide';
   const insets = useSafeAreaInsets();
   const viewerId = useAuthStore((state) => state.user?.id ?? '');
   const userId = userIdProp ?? viewerId;
@@ -100,6 +103,7 @@ export function TimelineScreen({
   const [selectedConcert, setSelectedConcert] =
     useState<ConcertWithRelations | null>(null);
   const listRef = useRef<FlashListRef<TimelineItem>>(null);
+  useScrollToTop(listRef);
 
   // Undo delete state
   const [pendingDeleteIds, setPendingDeleteIds] = useState<Set<string>>(
@@ -209,7 +213,7 @@ export function TimelineScreen({
   function handleEditConcert(concert: ConcertWithRelations) {
     setSelectedConcert(null);
     startEdit(concert);
-    router.push('/log');
+    router.navigate(routes.logWizard());
   }
 
   function handleDeleteConcert(id: string) {
@@ -279,7 +283,12 @@ export function TimelineScreen({
       }
 
       return (
-        <View style={styles.logRowContainer}>
+        <View
+          style={[
+            styles.logRowContainer,
+            compactLayout && styles.compactLogRowContainer,
+          ]}
+        >
           <TimelineAxisItem
             dayNumber={item.dayNumber}
             shortWeekday={item.shortWeekday}
@@ -331,7 +340,7 @@ export function TimelineScreen({
         </View>
       );
     },
-    [canEdit, handleSwipeDelete, openArtistCard],
+    [canEdit, compactLayout, handleSwipeDelete, openArtistCard],
   );
 
   const getItemType = useCallback((item: TimelineItem) => item.type, []);
@@ -566,7 +575,7 @@ export function TimelineScreen({
             <Pressable
               accessibilityRole="button"
               accessibilityLabel="Open your profile"
-              onPress={() => router.push('/user/me')}
+              onPress={() => router.navigate(routes.user('me'))}
               style={styles.avatarBtn}
             >
               <Avatar
@@ -616,7 +625,7 @@ export function TimelineScreen({
                     <Button
                       label="Log a concert"
                       leftIcon={<Plus color={colors.accentInk} size={17} />}
-                      onPress={() => router.push('/log')}
+                      onPress={() => router.navigate(routes.logWizard())}
                     />
                   ) : undefined
                 }
@@ -793,6 +802,7 @@ const styles = StyleSheet.create({
     paddingRight: spacing.md,
     marginBottom: spacing.md,
   },
+  compactLogRowContainer: { paddingRight: spacing.sm },
   emptyContainer: {
     flex: 1,
     paddingTop: 60,

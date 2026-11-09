@@ -39,6 +39,7 @@ import {
 } from '@shopify/react-native-skia';
 import * as Haptics from 'expo-haptics';
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
+import { routes } from '../../navigation/routes';
 import {
   ArrowLeft,
   Calendar,
@@ -100,6 +101,7 @@ import { CloudComparePanel } from './CloudComparePanel';
 import { CloudTerritoryCard } from './CloudTerritoryCard';
 import { IdentitySheet } from '../identity';
 import { useMusicIdentity } from '../identity/hooks';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 import {
   SpatialHashGrid,
   buildCloudNodes,
@@ -1185,6 +1187,7 @@ export function CloudGraph({ userId: propUserId }: { userId?: string } = {}) {
   const signedInUserId = useAuthStore((state) => state.user?.id ?? '');
   const userId = propUserId ?? signedInUserId;
   const { width: windowWidth } = useWindowDimensions();
+  const compactToolbar = useBreakpoint() !== 'wide';
 
   // Primary data source: user_cloud_data RPC
   const cloudDataQuery = useUserCloudData(userId);
@@ -2818,7 +2821,7 @@ export function CloudGraph({ userId: propUserId }: { userId?: string } = {}) {
             OFFLINE · CACHED ATLAS
           </Text>
         ) : null}
-        <CloudEmptyWorld onStart={() => router.push('/log')} />
+        <CloudEmptyWorld onStart={() => router.navigate(routes.logWizard())} />
         {unclassifiedArtists.length > 0 ? (
           <Pressable
             accessibilityRole="button"
@@ -2898,6 +2901,7 @@ export function CloudGraph({ userId: propUserId }: { userId?: string } = {}) {
         legendVisible={showLegend}
         onFly={startTour}
         onToggleMenu={() => setShowMenu((visible) => !visible)}
+        onCloseMenu={() => setShowMenu(false)}
         onReplay={replayIntro}
         onToggleMotion={toggleMotion}
         onToggleSound={toggleSound}
@@ -2973,10 +2977,16 @@ export function CloudGraph({ userId: propUserId }: { userId?: string } = {}) {
       ) : null}
 
       {/* Top Toolbar: Search, Constellation toggle, Legend, Reset */}
-      <View style={styles.toolbar}>
+      <View
+        style={[
+          styles.toolbar,
+          compactToolbar && styles.compactToolbar,
+        ]}
+      >
         <View
           style={[
             styles.searchBox,
+            compactToolbar && styles.compactSearchBox,
             { backgroundColor: colors.surface, borderColor: colors.line },
           ]}
         >
@@ -2990,6 +3000,7 @@ export function CloudGraph({ userId: propUserId }: { userId?: string } = {}) {
             returnKeyType="search"
             style={[styles.searchInput, { color: colors.ink }]}
             accessibilityLabel="Search artists in your cloud"
+            accessibilityHint="Type an artist name, then submit to find it in your cloud"
           />
           {search ? (
             <Pressable
@@ -3525,7 +3536,13 @@ export function CloudGraph({ userId: propUserId }: { userId?: string } = {}) {
             setSelectedTerritorySlug(null);
             setSelectedHub(null);
           }}
-          onLogShow={() => router.push('/log')}
+          onLogShow={() => router.navigate(routes.logWizard())}
+          onOpenArtist={(artist) => {
+            void openArtistCard({
+              artistId: artist.id,
+              name: artist.name,
+            });
+          }}
         />
       ) : null}
 
@@ -3840,7 +3857,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 12,
   },
-  toolbar: { flexDirection: 'row', gap: 8, alignItems: 'center' },
+  toolbar: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
+    gap: 8,
+    minWidth: 0,
+    width: '100%',
+  },
+  compactToolbar: { flexWrap: 'wrap' },
   searchBox: {
     flex: 1,
     height: 44,
@@ -3849,9 +3874,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 9,
+    minWidth: 0,
     paddingHorizontal: 11,
   },
-  searchInput: { flex: 1, fontSize: 13, paddingVertical: 0 },
+  compactSearchBox: {
+    flexBasis: '100%',
+    flexGrow: 1,
+    flexShrink: 0,
+    width: '100%',
+  },
+  searchInput: { flex: 1, fontSize: 13, minWidth: 0, paddingVertical: 0 },
   iconButton: {
     width: 44,
     height: 44,

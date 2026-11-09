@@ -5,15 +5,16 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
 import { router } from 'expo-router';
 import {
+  ArrowLeft,
   Camera,
   LogOut,
   MapPin,
   ShieldCheck,
   Trash2,
 } from 'lucide-react-native';
-import { useQueryClient } from '@tanstack/react-query';
 import {
   ActivityIndicator,
+  Pressable,
   ScrollView,
   StyleSheet,
   Switch,
@@ -34,6 +35,9 @@ import {
   useUpdateProfile,
 } from '../../features/auth/hooks';
 import { useAuthStore } from '../../features/auth/store';
+import { clearSessionData } from '../../navigation/clearSessionData';
+import { routes } from '../../navigation/routes';
+import { useSafeBack } from '../../navigation/useSafeBack';
 import { LocationPreferenceSheet } from '../../features/home/LocationPreferenceSheet';
 import { useHomeLocation } from '../../features/home/useHomeLocation';
 import { supabase } from '../../lib/supabase';
@@ -57,10 +61,9 @@ const cloudQualityOptions = [
 
 export default function SettingsScreen() {
   const { colors, mode, setMode } = useTheme();
+  const safeBack = useSafeBack(routes.fallback.settings());
   const user = useAuthStore((state) => state.user);
-  const clearAuth = useAuthStore((state) => state.signOut);
   const profileQuery = useMe();
-  const queryClient = useQueryClient();
   const updateProfile = useUpdateProfile(user?.id ?? '');
   const updatePrivacy = useUpdatePrivacy(user?.id ?? '');
   const {
@@ -236,14 +239,22 @@ export default function SettingsScreen() {
 
   async function signOut() {
     setBusy(true);
-    const { error } = await supabase.auth.signOut();
-    setBusy(false);
-    if (error) {
-      setMessage(error.message);
-      return;
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        setMessage(error.message);
+        return;
+      }
+      try {
+        await clearSessionData();
+      } catch (cleanupError) {
+        console.error('[auth] Could not clear all local session data.', cleanupError);
+        setMessage('You are signed out, but some local media could not be cleared.');
+      }
+      router.replace(routes.welcome());
+    } finally {
+      setBusy(false);
     }
-    queryClient.clear();
-    router.replace('/(auth)/welcome');
   }
 
   async function deleteAccount() {
@@ -256,10 +267,14 @@ export default function SettingsScreen() {
       });
       if (error) throw error;
       await supabase.auth.signOut({ scope: 'local' });
-      clearAuth();
-      queryClient.clear();
+      try {
+        await clearSessionData();
+      } catch (cleanupError) {
+        console.error('[auth] Could not clear all local session data.', cleanupError);
+        setMessage('Your account was deleted, but some local media could not be cleared.');
+      }
       setDeleteVisible(false);
-      router.replace('/(auth)/welcome');
+      router.replace(routes.welcome());
     } catch (error) {
       setMessage(
         error instanceof Error
@@ -283,6 +298,14 @@ export default function SettingsScreen() {
     <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.bg }]}>
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.header}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Back to profile"
+            onPress={safeBack}
+            style={styles.backButton}
+          >
+            <ArrowLeft size={20} color={colors.ink} />
+          </Pressable>
           <Wordmark height={22} />
           <Text variant="display">Settings</Text>
           <Text variant="body" color="secondary">
@@ -576,6 +599,7 @@ const styles = StyleSheet.create({
   loading: { alignItems: 'center', flex: 1, justifyContent: 'center' },
   content: { gap: 18, padding: 24, paddingBottom: 40 },
   header: { gap: 6, marginBottom: 4 },
+  backButton: { alignSelf: 'flex-start', paddingVertical: 6 },
   profileCard: { gap: 14 },
   avatarRow: {
     alignItems: 'center',

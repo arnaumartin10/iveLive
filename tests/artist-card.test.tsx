@@ -127,7 +127,11 @@ jest.mock('expo-linear-gradient', () => {
 });
 
 jest.mock('expo-router', () => ({
-  router: { push: jest.fn(), back: jest.fn() },
+  router: {
+    push: jest.fn(),
+    navigate: jest.fn(),
+    back: jest.fn(),
+  },
 }));
 
 const albums: ArtistWithAlbums['albums'] = Array.from(
@@ -219,15 +223,24 @@ function configureQueries(artist: ArtistWithAlbums | null) {
   mockUseArtistFriends.mockReturnValue({
     data: [
       {
-        id: 'friend-log-1',
-        user_id: 'friend-id',
-        event_date: '2025-05-01',
-        venue_type: 'stadium',
-        venue_name: 'City Stadium',
-        rating: 5,
+        id: 'friend-id',
         username: 'friend',
         display_name: 'A Friend',
         avatar_url: null,
+        logs_count: 1,
+        logs: [
+          {
+            id: 'friend-log-1',
+            event_date: '2025-05-01',
+            venue_type: 'stadium',
+            venue_name: 'City Stadium',
+            rating: 5,
+            review: 'A brilliant show.',
+            media_count: 0,
+            has_setlist: false,
+            top_song: null,
+          },
+        ],
       },
     ],
     isLoading: false,
@@ -524,12 +537,25 @@ describe('ArtistCardContent', () => {
     expect(screen.queryByLabelText('Edit custom artist')).toBeNull();
   });
 
-  it('navigates to friend log when tapping their avatar in friends who have seen them', () => {
+  it('opens the friends log sheet and navigates to a selected friend log', () => {
     renderCard(fullArtist);
-    const friendBtn = screen.getByLabelText("A Friend's show on 2025-05-01");
-    expect(friendBtn).toBeTruthy();
-    fireEvent.press(friendBtn);
-    expect(router.push).toHaveBeenCalledWith('/log/friend-log-1');
+    fireEvent.press(
+      screen.getByLabelText(
+        "Open friends who have seen The Example Band",
+      ),
+    );
+    fireEvent.press(
+      screen.getByLabelText(
+        'Open The Example Band log from May 1, 2025',
+      ),
+    );
+    expect(router.navigate).toHaveBeenCalledWith({
+      pathname: '/log/[id]',
+      params: {
+        id: 'friend-log-1',
+        returnTo: '/artist/artist-1',
+      },
+    });
   });
 
   it('expands review text and opens the album preview sheet', () => {
@@ -601,6 +627,6 @@ describe('ArtistCardContent', () => {
     expect(mockResetLogDraft).toHaveBeenCalled();
     expect(mockSetLogArtist).toHaveBeenCalledWith(fullArtist);
     expect(mockGoToDateStep).toHaveBeenCalled();
-    expect(router.push).toHaveBeenCalledWith('/log');
+    expect(router.navigate).toHaveBeenCalledWith('/log');
   });
 });

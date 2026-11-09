@@ -7,6 +7,7 @@ import {
   View,
 } from 'react-native';
 import { router } from 'expo-router';
+import { routes } from '../../navigation/routes';
 import { useTheme } from '../../theme/ThemeProvider';
 import { radius, spacing } from '../../theme/tokens';
 import {
@@ -122,10 +123,7 @@ export function ProfileFriendsSection({
   );
 
   function openProfile(targetUsername: string) {
-    router.push({
-      pathname: '/user/[username]',
-      params: { username: targetUsername },
-    });
+    router.navigate(routes.user(targetUsername));
   }
 
   function renderUser({
@@ -434,15 +432,15 @@ export function ProfileFriendsSection({
                     <FeedCard
                       key={item.id}
                       item={item}
+                      onPressLog={(logId) =>
+                        router.navigate(routes.log(logId))
+                      }
                       onOpenComments={(feedItem: FeedItem) =>
                         setCommentsLogId(feedItem.id)
                       }
                       onPressUser={openProfile}
                       onPressArtist={(artistId) =>
-                        router.push({
-                          pathname: '/artist/[id]',
-                          params: { id: artistId },
-                        })
+                        router.navigate(routes.artist(artistId))
                       }
                     />
                   ))

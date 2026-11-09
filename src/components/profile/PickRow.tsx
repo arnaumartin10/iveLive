@@ -131,7 +131,7 @@ export function PickRow({
               </View>
             </View>
             <View style={styles.profileCardCopy}>
-              <Text variant="caption" weight="bold" numberOfLines={2}>
+              <Text variant="caption" weight="bold">
                 {pick?.name ?? 'Add an artist'}
               </Text>
               {pick ? (
@@ -209,8 +209,7 @@ export function PickRow({
             <Text
               variant="caption"
               weight="semibold"
-              numberOfLines={1}
-              style={[styles.name, { maxWidth: diameter + 14 }]}
+              style={[styles.name, { maxWidth: diameter + 28 }]}
             >
               {pick.name}
             </Text>

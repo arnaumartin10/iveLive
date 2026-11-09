@@ -1,6 +1,106 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../../lib/supabase';
 
+export type CatalogResolutionResult =
+  | { status: 'resolved'; artistId: string; cacheHit: boolean }
+  | { status: 'not_found'; attempts: number }
+  | { status: 'pending' };
+
+export class CatalogResolutionError extends Error {
+  constructor(
+    readonly code: string,
+    readonly retryAfterSeconds?: number,
+  ) {
+    super(code);
+  }
+}
+
+async function functionErrorCode(error: unknown): Promise<{
+  code: string;
+  retryAfterSeconds?: number;
+}> {
+  if (
+    typeof error === 'object' &&
+    error !== null &&
+    'context' in error &&
+    error.context instanceof Response
+  ) {
+    try {
+      const body: unknown = await error.context.clone().json();
+      if (typeof body === 'object' && body !== null && 'code' in body) {
+        const retryAfterSeconds =
+          'retryAfterSeconds' in body &&
+          typeof body.retryAfterSeconds === 'number'
+            ? body.retryAfterSeconds
+            : undefined;
+        return {
+          code: typeof body.code === 'string' ? body.code : 'CATALOG_FAILED',
+          ...(retryAfterSeconds === undefined ? {} : { retryAfterSeconds }),
+        };
+      }
+    } catch {
+      return { code: 'CATALOG_OFFLINE' };
+    }
+  }
+  return { code: 'CATALOG_OFFLINE' };
+}
+
+export async function resolveGenreArtist(input: {
+  queueId: string | null;
+  name: string;
+  genreSlug: string;
+}): Promise<CatalogResolutionResult> {
+  const { data, error } = await supabase.functions.invoke(
+    'resolve-artist',
+    { body: input },
+  );
+  if (error) {
+    const detail = await functionErrorCode(error);
+    throw new CatalogResolutionError(
+      detail.code,
+      detail.retryAfterSeconds,
+    );
+  }
+  if (!data || typeof data !== 'object' || !('status' in data)) {
+    throw new CatalogResolutionError('CATALOG_INVALID_RESPONSE');
+  }
+  if (
+    data.status === 'resolved' &&
+    'artistId' in data &&
+    typeof data.artistId === 'string'
+  ) {
+    return {
+      status: 'resolved',
+      artistId: data.artistId,
+      cacheHit: data.cacheHit === true,
+    };
+  }
+  if (data.status === 'not_found') {
+    return {
+      status: 'not_found',
+      attempts:
+        'attempts' in data && typeof data.attempts === 'number'
+          ? data.attempts
+          : 1,
+    };
+  }
+  if (data.status === 'pending') return { status: 'pending' };
+  throw new CatalogResolutionError('CATALOG_INVALID_RESPONSE');
+}
+
+export async function reportGenreArtist(queueId: string): Promise<void> {
+  const { data, error } = await supabase.functions.invoke('resolve-artist', {
+    body: { queueId, report: true },
+  });
+  if (error) {
+    const detail = await functionErrorCode(error);
+    throw new CatalogResolutionError(detail.code);
+  }
+  if (!data || typeof data !== 'object' || !('reported' in data) || data.reported !== true) {
+    throw new CatalogResolutionError('CATALOG_INVALID_RESPONSE');
+  }
+}
+
 export type GenreCatalogEntry = {
   slug: string;
   label: string;

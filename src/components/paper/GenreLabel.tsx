@@ -6,6 +6,7 @@ import {
   type ViewStyle,
 } from 'react-native';
 import { router } from 'expo-router';
+import { routes } from '../../navigation/routes';
 import { useTheme } from '../../theme/ThemeProvider';
 import {
   fontFamily,
@@ -232,7 +233,7 @@ function GenreLabelBody({
       hitSlop={10}
       onPress={(event) => {
         event?.stopPropagation?.();
-        router.push({ pathname: '/genre/[slug]', params: { slug: routeSlug } });
+        router.navigate(routes.genre(routeSlug));
       }}
       style={styles.interactive}
     >

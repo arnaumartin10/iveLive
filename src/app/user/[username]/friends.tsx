@@ -1,4 +1,5 @@
 import { Redirect, useLocalSearchParams } from 'expo-router';
+import { routes } from '../../../navigation/routes';
 
 export default function UserFriendsAlias() {
   const params = useLocalSearchParams<{ username: string }>();
@@ -7,10 +8,7 @@ export default function UserFriendsAlias() {
     : (params.username ?? '');
   return (
     <Redirect
-      href={{
-        pathname: '/user/[username]',
-        params: { ...params, username, tab: 'friends' },
-      }}
+      href={routes.user(username, { tab: 'friends' })}
     />
   );
 }

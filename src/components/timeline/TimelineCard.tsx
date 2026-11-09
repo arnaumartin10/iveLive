@@ -15,6 +15,7 @@ import { Pill } from '../ui/Pill';
 import { StarRating } from '../ui/StarRating';
 import { Text } from '../ui/Text';
 import type { ConcertWithRelations } from '../../features/concerts/types';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 
 interface TimelineCardProps {
   concert: ConcertWithRelations;
@@ -91,6 +92,7 @@ export function TimelineCard({
   onOpenComments,
 }: TimelineCardProps) {
   const { colors } = useTheme();
+  const compact = useBreakpoint() !== 'wide';
   const artistName = concert.artist?.name || 'Unknown Artist';
   const artistPhoto =
     concert.artist?.image_url_thumb || concert.artist?.image_url_large;
@@ -98,7 +100,7 @@ export function TimelineCard({
   return (
     <Stub id={`show-${concert.id}`} tilt={false} style={styles.stub}>
       <View style={styles.card}>
-      <View style={styles.cardHeader}>
+      <View style={[styles.cardHeader, compact && styles.compactCardHeader]}>
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={`Concert by ${artistName} at ${concert.venue_name || 'unknown venue'}`}
@@ -115,21 +117,25 @@ export function TimelineCard({
               },
             ]}
           >
-            <Avatar imageUrl={artistPhoto} name={artistName} size="md" />
+            <Avatar
+              imageUrl={artistPhoto}
+              name={artistName}
+              size={compact ? 'sm' : 'md'}
+            />
           </View>
 
           <View style={styles.artistInfo}>
             <Text
               variant="label"
               weight="bold"
-              numberOfLines={1}
+              numberOfLines={compact ? undefined : 1}
               style={styles.artistName}
             >
               {artistName}
             </Text>
 
             {/* Venue Pill & Venue Name */}
-            <View style={styles.venueRow}>
+            <View style={[styles.venueRow, compact && styles.compactVenueRow]}>
               {concert.venue_type ? (
                 <Pill venueType={concert.venue_type} style={styles.pill} />
               ) : null}
@@ -140,7 +146,7 @@ export function TimelineCard({
                   <Text
                     variant="caption"
                     color="secondary"
-                    numberOfLines={1}
+                    numberOfLines={compact ? undefined : 1}
                     style={styles.venueNameText}
                   >
                     {concert.venue_name}
@@ -151,16 +157,18 @@ export function TimelineCard({
           </View>
 
         </Pressable>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={`Open ${artistName} artist card`}
-          onPress={onOpenArtist}
-          style={styles.artistCardButton}
-        >
-          <Info size={18} color={colors.inkMuted} />
-        </Pressable>
+        {!compact ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={`Open ${artistName} artist card`}
+            onPress={onOpenArtist}
+            style={styles.artistCardButton}
+          >
+            <Info size={18} color={colors.inkMuted} />
+          </Pressable>
+        ) : null}
         {/* StarRating (read-only, compact) */}
-        {concert.rating ? (
+        {!compact && concert.rating ? (
           <View style={styles.ratingBadge}>
             <StarRating value={concert.rating} size={12} />
             <Text variant="caption" weight="bold" style={[styles.ratingNumber, { color: colors.ink }]}>
@@ -168,7 +176,7 @@ export function TimelineCard({
             </Text>
           </View>
         ) : null}
-        {concert.media && concert.media.length > 0 ? (
+        {!compact && concert.media && concert.media.length > 0 ? (
           <View style={styles.mediaStrip}>
             {concert.media.slice(0, 3).map((media) => (
               <Pressable
@@ -202,6 +210,73 @@ export function TimelineCard({
           </View>
         ) : null}
       </View>
+
+      {compact ? (
+        <View style={styles.compactDetailsRow}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={`Open ${artistName} artist card`}
+            onPress={onOpenArtist}
+            style={[styles.artistCardButton, styles.compactArtistCardButton]}
+          >
+            <Info size={18} color={colors.inkMuted} />
+          </Pressable>
+          {concert.rating ? (
+            <View style={styles.compactRatingRow}>
+              <StarRating value={concert.rating} size={12} />
+              <Text
+                variant="caption"
+                weight="bold"
+                style={[styles.ratingNumber, { color: colors.ink }]}
+              >
+                {concert.rating.toFixed(1)}
+              </Text>
+            </View>
+          ) : null}
+        </View>
+      ) : null}
+
+      {compact && concert.media && concert.media.length > 0 ? (
+        <View style={styles.compactMediaStrip}>
+          {concert.media.slice(0, 3).map((media) => (
+            <Pressable
+              key={media.id}
+              accessibilityRole="button"
+              accessibilityLabel={`View ${media.slot.replace('_', ' ')} keepsake`}
+              onPress={onPress}
+              style={[
+                styles.mediaThumb,
+                { borderColor: colors.ink, backgroundColor: colors.bgSunken },
+              ]}
+            >
+              {media.thumb_url ? (
+                <Image
+                  source={{ uri: media.poster_url ?? media.thumb_url }}
+                  style={StyleSheet.absoluteFill}
+                  contentFit="cover"
+                  cachePolicy="disk"
+                />
+              ) : null}
+              {media.kind === 'video' ? (
+                <View
+                  style={[
+                    styles.miniVideoStamp,
+                    { backgroundColor: colors.surface },
+                  ]}
+                >
+                  <Play size={10} color={colors.ink} fill={colors.ink} />
+                  <Text
+                    variant="mono"
+                    style={{ color: colors.ink, fontSize: 8 }}
+                  >
+                    {Math.floor((media.duration_ms ?? 0) / 1000)}s
+                  </Text>
+                </View>
+              ) : null}
+            </Pressable>
+          ))}
+        </View>
+      ) : null}
 
       {/* Collapsible notes block */}
       {concert.review ? (
@@ -263,6 +338,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: spacing.md,
     gap: spacing.sm,
+    minWidth: 0,
   },
   stub: { flex: 1 },
   cardHeaderPressable: {
@@ -271,8 +347,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: spacing.sm,
     minWidth: 0,
+    flexShrink: 1,
   },
+  compactCardHeader: { alignItems: 'flex-start' },
   artistCardButton: { alignItems: 'center', height: 38, justifyContent: 'center', width: 32 },
+  compactArtistCardButton: { height: 44, width: 44 },
+  compactDetailsRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: spacing.sm,
+    minHeight: 44,
+  },
   cardHeader: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -286,6 +371,7 @@ const styles = StyleSheet.create({
   artistInfo: {
     flex: 1,
     gap: 4,
+    minWidth: 0,
   },
   artistName: {
     fontSize: 16,
@@ -297,6 +383,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: 6,
   },
+  compactVenueRow: { alignItems: 'flex-start', flexDirection: 'column' },
   pill: {
     minHeight: 22,
     paddingHorizontal: 8,
@@ -316,6 +403,12 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     gap: 2,
   },
+  compactRatingRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 5,
+    minHeight: 24,
+  },
   ratingNumber: {
     fontSize: 11,
   },
@@ -330,6 +423,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 3,
     flexShrink: 0,
+  },
+  compactMediaStrip: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
   },
   mediaThumb: {
     height: 26,

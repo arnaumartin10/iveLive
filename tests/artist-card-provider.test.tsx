@@ -8,10 +8,10 @@ import {
   useArtistCard,
 } from '../src/features/artists/ArtistCardProvider';
 
-const mockRouterPush = jest.fn();
+const mockRouterNavigate = jest.fn();
 
 jest.mock('expo-router', () => ({
-  router: { push: (...args: unknown[]) => mockRouterPush(...args) },
+  router: { navigate: (...args: unknown[]) => mockRouterNavigate(...args) },
 }));
 
 function OpenArtistCardButton() {
@@ -42,7 +42,7 @@ describe('ArtistCardProvider', () => {
 
     fireEvent.press(screen.getByLabelText('Open artist'));
 
-    expect(mockRouterPush).toHaveBeenCalledWith({
+    expect(mockRouterNavigate).toHaveBeenCalledWith({
       pathname: '/artist/[id]',
       params: { id: 'artist-1' },
     });

@@ -1,5 +1,6 @@
 import { Redirect } from 'expo-router';
+import { routes } from '../navigation/routes';
 
 export default function LegacyTimelineRoute() {
-  return <Redirect href="/(tabs)/profile?tab=timeline" />;
+  return <Redirect href={routes.profile('timeline')} />;
 }

@@ -72,7 +72,14 @@ export function Sheet({
       {/* Ragged paper torn edge decoration */}
       <TornEdge edge="top" color={colors.surface} height={8} />
       {useScrollableContent ? (
-        children
+        <BottomSheetView style={styles.scrollableContent}>
+          {title ? (
+            <View style={[styles.heading, { borderBottomColor: colors.line }]}>
+              <Text variant="title">{title}</Text>
+            </View>
+          ) : null}
+          {children}
+        </BottomSheetView>
       ) : (
         <BottomSheetView style={styles.content}>
           {title ? (
@@ -89,6 +96,7 @@ export function Sheet({
 
 const styles = StyleSheet.create({
   content: { flex: 1, paddingBottom: spacing.xl },
+  scrollableContent: { flex: 1 },
   heading: {
     borderBottomWidth: 1.5,
     marginBottom: spacing.lg,

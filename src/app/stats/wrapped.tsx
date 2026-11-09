@@ -1,4 +1,5 @@
-import { router } from 'expo-router';
+import { routes } from '../../navigation/routes';
+import { useSafeBack } from '../../navigation/useSafeBack';
 import { ChevronLeft, Sparkles } from 'lucide-react-native';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { BarChart, Donut, Gauge } from '../../components/stats/Charts';
@@ -18,6 +19,7 @@ import { GenreLabel, Ticket } from '../../components/paper';
 
 export default function WrappedScreen() {
   const { colors } = useTheme();
+  const safeBack = useSafeBack(routes.stats());
   const overviewQuery = useStatsOverview();
   const genresQuery = useGenreStats();
   const diversityQuery = useDiversity();
@@ -26,7 +28,7 @@ export default function WrappedScreen() {
   return (
     <View style={[styles.root, { backgroundColor: colors.bg }]}>
       <Pressable
-        onPress={() => router.back()}
+        onPress={safeBack}
         accessibilityRole="button"
         accessibilityLabel="Go back"
         style={styles.backButton}
@@ -152,7 +154,7 @@ export default function WrappedScreen() {
             Loading your story…
           </Text>
         )}
-        <Button label="Back to Stats" onPress={() => router.back()} />
+        <Button label="Back to Stats" onPress={safeBack} />
       </ScrollView>
     </View>
   );

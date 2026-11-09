@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import {
+  ActivityIndicator,
   Linking,
   Pressable,
   ScrollView,
@@ -8,7 +9,10 @@ import {
   View,
 } from 'react-native';
 import { ArrowLeft, ExternalLink } from 'lucide-react-native';
-import { Redirect, router, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
+import { useQueryClient } from '@tanstack/react-query';
+import { routes } from '../../navigation/routes';
+import { useSafeBack } from '../../navigation/useSafeBack';
 import { BookmarkIcon } from '../../components/icons';
 import { ArtistPhoto } from '../../components/ui/ArtistPhoto';
 import { Button } from '../../components/ui/Button';
@@ -19,7 +23,11 @@ import { useArtistCard } from '../artists/ArtistCardProvider';
 import { useTheme } from '../../theme/ThemeProvider';
 import { fontFamily, hardShadow, spacing } from '../../theme/tokens';
 import { RAW } from '../../theme/palette';
-import { MACRO_GENRES, type MacroGenre } from './macroGenres';
+import {
+  MACRO_GENRES,
+  type MacroGenre,
+  type MacroGenreDefinition,
+} from './macroGenres';
 import {
   getGenreContent,
   calculateGenreProgress,
@@ -29,14 +37,21 @@ import {
   type GenreFilter,
   type GenreArtist,
 } from './content';
-import { useGenrePage } from './hooks';
-import { useGenreCatalog, type GenreCatalogEntry } from './catalog';
+import { genrePageKeys, useGenrePage } from './hooks';
+import {
+  CatalogResolutionError,
+  reportGenreArtist,
+  resolveGenreArtist,
+  useGenreCatalog,
+  type GenreCatalogEntry,
+} from './catalog';
 
 function isStubSlug(slug: string): boolean {
   return slug === 'other' || slug === 'unclassified';
 }
 
 export function GenrePageRoute() {
+  const safeBack = useSafeBack(routes.fallback.genre());
   const params = useLocalSearchParams<{ slug?: string; branch?: string }>();
   const rawSlug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
   const slug = rawSlug ?? '';
@@ -49,24 +64,37 @@ export function GenrePageRoute() {
   );
 
   if (!isMacro) {
-    if (isStubSlug(slug)) return <GenreStub />;
+    if (isStubSlug(slug)) return <GenreStub onBack={safeBack} />;
     if (catalogQuery.isLoading) return <GenreLoadingState />;
     if (catalogQuery.isError) {
       return (
         <GenreStub
           message="We could not load this genre right now. Check your connection and try again."
           onRetry={() => void catalogQuery.refetch()}
+          onBack={safeBack}
         />
       );
     }
     const catalogEntry =
       catalogQuery.data?.find((entry) => entry.slug === slug) ?? null;
-    if (!catalogEntry) return <Redirect href="/genre/other" />;
+    if (!catalogEntry) {
+      return (
+        <GenreStub
+          message="This genre could not be found."
+          onBack={safeBack}
+        />
+      );
+    }
     return (
-      <GenrePage slug={slug} branch={branch} catalogEntry={catalogEntry} />
+      <GenrePage
+        slug={slug}
+        branch={branch}
+        catalogEntry={catalogEntry}
+        onBack={safeBack}
+      />
     );
   }
-  return <GenrePage slug={slug} branch={branch} />;
+  return <GenrePage slug={slug} branch={branch} onBack={safeBack} />;
 }
 
 function GenreLoadingState() {
@@ -86,9 +114,11 @@ function GenreLoadingState() {
 function GenreStub({
   message = 'We could not place this one yet.',
   onRetry,
+  onBack,
 }: {
   message?: string;
   onRetry?: () => void;
+  onBack: () => void;
 }) {
   const { colors } = useTheme();
   return (
@@ -108,7 +138,7 @@ function GenreStub({
         <Button
           label="Back to music"
           variant="secondary"
-          onPress={() => router.back()}
+          onPress={onBack}
         />
       )}
     </View>
@@ -119,10 +149,12 @@ function GenrePage({
   slug,
   branch,
   catalogEntry,
+  onBack,
 }: {
   slug: string;
   branch?: string;
   catalogEntry?: GenreCatalogEntry | null;
+  onBack: () => void;
 }) {
   const content = getGenreContent(slug);
   const pageQuery = useGenrePage(
@@ -201,8 +233,8 @@ function GenrePage({
     catalogQuery.data?.filter((entry) => entry.parent_slug === slug) ?? [];
   const branchLabel = branch?.replaceAll('_', ' ').trim();
 
-  function openArtist(artist: Pick<GenreArtist, 'id'>) {
-    void openArtistCard(artist.id);
+  function openArtist(artistId: string) {
+    void openArtistCard(artistId);
   }
 
   return (
@@ -219,7 +251,7 @@ function GenrePage({
           accessibilityRole="button"
           accessibilityLabel="Go back"
           hitSlop={10}
-          onPress={() => router.back()}
+          onPress={onBack}
           style={styles.backButton}
         >
           <ArrowLeft size={18} color={colors.ink} />
@@ -379,12 +411,12 @@ function GenrePage({
             <View style={styles.pillars}>
               {pillars.slice(0, 3).map((artist, index) => (
                 <PillarCard
-                  key={artist.id}
+                  key={artist.catalogQueueId ?? artist.id ?? artist.name}
                   artist={artist}
                   index={index + 1}
-                  onOpen={
-                    artist.isArtistLinked ? () => openArtist(artist) : undefined
-                  }
+                  genreSlug={slug}
+                  pattern={pattern}
+                  onOpen={openArtist}
                 />
               ))}
             </View>
@@ -416,7 +448,7 @@ function GenrePage({
           <Button
             label="Log a show"
             size="sm"
-            onPress={() => router.push('/log')}
+            onPress={() => router.navigate(routes.logWizard())}
           />
         </View>
       )}
@@ -486,14 +518,12 @@ function GenrePage({
                 <View style={[styles.artistGrid, { gap }]}>
                   {filteredExamples.map((artist) => (
                     <ArtistTile
-                      key={artist.id}
+                      key={artist.catalogQueueId ?? artist.id ?? artist.name}
                       artist={artist}
                       width={tileWidth}
-                      onOpen={
-                        artist.isArtistLinked
-                          ? () => openArtist(artist)
-                          : undefined
-                      }
+                      genreSlug={slug}
+                      pattern={pattern}
+                      onOpen={openArtist}
                     />
                   ))}
                 </View>
@@ -667,13 +697,19 @@ function PillarSkeletons() {
 function PillarCard({
   artist,
   index,
+  genreSlug,
+  pattern,
   onOpen,
 }: {
   artist: GenreArtist;
   index: number;
-  onOpen?: () => void;
+  genreSlug: string;
+  pattern: MacroGenreDefinition;
+  onOpen: (artistId: string) => void;
 }) {
   const { colors } = useTheme();
+  const action = useCatalogArtistAction(artist, genreSlug, onOpen);
+  const linkedArtist = artist.id && artist.isArtistLinked;
   return (
     <View
       style={[
@@ -687,33 +723,286 @@ function PillarCard({
       >
         {index}
       </Text>
-      <ArtistPhoto
-        uri={artist.image_url_large ?? artist.image_url_thumb}
-        width={112}
-        height={112}
-        treatment="original"
-        onPress={onOpen}
-        allowPeekOriginal={false}
-      />
-      {onOpen ? (
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={`Open ${artist.name} artist card`}
-          hitSlop={8}
-          onPress={onOpen}
-        >
-          <Text variant="title" numberOfLines={2}>
-            {artist.name}
-          </Text>
-        </Pressable>
-      ) : (
+      <Pressable
+        accessibilityRole="button"
+        disabled={Boolean(linkedArtist)}
+        accessibilityLabel={
+          linkedArtist
+            ? `Open ${artist.name} artist card`
+            : `Find ${artist.name} artist page`
+        }
+        onPress={action.open}
+      >
+        {linkedArtist ? (
+          <ArtistPhoto
+            uri={artist.image_url_large ?? artist.image_url_thumb}
+            width={112}
+            height={112}
+            treatment="original"
+            onPress={() => artist.id && onOpen(artist.id)}
+            allowPeekOriginal={false}
+          />
+        ) : (
+          <PaperArtistSticker
+            name={artist.name}
+            width={112}
+            pattern={pattern}
+            resolving={action.status === 'resolving'}
+          />
+        )}
+      </Pressable>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={
+          linkedArtist
+            ? `Open ${artist.name} artist card`
+            : `Find ${artist.name} artist page`
+        }
+        onPress={action.open}
+      >
         <Text variant="title" numberOfLines={2}>
           {artist.name}
         </Text>
-      )}
+      </Pressable>
       <Text variant="caption" color="secondary">
         {artist.why}
       </Text>
+      <CatalogActionNotice
+        artist={artist}
+        status={action.status}
+        message={action.message}
+        onRetry={action.retry}
+        onReport={action.report}
+      />
+    </View>
+  );
+}
+
+type CatalogUiStatus =
+  | 'idle'
+  | 'resolving'
+  | 'cooldown'
+  | 'not_found'
+  | 'rate_limit'
+  | 'offline'
+  | 'pending'
+  | 'reported';
+
+function useCatalogArtistAction(
+  artist: GenreArtist,
+  genreSlug: string,
+  onOpen: (artistId: string) => void,
+) {
+  const queryClient = useQueryClient();
+  const [status, setStatus] = useState<CatalogUiStatus>('idle');
+  const [message, setMessage] = useState('');
+
+  async function resolve() {
+    if (!artist.catalogQueueId) {
+      router.push(routes.artistNew(artist.name));
+      return;
+    }
+    setStatus('resolving');
+    setMessage('');
+    try {
+      const result = await resolveGenreArtist({
+        queueId: artist.catalogQueueId,
+        name: artist.name,
+        genreSlug,
+      });
+      if (result.status === 'resolved') {
+        onOpen(result.artistId);
+        void queryClient.invalidateQueries({
+          queryKey: genrePageKeys.page(genreSlug),
+        });
+      } else if (result.status === 'not_found') {
+        setStatus('not_found');
+      } else {
+        setStatus('pending');
+        setMessage('The first lookup found no exact match. Try again later.');
+      }
+    } catch (error) {
+      if (error instanceof CatalogResolutionError) {
+        if (error.code === 'SPOTIFY_COOLDOWN') {
+          setStatus('cooldown');
+          setMessage(
+            'Spotify needs a short break, try again in a few minutes.',
+          );
+        } else if (error.code === 'CATALOG_RATE_LIMIT') {
+          setStatus('rate_limit');
+          setMessage('You have reached the artist lookup limit. Try again later.');
+        } else if (error.code === 'RESOLUTION_IN_PROGRESS') {
+          setStatus('pending');
+          setMessage('This artist is already being looked up.');
+        } else {
+          setStatus('offline');
+          setMessage('We could not reach the artist catalog. Check your connection and try again.');
+        }
+      } else {
+        setStatus('offline');
+        setMessage('We could not reach the artist catalog. Check your connection and try again.');
+      }
+    }
+  }
+
+  async function report() {
+    if (!artist.catalogQueueId) return;
+    try {
+      await reportGenreArtist(artist.catalogQueueId);
+      setStatus('reported');
+      setMessage('Thanks. We will review this artist listing.');
+    } catch {
+      setStatus('offline');
+      setMessage('Your report could not be sent. Check your connection and try again.');
+    }
+  }
+
+  function open() {
+    if (artist.id && artist.isArtistLinked) {
+      onOpen(artist.id);
+      return;
+    }
+    void resolve();
+  }
+
+  return {
+    status,
+    message,
+    open,
+    retry: () => void resolve(),
+    report: () => void report(),
+  };
+}
+
+function PaperArtistSticker({
+  name,
+  width,
+  pattern,
+  resolving,
+  bordered = true,
+}: {
+  name: string;
+  width: number;
+  pattern: MacroGenreDefinition;
+  resolving: boolean;
+  bordered?: boolean;
+}) {
+  const { colors } = useTheme();
+  const initials = name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((word) => word[0])
+    .join('')
+    .toUpperCase();
+  return (
+    <View
+      style={[
+        styles.paperArtwork,
+        {
+          width,
+          height: width,
+          borderColor: colors.ink,
+          borderWidth: bordered ? 1.5 : 0,
+        },
+      ]}
+    >
+      <PatternFill
+        pattern={pattern.pattern}
+        colorA={RAW[pattern.inkA]}
+        colorB={RAW[pattern.inkB]}
+        width={width - 3}
+        height={width - 3}
+      />
+      <View
+        style={[
+          styles.artistSticker,
+          {
+            backgroundColor: colors.surface,
+            borderColor: colors.ink,
+            width: Math.max(42, width * 0.54),
+            height: Math.max(42, width * 0.54),
+          },
+        ]}
+      >
+        {resolving ? (
+          <ActivityIndicator
+            accessibilityLabel="Resolving artist"
+            color={colors.ink}
+          />
+        ) : (
+          <Text
+            variant="title"
+            weight="bold"
+            style={{ color: colors.ink, fontFamily: fontFamily.display }}
+          >
+            {initials}
+          </Text>
+        )}
+      </View>
+    </View>
+  );
+}
+
+function CatalogActionNotice({
+  artist,
+  status,
+  message,
+  onRetry,
+  onReport,
+}: {
+  artist: GenreArtist;
+  status: CatalogUiStatus;
+  message: string;
+  onRetry: () => void;
+  onReport: () => void;
+}) {
+  const { colors } = useTheme();
+  if (status === 'idle' || status === 'resolving') return null;
+  return (
+    <View style={[styles.catalogNotice, { borderColor: colors.line }]}>
+      <Text variant="caption" color={status === 'offline' ? 'danger' : 'secondary'}>
+        {status === 'not_found'
+          ? 'We could not find this artist on Spotify.'
+          : status === 'reported'
+            ? message
+            : message}
+      </Text>
+      {status === 'cooldown' || status === 'offline' || status === 'pending' ? (
+        <Pressable
+          accessibilityRole="button"
+          onPress={onRetry}
+          style={styles.catalogAction}
+        >
+          <Text variant="caption" weight="bold" color="accent">
+            Try again
+          </Text>
+        </Pressable>
+      ) : null}
+      {status === 'not_found' ? (
+        <>
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => router.push(routes.artistNew(artist.name))}
+            style={styles.catalogAction}
+          >
+            <Text variant="caption" weight="bold" color="accent">
+              Add manually
+            </Text>
+          </Pressable>
+          {artist.catalogQueueId ? (
+            <Pressable
+              accessibilityRole="button"
+              onPress={onReport}
+              style={styles.catalogAction}
+            >
+              <Text variant="caption" color="secondary">
+                Report this listing
+              </Text>
+            </Pressable>
+          ) : null}
+        </>
+      ) : null}
     </View>
   );
 }
@@ -829,79 +1118,112 @@ function ArtistGridSkeleton({
 function ArtistTile({
   artist,
   width,
+  genreSlug,
+  pattern,
   onOpen,
 }: {
   artist: GenreArtist;
   width: number;
-  onOpen?: () => void;
+  genreSlug: string;
+  pattern: MacroGenreDefinition;
+  onOpen: (artistId: string) => void;
 }) {
   const { colors } = useTheme();
+  const action = useCatalogArtistAction(artist, genreSlug, onOpen);
+  const linkedArtist = Boolean(artist.id && artist.isArtistLinked);
   return (
     <View style={[styles.tile, { width }]}>
-      <View style={[styles.photoFrame, { borderColor: colors.ink }]}>
-        <ArtistPhoto
-          uri={artist.image_url_thumb ?? artist.image_url_large}
-          width={width - 3}
-          height={width - 3}
-          borderRadius={0}
-          treatment="original"
-          onPress={onOpen}
-          allowPeekOriginal={false}
-          style={styles.tilePhoto}
-        />
-        {artist.seen_count > 0 ? (
-          <View
-            style={[
-              styles.seenStamp,
-              { backgroundColor: colors.bg, borderColor: colors.ink },
-            ]}
-          >
-            <Text variant="overline" style={styles.seenText}>
-              SEEN {artist.seen_count > 1 ? `×${artist.seen_count}` : ''}
-            </Text>
-          </View>
-        ) : null}
-        {artist.in_wishlist ? (
-          <View
-            accessibilityLabel="Saved in wishlist"
-            style={[
-              styles.savedMark,
-              { backgroundColor: colors.bg, borderColor: colors.ink },
-            ]}
-          >
-            <BookmarkIcon size={14} color={colors.ink} />
-          </View>
-        ) : null}
-      </View>
-      {onOpen ? (
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={`Open ${artist.name} artist card`}
-          hitSlop={6}
-          onPress={onOpen}
-          style={styles.tileName}
+      <Pressable
+        accessibilityRole="button"
+        disabled={linkedArtist}
+        accessibilityLabel={
+          linkedArtist
+            ? `Open ${artist.name} artist card`
+            : `Find ${artist.name} artist page`
+        }
+        onPress={action.open}
+      >
+        <View
+          style={[
+            styles.photoFrame,
+            {
+              borderColor: colors.ink,
+              width,
+              height: width,
+            },
+          ]}
         >
-          <Text
-            variant="caption"
-            weight="bold"
-            numberOfLines={2}
-            style={styles.tileNameText}
-          >
-            {artist.name}
-          </Text>
-        </Pressable>
-      ) : (
-        <View style={styles.tileName}>
-          <Text
-            variant="caption"
-            weight="bold"
-            numberOfLines={2}
-            style={styles.tileNameText}
-          >
-            {artist.name}
-          </Text>
+          {linkedArtist ? (
+            <ArtistPhoto
+              uri={artist.image_url_thumb ?? artist.image_url_large}
+              width={width - 3}
+              height={width - 3}
+              borderRadius={0}
+              treatment="original"
+              onPress={() => artist.id && onOpen(artist.id)}
+              allowPeekOriginal={false}
+              style={styles.tilePhoto}
+            />
+          ) : (
+            <PaperArtistSticker
+              name={artist.name}
+              width={width - 3}
+              pattern={pattern}
+              resolving={action.status === 'resolving'}
+              bordered={false}
+            />
+          )}
+          {artist.seen_count > 0 ? (
+            <View
+              style={[
+                styles.seenStamp,
+                { backgroundColor: colors.bg, borderColor: colors.ink },
+              ]}
+            >
+              <Text variant="overline" style={styles.seenText}>
+                SEEN {artist.seen_count > 1 ? `×${artist.seen_count}` : ''}
+              </Text>
+            </View>
+          ) : null}
+          {artist.in_wishlist ? (
+            <View
+              accessibilityLabel="Saved in wishlist"
+              style={[
+                styles.savedMark,
+                { backgroundColor: colors.bg, borderColor: colors.ink },
+              ]}
+            >
+              <BookmarkIcon size={14} color={colors.ink} />
+            </View>
+          ) : null}
         </View>
-      )}
+      </Pressable>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={
+          linkedArtist
+            ? `Open ${artist.name} artist card`
+            : `Find ${artist.name} artist page`
+        }
+        onPress={action.open}
+        style={styles.tileName}
+      >
+          <Text
+            variant="caption"
+            weight="bold"
+            numberOfLines={2}
+            style={styles.tileNameText}
+          >
+            {artist.name}
+          </Text>
+      </Pressable>
+      <CatalogActionNotice
+        artist={artist}
+        status={action.status}
+        message={action.message}
+        onRetry={action.retry}
+        onReport={action.report}
+      />
       {artist.note ? (
         <Text variant="caption" color="secondary" numberOfLines={2}>
           {artist.note}
@@ -1036,6 +1358,12 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     ...hardShadow.sm,
   },
+  paperArtwork: {
+    alignItems: 'center',
+    borderWidth: 1.5,
+    justifyContent: 'center',
+    overflow: 'hidden',
+  },
   tilePhoto: { borderWidth: 0 },
   seenStamp: {
     bottom: 6,
@@ -1073,6 +1401,17 @@ const styles = StyleSheet.create({
   },
   editorialFooter: { marginTop: 8 },
   notice: { borderWidth: 1, gap: 8, padding: 14 },
+  artistSticker: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    borderWidth: 1.5,
+    justifyContent: 'center',
+    position: 'absolute',
+    top: '23%',
+    transform: [{ rotate: '-4deg' }],
+  },
+  catalogNotice: { borderTopWidth: 1, gap: 4, paddingTop: 6 },
+  catalogAction: { alignSelf: 'flex-start', justifyContent: 'center', minHeight: 36 },
   retry: { alignSelf: 'flex-start', minHeight: 38, justifyContent: 'center' },
   centerState: {
     alignItems: 'center',

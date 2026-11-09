@@ -26,7 +26,7 @@ describe('GenreLabel navigation', () => {
     );
 
     fireEvent.press(screen.getByLabelText('Open the Rock page'));
-    expect(jest.mocked(router.push)).toHaveBeenCalledWith({
+    expect(jest.mocked(router.navigate)).toHaveBeenCalledWith({
       pathname: '/genre/[slug]',
       params: { slug: 'rock' },
     });
@@ -62,7 +62,7 @@ describe('GenreLabel navigation', () => {
     );
 
     fireEvent.press(screen.getByLabelText('Open the Post-punk page'));
-    expect(jest.mocked(router.push)).toHaveBeenCalledWith({
+    expect(jest.mocked(router.navigate)).toHaveBeenCalledWith({
       pathname: '/genre/[slug]',
       params: { slug: 'post-punk' },
     });

@@ -68,6 +68,7 @@
     "zustand": "^5.0.15"
   },
   "devDependencies": {
+    "@playwright/test": "^1.65.0",
     "@testing-library/jest-native": "^5.4.3",
     "@testing-library/react-native": "^13.3.3",
     "@types/d3-force": "^3.0.10",
@@ -96,9 +97,10 @@
     "web": "expo start --web",
     "build:web": "node node_modules/@shopify/react-native-skia/scripts/setup-canvaskit.js public/_expo/static/js/web && expo export --platform web",
     "assets:generate": "tsx scripts/generate-brand-assets.ts",
-    "lint": "expo lint",
+    "lint": "expo lint src tests playwright.config.ts",
     "typecheck": "tsc --noEmit",
     "test": "jest --runInBand",
+    "test:e2e": "playwright test",
     "test:watch": "jest --watch",
     "format": "prettier --write .",
     "format:check": "prettier --check .",

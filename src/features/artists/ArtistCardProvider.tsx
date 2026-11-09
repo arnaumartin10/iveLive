@@ -7,6 +7,7 @@ import {
   type PropsWithChildren,
 } from 'react';
 import { router } from 'expo-router';
+import { routes } from '../../navigation/routes';
 import { useQueryClient } from '@tanstack/react-query';
 import { Image } from 'expo-image';
 import { ensureArtist } from './api';
@@ -48,7 +49,7 @@ export function ArtistCardProvider({ children }: PropsWithChildren) {
           const imageUrl = cached?.image_url_large ?? cached?.image_url_thumb;
           if (imageUrl)
             void Image.prefetch(imageUrl, { cachePolicy: 'memory-disk' });
-          router.push({ pathname: '/artist/[id]', params: { id: input } });
+          router.navigate(routes.artist(input));
           return;
         }
 
@@ -65,10 +66,7 @@ export function ArtistCardProvider({ children }: PropsWithChildren) {
             null;
           if (imageUrl)
             void Image.prefetch(imageUrl, { cachePolicy: 'memory-disk' });
-          router.push({
-            pathname: '/artist/[id]',
-            params: { id: existingId },
-          });
+          router.navigate(routes.artist(existingId));
           return;
         }
 
@@ -80,10 +78,7 @@ export function ArtistCardProvider({ children }: PropsWithChildren) {
           artist.image_url_thumb;
         if (imageUrl)
           void Image.prefetch(imageUrl, { cachePolicy: 'memory-disk' });
-        router.push({
-          pathname: '/artist/[id]',
-          params: { id: artist.id },
-        });
+        router.navigate(routes.artist(artist.id));
       } catch (error) {
         Alert.alert(
           'Could not open artist',

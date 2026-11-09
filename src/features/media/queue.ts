@@ -16,6 +16,7 @@ type QueueState = {
   retry: (id: string) => void;
   recoverInterrupted: () => void;
   setOffline: (offline: boolean) => void;
+  clear: () => Promise<void>;
 };
 
 export const useMediaQueueStore = create<QueueState>()(
@@ -104,6 +105,23 @@ export const useMediaQueueStore = create<QueueState>()(
         void runQueue();
       },
       setOffline: (isOffline) => set({ isOffline }),
+      clear: async () => {
+        const items = get().items;
+        for (const item of items) {
+          controllers.get(item.id)?.abort();
+          controllers.delete(item.id);
+        }
+        set({ items: [], isOffline: false });
+        await Promise.all(
+          items.map((item) =>
+            deleteLocalFiles([
+              item.localPath,
+              item.thumbLocalPath,
+              item.posterLocalPath,
+            ]),
+          ),
+        );
+      },
     }),
     {
       name: 'ivelive-keepsake-upload-queue',

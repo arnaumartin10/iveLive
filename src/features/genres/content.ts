@@ -394,7 +394,9 @@ export function calculateGenreProgress(
 }
 
 export type GenreArtist = {
-  id: string;
+  id: string | null;
+  catalogQueueId?: string | null;
+  catalogStatus?: string | null;
   name: string;
   image_url_thumb: string | null;
   image_url_large: string | null;
@@ -502,7 +504,7 @@ function mergeEditorialArtists(
           why: editorialArtist.why,
           note: editorialArtist.note ?? seeded.note,
           isEditorialFallback: false,
-          isArtistLinked: true,
+          isArtistLinked: seeded.id !== null,
         }
       : editorialArtist;
   });
@@ -588,8 +590,12 @@ function parseGenreArtist(value: unknown): GenreArtist {
   if (typeof artist.in_wishlist !== 'boolean') {
     throw new Error('Genre page artist wishlist flag was invalid.');
   }
+  const id =
+    artist.id === null
+      ? null
+      : requiredString(artist.id, 'artist.id');
   return {
-    id: requiredString(artist.id, 'artist.id'),
+    id,
     name: requiredString(artist.name, 'artist.name'),
     image_url_thumb: nullableString(
       artist.image_url_thumb,
@@ -611,7 +617,15 @@ function parseGenreArtist(value: unknown): GenreArtist {
         : nullableString(artist.note, 'artist.note'),
     seen_count: finiteNumber(artist.seen_count, 'artist.seen_count'),
     in_wishlist: artist.in_wishlist,
-    isArtistLinked: true,
+    isArtistLinked: id !== null,
+    catalogQueueId:
+      artist.catalog_queue_id === undefined
+        ? null
+        : nullableString(artist.catalog_queue_id, 'artist.catalog_queue_id'),
+    catalogStatus:
+      artist.catalog_status === undefined
+        ? null
+        : nullableString(artist.catalog_status, 'artist.catalog_status'),
   };
 }
 

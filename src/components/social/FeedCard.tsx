@@ -30,7 +30,7 @@ import { Avatar } from '../ui/Avatar';
 import { Pill } from '../ui/Pill';
 import { StarRating } from '../ui/StarRating';
 import { Text } from '../ui/Text';
-import { Tape, Sticker } from '../paper';
+import { Stamp, Tape, Sticker } from '../paper';
 import { getSeededRotation } from '../paper/hash';
 import { MediaViewer } from '../media/MediaViewer';
 import { useAuthStore } from '../../features/auth/store';
@@ -41,6 +41,8 @@ type FeedCardProps = {
   item: FeedItem;
   onOpenComments: (item: FeedItem) => void;
   onPressArtist?: (artistId: string) => void;
+  onPressLog?: (logId: string) => void;
+  youWentToo?: boolean;
   onPressUser?: (username: string) => void;
   onOpenOptions?: (item: FeedItem) => void;
 };
@@ -49,6 +51,8 @@ export function FeedCard({
   item,
   onOpenComments,
   onPressArtist,
+  onPressLog,
+  youWentToo = false,
   onPressUser,
   onOpenOptions,
 }: FeedCardProps) {
@@ -127,7 +131,7 @@ export function FeedCard({
           />
           <View style={styles.authorInfo}>
             <View style={styles.authorNameRow}>
-              <Text variant="body" weight="semibold" numberOfLines={1}>
+              <Text variant="body" weight="semibold">
                 {authorName}
               </Text>
               <Text variant="caption" style={{ color: colors.inkMuted }}>
@@ -310,11 +314,20 @@ export function FeedCard({
             <Text
               variant="caption"
               weight="medium"
-              numberOfLines={1}
               style={[styles.venueName, { color: colors.inkMuted }]}
             >
               {item.venue_name}
             </Text>
+          ) : null}
+          {youWentToo ? (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="You went too. Open this log."
+              disabled={!onPressLog}
+              onPress={() => onPressLog?.(item.id)}
+            >
+              <Stamp label="YOU WENT TOO" tilt={false} variant="orange" />
+            </Pressable>
           ) : null}
         </View>
 
@@ -422,6 +435,18 @@ export function FeedCard({
 
       {/* Footer: Like & Comment buttons */}
       <View style={[styles.footer, { borderTopColor: colors.line }]}>
+        {onPressLog ? (
+          <Pressable
+            accessibilityRole="link"
+            accessibilityLabel={`Open ${item.artist.name} log`}
+            onPress={() => onPressLog(item.id)}
+            style={styles.actionButton}
+          >
+            <Text variant="caption" weight="bold" color="accent">
+              OPEN LOG
+            </Text>
+          </Pressable>
+        ) : null}
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={`Like post. ${item.like_count} likes.`}
@@ -500,6 +525,7 @@ const styles = StyleSheet.create({
   authorInfo: {
     marginLeft: spacing[2],
     flex: 1,
+    minWidth: 0,
   },
   authorNameRow: {
     flexDirection: 'row',
@@ -576,11 +602,15 @@ const styles = StyleSheet.create({
   },
   metaRow: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     alignItems: 'center',
     gap: spacing[2],
     marginVertical: spacing[1],
   },
   venueName: {
+    flexShrink: 1,
+    minWidth: 0,
+    maxWidth: '100%',
     flex: 1,
   },
   ratingRow: {

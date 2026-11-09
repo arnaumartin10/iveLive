@@ -1,4 +1,5 @@
-import { router } from 'expo-router';
+import { routes } from '../../navigation/routes';
+import { useSafeBack } from '../../navigation/useSafeBack';
 import { ArrowLeft } from 'lucide-react-native';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -7,6 +8,7 @@ import { useTheme } from '../../theme/ThemeProvider';
 
 export default function PrivacyScreen() {
   const { colors } = useTheme();
+  const safeBack = useSafeBack(routes.fallback.legal());
 
   return (
     <SafeAreaView
@@ -16,7 +18,7 @@ export default function PrivacyScreen() {
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Back to sign in"
-          onPress={() => router.replace('/(auth)/welcome')}
+          onPress={safeBack}
           style={styles.back}
         >
           <ArrowLeft color={colors.ink} size={20} />

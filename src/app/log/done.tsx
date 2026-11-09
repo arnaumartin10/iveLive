@@ -7,7 +7,8 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import { Image } from 'expo-image';
-import { router, useLocalSearchParams, type Href } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
+import { routes } from '../../navigation/routes';
 import { useQueryClient } from '@tanstack/react-query';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ArrowRight, Plus, Share2 } from 'lucide-react-native';
@@ -280,21 +281,18 @@ export default function LogDoneScreen() {
     if (!id) return;
     reset();
     useTimelineStore.getState().resetFilters();
-    router.replace({
-      pathname: '/(tabs)/profile',
-      params: { tab: 'timeline', highlight: id },
-    });
+    router.replace(routes.profile('timeline', { highlight: id }));
   }
 
   function handleAnotherPress() {
     reset();
-    router.replace('/log');
+    router.replace(routes.logWizard());
   }
 
   function handleAddPhotos() {
     if (!id) return;
     setStep(6);
-    router.push(`/log/step-keepsakes?id=${encodeURIComponent(id)}` as Href);
+    router.navigate(routes.logKeepsakes(id));
   }
 
   return (
@@ -462,10 +460,9 @@ export default function LogDoneScreen() {
               label="See on the atlas"
               size="sm"
               onPress={() =>
-                router.push({
-                  pathname: '/cloud',
-                  params: { focus: `macro:${discoveredTerritory.macro_slug}` },
-                })
+                router.navigate(
+                  routes.cloud(`macro:${discoveredTerritory.macro_slug}`),
+                )
               }
             />
           </Card>

@@ -18,14 +18,23 @@ export type ArtistImageGalleryRow =
 
 export interface ArtistFriendLog {
   id: string;
-  user_id: string;
   event_date: string;
   venue_type: string;
   venue_name: string | null;
   rating: number | null;
+  review: string | null;
+  media_count: number;
+  has_setlist: boolean;
+  top_song: string | null;
+}
+
+export interface ArtistFriend {
+  id: string;
   username: string;
   display_name: string | null;
   avatar_url: string | null;
+  logs_count: number;
+  logs: ArtistFriendLog[];
 }
 
 export interface ArtistSearchResult {

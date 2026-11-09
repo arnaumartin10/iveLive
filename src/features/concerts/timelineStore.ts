@@ -32,6 +32,7 @@ interface TimelineStoreState {
   setMinRating: (minRating: number | null) => void;
   setFilters: (filters: Partial<TimelineFilterState>) => void;
   resetFilters: () => void;
+  clear: () => void;
   hasActiveFilters: () => boolean;
   activeFilterCount: () => number;
 }
@@ -84,6 +85,12 @@ export const useTimelineStore = create<TimelineStoreState>()(
 
       resetFilters: () =>
         set({
+          filters: { ...initialFilters },
+        }),
+
+      clear: () =>
+        set({
+          order: 'newest',
           filters: { ...initialFilters },
         }),
 

@@ -1,4 +1,5 @@
 import { Redirect, useLocalSearchParams } from 'expo-router';
+import { routes } from '../../../navigation/routes';
 
 export default function UserWishlistAlias() {
   const params = useLocalSearchParams<{ username: string }>();
@@ -7,10 +8,7 @@ export default function UserWishlistAlias() {
     : (params.username ?? '');
   return (
     <Redirect
-      href={{
-        pathname: '/user/[username]',
-        params: { ...params, username, tab: 'wishlist' },
-      }}
+      href={routes.user(username, { tab: 'wishlist' })}
     />
   );
 }

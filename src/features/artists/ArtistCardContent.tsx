@@ -34,6 +34,8 @@ import {
   Trash2,
 } from 'lucide-react-native';
 import { router } from 'expo-router';
+import { routes } from '../../navigation/routes';
+import { useSafeBack } from '../../navigation/useSafeBack';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../theme/ThemeProvider';
 import { hardShadow, radius, spacing } from '../../theme/tokens';
@@ -65,6 +67,7 @@ import {
   useUserArtistImageOverride,
 } from './hooks';
 import { CustomArtistForm } from './CustomArtistForm';
+import { FriendsWhoSawArtistSheet } from './FriendsWhoSawArtistSheet';
 import type { ArtistAlbumRow, ArtistWithAlbums } from './types';
 import { getArtistImageChoices, type ArtistImageRole } from './imageChoices';
 import { useArtistRatingSummary, useArtistTourDates } from '../home/hooks';
@@ -79,6 +82,7 @@ type ArtistCardContentProps = {
   artistSeed?: ArtistWithAlbums | null;
   presentation: 'sheet' | 'route';
   onDismiss?: () => void;
+  onBack?: () => void;
 };
 
 function formatDate(value: string | null | undefined) {
@@ -238,6 +242,7 @@ export function ArtistCardContent({
   artistSeed,
   presentation,
   onDismiss,
+  onBack,
 }: ArtistCardContentProps) {
   const { colors } = useTheme();
   const userId = useAuthStore((state) => state.user?.id ?? '');
@@ -274,6 +279,7 @@ export function ArtistCardContent({
   );
   const [genreSheetVisible, setGenreSheetVisible] = useState(false);
   const [reportSheetVisible, setReportSheetVisible] = useState(false);
+  const [friendsSheetVisible, setFriendsSheetVisible] = useState(false);
   const [reportDetails, setReportDetails] = useState('');
   const [draftGenres, setDraftGenres] = useState<string[]>([]);
   const [imageTarget, setImageTarget] = useState<ArtistImageRole | null>(null);
@@ -441,7 +447,7 @@ export function ArtistCardContent({
     setLogArtist(artist);
     goToDateStep();
     onDismiss?.();
-    router.push('/log');
+    router.navigate(routes.logWizard());
   }
 
   async function handleReport() {
@@ -484,6 +490,9 @@ export function ArtistCardContent({
           variant="secondary"
           onPress={() => void artistQuery.refetch()}
         />
+        {presentation === 'route' ? (
+          <Button label="Go home" variant="secondary" onPress={onBack} />
+        ) : null}
       </View>
     );
   }
@@ -513,7 +522,7 @@ export function ArtistCardContent({
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Back"
-            onPress={() => router.back()}
+            onPress={onBack}
             style={styles.iconButton}
           >
             <ArrowLeft size={20} color={colors.ink} />
@@ -521,7 +530,6 @@ export function ArtistCardContent({
           <Text
             variant="label"
             weight="bold"
-            numberOfLines={1}
             style={styles.routeTitle}
           >
             {artist.name}
@@ -618,7 +626,6 @@ export function ArtistCardContent({
             <Text
               variant="title"
               weight="bold"
-              numberOfLines={2}
               style={styles.artistName}
             >
               {artist.name}
@@ -677,10 +684,7 @@ export function ArtistCardContent({
               accessibilityLabel="Open full artist page"
               onPress={() => {
                 onDismiss?.();
-                router.push({
-                  pathname: '/artist/[id]',
-                  params: { id: persistedArtistId },
-                });
+                router.navigate(routes.artist(persistedArtistId));
               }}
               style={[
                 styles.spotifyButton,
@@ -938,13 +942,12 @@ export function ArtistCardContent({
                 tourDatesQuery.data.map((date) => (
                   <View key={date.id} style={styles.tourDateRow}>
                     <View style={styles.tourDateCopy}>
-                      <Text variant="label" weight="semibold" numberOfLines={1}>
+                      <Text variant="label" weight="semibold">
                         {date.event_name ?? date.venue_name ?? 'Live date'}
                       </Text>
                       <Text
                         variant="caption"
                         color="secondary"
-                        numberOfLines={1}
                       >
                         {[
                           formatDate(date.event_date),
@@ -1038,7 +1041,6 @@ export function ArtistCardContent({
                       <Text
                         variant="caption"
                         weight="semibold"
-                        numberOfLines={2}
                         style={styles.albumTitle}
                       >
                         {album.title}
@@ -1078,7 +1080,7 @@ export function ArtistCardContent({
                   onEdit={() => {
                     startEdit(log);
                     onDismiss?.();
-                    router.push('/log');
+                    router.navigate(routes.logWizard());
                   }}
                   onDelete={() => handleDeleteLog(log)}
                 />
@@ -1107,9 +1109,19 @@ export function ArtistCardContent({
             </View>
           ) : friendsQuery.data?.length ? (
             <View style={styles.section}>
-              <Text variant="label" weight="bold">
-                Friends who have seen them
-              </Text>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel={`Friends who've seen ${artist?.name ?? 'this artist'} (${friendsQuery.data.length})`}
+                onPress={() => setFriendsSheetVisible(true)}
+                style={styles.sectionTitleRow}
+              >
+                <Text variant="label" weight="bold">
+                  Friends who have seen them
+                </Text>
+                <Text variant="caption" color="accent" weight="bold">
+                  {friendsQuery.data.length}
+                </Text>
+              </Pressable>
               <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
@@ -1117,13 +1129,10 @@ export function ArtistCardContent({
               >
                 {friendsQuery.data.map((friend) => (
                   <Pressable
-                    key={friend.user_id}
+                    key={friend.id}
                     accessibilityRole="button"
-                    accessibilityLabel={`${friend.display_name ?? friend.username}'s show on ${friend.event_date}`}
-                    onPress={() => {
-                      onDismiss?.();
-                      router.push(`/log/${friend.id}`);
-                    }}
+                    accessibilityLabel={`Open friends who have seen ${artist?.name ?? 'this artist'}`}
+                    onPress={() => setFriendsSheetVisible(true)}
                     style={styles.friendItem}
                   >
                     <Avatar
@@ -1134,13 +1143,12 @@ export function ArtistCardContent({
                     />
                     <Text
                       variant="caption"
-                      numberOfLines={1}
                       style={styles.friendName}
                     >
-                      {friend.display_name ?? friend.username}
+                      @{friend.username}
                     </Text>
                     <Text variant="caption" color="secondary">
-                      {formatDate(friend.event_date)}
+                      seen {friend.logs_count}×
                     </Text>
                   </Pressable>
                 ))}
@@ -1386,7 +1394,6 @@ export function ArtistCardContent({
                     <Text
                       variant="caption"
                       weight={selected ? 'semibold' : 'medium'}
-                      numberOfLines={1}
                       style={styles.imageChoiceLabel}
                     >
                       {choice.label}
@@ -1429,6 +1436,22 @@ export function ArtistCardContent({
         visible={!!selectedAlbum}
         onDismiss={() => setSelectedAlbum(null)}
       />
+      {artist && persistedArtistId ? (
+        <FriendsWhoSawArtistSheet
+          artistName={artist.name}
+          friends={friendsQuery.data ?? []}
+          ownEventDates={new Set(ownLogs.map((log) => log.event_date))}
+          visible={friendsSheetVisible}
+          onDismiss={() => setFriendsSheetVisible(false)}
+          onOpenLog={(logId) => {
+            router.navigate(
+              routes.log(logId, {
+                returnTo: routes.artistPath(persistedArtistId),
+              }),
+            );
+          }}
+        />
+      ) : null}
       {canEditManualArtist && artist ? (
         <Sheet
           visible={editManualSheetVisible}
@@ -1452,9 +1475,14 @@ export function ArtistCardContent({
 
 export function ArtistCardRoute({ artistId }: { artistId: string }) {
   const { colors } = useTheme();
+  const safeBack = useSafeBack(routes.fallback.artist());
   return (
     <SafeAreaView style={[styles.route, { backgroundColor: colors.bg }]}>
-      <ArtistCardContent artistId={artistId} presentation="route" />
+      <ArtistCardContent
+        artistId={artistId}
+        presentation="route"
+        onBack={safeBack}
+      />
     </SafeAreaView>
   );
 }
@@ -1462,10 +1490,10 @@ export function ArtistCardRoute({ artistId }: { artistId: string }) {
 function StatCell({ label, value }: { label: string; value: string }) {
   return (
     <View style={styles.statCell}>
-      <Text variant="caption" color="secondary" numberOfLines={1}>
+      <Text variant="caption" color="secondary">
         {label}
       </Text>
-      <Text variant="caption" weight="bold" numberOfLines={1}>
+      <Text variant="caption" weight="bold">
         {value}
       </Text>
     </View>
@@ -1500,7 +1528,6 @@ function ConcertHistoryRow({
           <Text
             variant="caption"
             color="secondary"
-            numberOfLines={1}
             style={styles.historyVenue}
           >
             {log.venue_name || 'Venue not specified'}
@@ -1817,7 +1844,7 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   historyDateRow: { alignItems: 'center', flexDirection: 'row', gap: 5 },
-  historyVenue: { flexShrink: 1, maxWidth: '45%' },
+  historyVenue: { flexShrink: 1, minWidth: 0 },
   historyRating: { alignItems: 'center', flexDirection: 'row', gap: 3 },
   reviewPressable: { gap: 3, paddingVertical: 2 },
   logActions: { flexDirection: 'row', gap: 1 },
@@ -1837,8 +1864,8 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.xs,
     paddingRight: spacing.md,
   },
-  friendItem: { alignItems: 'center', gap: 4, width: 74 },
-  friendName: { maxWidth: 74 },
+  friendItem: { alignItems: 'center', gap: 4, width: 100 },
+  friendName: { maxWidth: 100, textAlign: 'center' },
   footer: {
     alignItems: 'center',
     borderTopWidth: StyleSheet.hairlineWidth,
