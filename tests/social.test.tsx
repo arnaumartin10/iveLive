@@ -1,6 +1,12 @@
 import React from 'react';
 import { describe, expect, it, jest, beforeEach } from '@jest/globals';
-import { fireEvent, render, screen } from '@testing-library/react-native';
+import {
+  act,
+  fireEvent,
+  render,
+  renderHook,
+  screen,
+} from '@testing-library/react-native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from '../src/theme/ThemeProvider';
 import { FeedCard } from '../src/components/social/FeedCard';
@@ -8,6 +14,11 @@ import type { FeedItem } from '../src/features/social/types';
 import type { FeedMedia } from '../src/features/media/types';
 import * as socialApi from '../src/features/social/api';
 import { supabase } from '../src/lib/supabase';
+import {
+  useComments,
+  usePostComment,
+  socialKeys,
+} from '../src/features/social/hooks';
 
 // Mock supabase
 jest.mock('../src/lib/supabase', () => ({
@@ -156,6 +167,100 @@ describe('Social API', () => {
       p_details: null,
     });
   });
+
+  it('posts a comment to the requested log', async () => {
+    const comment = {
+      id: 'comment-1',
+      log_id: 'log-1',
+      user_id: 'user-2',
+      body: 'Great show!',
+      created_at: '2026-11-10T12:00:00Z',
+      author: {
+        id: 'user-2',
+        username: 'listener',
+        display_name: 'Listener',
+        avatar_url: null,
+      },
+    };
+    const single = jest.fn(() =>
+      Promise.resolve({ data: comment, error: null }),
+    );
+    const select = jest.fn(() => ({ single }));
+    const insert = jest.fn(() => ({ select }));
+    (supabase.from as any).mockReturnValueOnce({ insert });
+
+    await expect(
+      socialApi.postComment('log-1', 'user-2', 'Great show!'),
+    ).resolves.toEqual(comment);
+    expect(supabase.from).toHaveBeenCalledWith('log_comments');
+    expect(insert).toHaveBeenCalledWith({
+      log_id: 'log-1',
+      user_id: 'user-2',
+      body: 'Great show!',
+    });
+  });
+
+  it('gives each mounted comments listener its own realtime channel', () => {
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+    queryClient.setQueryData(socialKeys.comments('log-1'), []);
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    );
+
+    const first = renderHook(() => useComments('log-1'), { wrapper });
+    const second = renderHook(() => useComments('log-1'), { wrapper });
+    const topics = (supabase.channel as jest.Mock).mock.calls.map(
+      ([topic]) => topic,
+    );
+
+    expect(topics).toHaveLength(2);
+    expect(new Set(topics).size).toBe(2);
+    first.unmount();
+    second.unmount();
+  });
+
+  it('updates the friend-feed comment count immediately after posting', async () => {
+    const comment = {
+      id: 'comment-1',
+      log_id: mockFeedItem.id,
+      user_id: 'user-2',
+      body: 'Great show!',
+      created_at: '2026-11-10T12:00:00Z',
+      author: mockFeedItem.author,
+    };
+    const single = jest.fn(() =>
+      Promise.resolve({ data: comment, error: null }),
+    );
+    const select = jest.fn(() => ({ single }));
+    const insert = jest.fn(() => ({ select }));
+    (supabase.from as any).mockReturnValueOnce({ insert });
+
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+    const feedKey = socialKeys.feedForUser('');
+    queryClient.setQueryData(feedKey, {
+      pages: [[mockFeedItem]],
+      pageParams: [null],
+    });
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    );
+    const { result } = renderHook(() => usePostComment(mockFeedItem.id), {
+      wrapper,
+    });
+
+    await act(async () => {
+      await result.current.mutateAsync('Great show!');
+    });
+
+    const updated = queryClient.getQueryData(feedKey) as {
+      pages: FeedItem[][];
+    };
+    expect(updated.pages[0]?.[0]?.comment_count).toBe(4);
+  });
 });
 
 describe('FeedCard', () => {
@@ -223,6 +328,8 @@ describe('FeedCard', () => {
     expect(screen.getByText('SHOW NOTE')).toBeTruthy();
     expect(screen.getByText('12')).toBeTruthy(); // like count
     expect(screen.getByText('3')).toBeTruthy(); // comment count
+    fireEvent.press(screen.getByLabelText('Open comments. 3 comments.'));
+    expect(handleOpenComments).toHaveBeenCalledWith(mockFeedItem);
   });
 
   it('renders a saved setlist only when the log has songs', () => {

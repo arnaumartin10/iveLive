@@ -5,20 +5,17 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { ProfileScreen } from '../src/components/profile/ProfileScreen';
 import { WishlistCard } from '../src/components/profile/WishlistCard';
 import { ThemeProvider } from '../src/theme/ThemeProvider';
+import { routes } from '../src/navigation/routes';
 import { useAuthStore } from '../src/features/auth/store';
 import { useMe } from '../src/features/auth/hooks';
 import {
   useProfileOverview,
-  useSetPicks,
-  useAddWishlistItem,
   useUpdateWishlistItem,
   useDeleteWishlistItem,
-  useFullWishlist,
 } from '../src/features/profile/hooks';
 import {
   useFollow,
   useFollowStatus,
-  useUnreadCount,
   useUnfollow,
 } from '../src/features/social/hooks';
 import type {
@@ -32,8 +29,6 @@ jest.mock('../src/features/artists/ArtistCardProvider', () => ({
 
 jest.mock('../src/features/profile/hooks', () => ({
   useProfileOverview: jest.fn(),
-  useSetPicks: jest.fn(() => ({ mutateAsync: jest.fn() })),
-  useAddWishlistItem: jest.fn(() => ({ mutateAsync: jest.fn() })),
   useUpdateWishlistItem: jest.fn(() => ({ mutateAsync: jest.fn() })),
   useDeleteWishlistItem: jest.fn(() => ({ mutate: jest.fn() })),
   useFullWishlist: jest.fn(() => ({
@@ -93,25 +88,6 @@ jest.mock('../src/components/profile/ProfileFriendsSection', () => ({
       `Friends section content (${initialSection})`,
     ),
 }));
-
-jest.mock('../src/components/profile/PicksEditorSheet', () => {
-  return {
-    PicksEditorSheet: ({
-      visible,
-      list,
-    }: {
-      visible: boolean;
-      list: string;
-    }) => {
-      if (!visible) return null;
-      return require('react').createElement(
-        require('react-native').Text,
-        null,
-        `picks-editor-${list}`,
-      );
-    },
-  };
-});
 
 jest.mock('react-native-gesture-handler', () => ({
   Swipeable: ({ children }: PropsWithChildren) => children,
@@ -214,12 +190,6 @@ describe('profile screen sections', () => {
       .mockReturnValue({ mutate: jest.fn(), isPending: false } as never);
     jest.mocked(useFollowStatus).mockReturnValue({ data: null } as never);
     jest
-      .mocked(useSetPicks)
-      .mockReturnValue({ mutateAsync: jest.fn() } as never);
-    jest
-      .mocked(useAddWishlistItem)
-      .mockReturnValue({ mutateAsync: jest.fn() } as never);
-    jest
       .mocked(useUpdateWishlistItem)
       .mockReturnValue({ mutateAsync: jest.fn() } as never);
     jest
@@ -263,11 +233,27 @@ describe('profile screen sections', () => {
     expect(screen.getAllByText('Find friends').length).toBeGreaterThan(0);
   });
 
-  it('opens the editor from Add in both pick sections', () => {
+  it('navigates to a full-page editor from a pick section', () => {
     setOverview({ ...baseProfile, recent_picks: [], favourite_picks: [] });
     render(<ProfileScreen />, { wrapper });
+    jest.mocked(router.navigate).mockClear();
     fireEvent.press(screen.getByLabelText('Edit WHAT I’M INTO RECENTLY'));
-    expect(screen.getByText('picks-editor-recent')).toBeTruthy();
+    expect(router.navigate).toHaveBeenCalledWith(
+      routes.profilePicksEdit('owner', 'recent'),
+    );
+  });
+
+  it('navigates to a full-page editor for a wishlist item', () => {
+    jest
+      .mocked(useLocalSearchParams)
+      .mockReturnValue({ tab: 'wishlist' } as never);
+    setOverview(baseProfile);
+    render(<ProfileScreen />, { wrapper });
+    jest.mocked(router.navigate).mockClear();
+    fireEvent.press(screen.getByLabelText('Edit The Cure wishlist item'));
+    expect(router.navigate).toHaveBeenCalledWith(
+      routes.profileWishlistEdit('owner', 'wish-1'),
+    );
   });
 
   it('hides empty sections for a visitor', () => {

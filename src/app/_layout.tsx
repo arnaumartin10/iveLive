@@ -124,7 +124,10 @@ function AppContent({ fontsReady }: { fontsReady: boolean }) {
           const currentPath = getCurrentInternalPath();
           void saveReturnTo(currentPath !== '/' ? currentPath : pathname).catch(
             (error: unknown) => {
-              console.error('[navigation] Could not save the requested path.', error);
+              console.error(
+                '[navigation] Could not save the requested path.',
+                error,
+              );
             },
           );
           router.replace(routes.welcome());
@@ -174,13 +177,14 @@ function AppContent({ fontsReady }: { fontsReady: boolean }) {
         void consumeReturnTo()
           .then((destination) => {
             if (active) {
-              router.replace(
-                returnToHref(destination) ?? routes.home(),
-              );
+              router.replace(returnToHref(destination) ?? routes.home());
             }
           })
           .catch((error: unknown) => {
-            console.error('[navigation] Could not restore the requested path.', error);
+            console.error(
+              '[navigation] Could not restore the requested path.',
+              error,
+            );
             if (active) router.replace(routes.home());
           });
         return () => {
@@ -302,6 +306,8 @@ function AppContent({ fontsReady }: { fontsReady: boolean }) {
           />
           <Stack.Screen name="artist/[id]" />
           <Stack.Screen name="artist/new" />
+          <Stack.Screen name="profile/edit-picks" />
+          <Stack.Screen name="profile/edit-wishlist" />
           <Stack.Screen name="user/[username]" />
           <Stack.Screen name="user/[username]/diary" />
           <Stack.Screen name="user/[username]/friends" />

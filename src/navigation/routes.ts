@@ -20,35 +20,40 @@ export type ProfileRouteParams = {
 export const routes = {
   home: (): Href => '/(tabs)',
   cloud: (focus?: string): Href =>
-    focus
-      ? { pathname: '/(tabs)/cloud', params: { focus } }
-      : '/(tabs)/cloud',
+    focus ? { pathname: '/(tabs)/cloud', params: { focus } } : '/(tabs)/cloud',
   stats: (): Href => '/(tabs)/stats',
   profile: (
     tab: UserTab = 'profile',
     params: ProfileRouteParams = {},
   ): Href => ({
-      pathname: '/(tabs)/profile',
-      params: { tab, ...params },
-    }),
+    pathname: '/(tabs)/profile',
+    params: { tab, ...params },
+  }),
   profilePath: (tab: UserTab = 'profile'): string =>
     `/profile?tab=${encodeURIComponent(tab)}`,
+  profilePicksEdit: (username: string, list: 'recent' | 'favourite'): Href => ({
+    pathname: '/profile/edit-picks',
+    params: { username, list },
+  }),
+  profileWishlistEdit: (username: string, itemId?: string): Href => ({
+    pathname: '/profile/edit-wishlist',
+    params: { username, ...(itemId ? { itemId } : {}) },
+  }),
   settings: (): Href => '/(tabs)/settings',
   logWizard: (params?: Record<string, string>): Href =>
     params ? { pathname: '/log', params } : '/log',
   logStep: (
-    step:
-      | 'artist'
-      | 'date'
-      | 'venue'
-      | 'venue-details'
-      | 'review',
+    step: 'artist' | 'date' | 'venue' | 'venue-details' | 'review',
   ): Href => `/log/step-${step}`,
   logKeepsakes: (id: string, setlistSaveFailed?: string): Href => ({
     pathname: '/log/step-keepsakes',
     params: { id, ...(setlistSaveFailed ? { setlistSaveFailed } : {}) },
   }),
-  logDone: (id: string, skipped: boolean, setlistSaveFailed?: boolean): Href => ({
+  logDone: (
+    id: string,
+    skipped: boolean,
+    setlistSaveFailed?: boolean,
+  ): Href => ({
     pathname: '/log/done',
     params: {
       id,
@@ -58,12 +63,16 @@ export const routes = {
   }),
   log: (id: string, options: RouteOptions = {}): Href => ({
     pathname: '/log/[id]',
-    params: { id, ...(options.returnTo ? { returnTo: options.returnTo } : {}) },
+    params: {
+      id,
+      ...(options.returnTo ? { returnTo: options.returnTo } : {}),
+    },
   }),
-  logDeepLink: (
-    id: string,
-    scheme: string | string[] = 'ivelive',
-  ): string => {
+  logComments: (id: string): Href => ({
+    pathname: '/log/[id]/comments',
+    params: { id },
+  }),
+  logDeepLink: (id: string, scheme: string | string[] = 'ivelive'): string => {
     const appScheme = Array.isArray(scheme) ? (scheme[0] ?? 'ivelive') : scheme;
     return `${appScheme}://log/${encodeURIComponent(id)}`;
   },

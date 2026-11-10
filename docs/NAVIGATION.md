@@ -9,24 +9,24 @@ behavior. Route destinations and fallbacks are centralized in
 Route groups in parentheses are omitted from public URLs. This is the complete
 screen-route inventory under `src/app`; layout files are listed separately.
 
-| Public path | Expo Router file(s) | Notes |
-|---|---|---|
-| `/` | `(tabs)/index.tsx` | Home; there is no longer a competing `src/app/index.tsx`. |
-| `/cloud`, `/stats`, `/profile`, `/settings` | `(tabs)/cloud.tsx`, `stats.tsx`, `profile.tsx`, `settings.tsx` | Settings is a hidden tab. |
-| `/welcome`, `/callback`, `/onboarding` | `(auth)/welcome.tsx`, `callback.tsx`, `onboarding.tsx` | Auth and profile setup. |
-| `/artist/:id`, `/artist/new` | `artist/[id].tsx`, `artist/new.tsx` | Artist page and artist creation. |
-| `/genre/:slug`, `/genres` | `genre/[slug].tsx`, `genres/index.tsx` | Genre details and browse. |
-| `/log`, `/log/:id` | `log/index.tsx`, `log/[id].tsx` | Wizard and log detail. |
-| `/log/done`, `/log/step-artist`, `/log/step-date`, `/log/step-venue`, `/log/step-venue-details`, `/log/step-review`, `/log/step-keepsakes` | `log/done.tsx`, `log/step-*.tsx` | Wizard steps; the layout owns the discard guard. |
-| `/user/:username`, `/user/:username/diary`, `/user/:username/friends`, `/user/:username/wishlist` | `user/[username].tsx`, `user/[username]/*.tsx` | User profile and legacy tab aliases. |
-| `/user/friends` | `user/friends.tsx` | Legacy alias to the signed-in profile's friends tab. |
-| `/notifications` | `notifications.tsx` | Notifications. |
-| `/timeline`, `/archive`, `/friends` | `timeline.tsx`, `archive.tsx`, `friends.tsx` | Legacy aliases to profile tabs. |
-| `/wrapped`, `/wrapped/:year` | `wrapped/index.tsx`, `wrapped/[year].tsx` | Wrapped story routes. |
-| `/stats/wall-of-fame`, `/stats/wrapped` | `stats/wall-of-fame.tsx`, `stats/wrapped.tsx` | Stats sub-pages. |
-| `/legal/privacy`, `/legal/terms` | `legal/privacy.tsx`, `legal/terms.tsx` | Public legal pages. |
-| `/cloud-bench`, `/components` | `(dev)/cloud-bench.tsx`, `(dev)/components.tsx` | Development routes. |
-| Unknown path | `+not-found.tsx` | “Show cancelled” empty state and Home action. |
+| Public path                                                                                                                                | Expo Router file(s)                                            | Notes                                                     |
+| ------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------- | --------------------------------------------------------- |
+| `/`                                                                                                                                        | `(tabs)/index.tsx`                                             | Home; there is no longer a competing `src/app/index.tsx`. |
+| `/cloud`, `/stats`, `/profile`, `/settings`                                                                                                | `(tabs)/cloud.tsx`, `stats.tsx`, `profile.tsx`, `settings.tsx` | Settings is a hidden tab.                                 |
+| `/welcome`, `/callback`, `/onboarding`                                                                                                     | `(auth)/welcome.tsx`, `callback.tsx`, `onboarding.tsx`         | Auth and profile setup.                                   |
+| `/artist/:id`, `/artist/new`                                                                                                               | `artist/[id].tsx`, `artist/new.tsx`                            | Artist page and artist creation.                          |
+| `/genre/:slug`, `/genres`                                                                                                                  | `genre/[slug].tsx`, `genres/index.tsx`                         | Genre details and browse.                                 |
+| `/log`, `/log/:id`                                                                                                                         | `log/index.tsx`, `log/[id].tsx`                                | Wizard and log detail.                                    |
+| `/log/done`, `/log/step-artist`, `/log/step-date`, `/log/step-venue`, `/log/step-venue-details`, `/log/step-review`, `/log/step-keepsakes` | `log/done.tsx`, `log/step-*.tsx`                               | Wizard steps; the layout owns the discard guard.          |
+| `/user/:username`, `/user/:username/diary`, `/user/:username/friends`, `/user/:username/wishlist`                                          | `user/[username].tsx`, `user/[username]/*.tsx`                 | User profile and legacy tab aliases.                      |
+| `/user/friends`                                                                                                                            | `user/friends.tsx`                                             | Legacy alias to the signed-in profile's friends tab.      |
+| `/notifications`                                                                                                                           | `notifications.tsx`                                            | Notifications.                                            |
+| `/timeline`, `/archive`, `/friends`                                                                                                        | `timeline.tsx`, `archive.tsx`, `friends.tsx`                   | Legacy aliases to profile tabs.                           |
+| `/wrapped`, `/wrapped/:year`                                                                                                               | `wrapped/index.tsx`, `wrapped/[year].tsx`                      | Wrapped story routes.                                     |
+| `/stats/wall-of-fame`, `/stats/wrapped`                                                                                                    | `stats/wall-of-fame.tsx`, `stats/wrapped.tsx`                  | Stats sub-pages.                                          |
+| `/legal/privacy`, `/legal/terms`                                                                                                           | `legal/privacy.tsx`, `legal/terms.tsx`                         | Public legal pages.                                       |
+| `/cloud-bench`, `/components`                                                                                                              | `(dev)/cloud-bench.tsx`, `(dev)/components.tsx`                | Development routes.                                       |
+| Unknown path                                                                                                                               | `+not-found.tsx`                                               | “Show cancelled” empty state and Home action.             |
 
 Navigators live in `src/app/_layout.tsx`, `(tabs)/_layout.tsx`,
 `(auth)/_layout.tsx`, `log/_layout.tsx`, and `wrapped/_layout.tsx`. Expo Router
@@ -76,37 +76,37 @@ helpers, and route aliases use typed `Redirect` destinations. No direct
 
 ### `router.navigate` call sites
 
-| Source file(s) | Destinations |
-|---|---|
-| `src/components/stats/StatsScreen.tsx`, `src/app/stats/wall-of-fame.tsx` | Artist, user diary, Wrapped, log wizard, wall of fame, genre. |
-| `src/components/profile/FriendsPreview.tsx`, `ProfileFriendsSection.tsx` | User profiles and artists. |
-| `src/components/profile/ProfileScreen.tsx` | Log wizard, settings, Wrapped, notifications, user wishlist, log detail, artist, wall of fame. |
-| `src/components/navigation/CustomTabBar.tsx` | Log wizard; tab-root navigation uses `navigation.navigate`; active-tab press scrolls to top and pops a nested stack to root. |
-| `src/components/navigation/CollapsibleHeaderLayout.tsx`, `src/components/timeline/TimelineScreen.tsx` | Current user profile and log wizard. |
-| `src/components/paper/GenreLabel.tsx`, `src/features/genres/GenreBrowseScreen.tsx` | Genre detail. |
-| `src/components/timeline/LogDetailSheet.tsx`, `src/app/log/[id].tsx` | Artist detail. |
-| `src/features/artists/ArtistCardProvider.tsx`, `ArtistCardContent.tsx` | Artist, log wizard, and log detail. |
-| `src/features/cloud/CloudTerritoryCard.tsx`, `src/features/cloud/CloudGraph.tsx` | Genre detail and log wizard. |
-| `src/features/home/HomeHub.tsx` | User profile/diary, genre browse, log wizard/detail, and legacy friends alias. |
-| `src/features/genres/GenrePageScreen.tsx` | Log wizard. |
-| `src/app/notifications.tsx`, `src/app/log/done.tsx` | User profile, keepsakes, and cloud routes. |
-| `src/app/log/step-artist.tsx` | Artist creation and genre browse. |
+| Source file(s)                                                                                        | Destinations                                                                                                                           |
+| ----------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/components/stats/StatsScreen.tsx`, `src/app/stats/wall-of-fame.tsx`                              | Artist, user diary, Wrapped, log wizard, wall of fame, genre.                                                                          |
+| `src/components/profile/FriendsPreview.tsx`, `ProfileFriendsSection.tsx`                              | User profiles and artists.                                                                                                             |
+| `src/components/profile/ProfileScreen.tsx`                                                            | Full-screen picks and wishlist editors, log wizard, settings, Wrapped, notifications, user wishlist, log detail, artist, wall of fame. |
+| `src/components/navigation/CustomTabBar.tsx`                                                          | Log wizard; tab-root navigation uses `navigation.navigate`; active-tab press scrolls to top and pops a nested stack to root.           |
+| `src/components/navigation/CollapsibleHeaderLayout.tsx`, `src/components/timeline/TimelineScreen.tsx` | Full-screen concert log detail, current user profile, and log wizard.                                                                  |
+| `src/components/paper/GenreLabel.tsx`, `src/features/genres/GenreBrowseScreen.tsx`                    | Genre detail.                                                                                                                          |
+| `src/app/log/[id].tsx`                                                                                | Full-screen concert log details, artist page, comments, and edit flow.                                                                 |
+| `src/features/artists/ArtistCardProvider.tsx`, `ArtistCardContent.tsx`                                | Artist, log wizard, and log detail.                                                                                                    |
+| `src/features/cloud/CloudTerritoryCard.tsx`, `src/features/cloud/CloudGraph.tsx`                      | Genre detail and log wizard.                                                                                                           |
+| `src/features/home/HomeHub.tsx`                                                                       | User profile/diary, genre browse, log wizard/detail, and legacy friends alias.                                                         |
+| `src/features/genres/GenrePageScreen.tsx`                                                             | Log wizard.                                                                                                                            |
+| `src/app/notifications.tsx`, `src/app/log/done.tsx`                                                   | User profile, keepsakes, and cloud routes.                                                                                             |
+| `src/app/log/step-artist.tsx`                                                                         | Artist creation and genre browse.                                                                                                      |
 
 ### Safe back, replacements, links, and redirects
 
-| Source file(s) | Behavior |
-|---|---|
-| `src/navigation/useSafeBack.ts` | The single `router.back()`/`router.replace()` policy and Android hardware-back listener. |
-| `src/features/artists/ArtistCardContent.tsx`, `src/features/genres/GenrePageScreen.tsx`, `src/features/genres/GenreBrowseScreen.tsx` | Back/close to history or route fallback. |
-| `src/app/log/[id].tsx` | Back to validated `returnTo`, otherwise the log owner's diary when known, then the signed-in diary fallback. |
-| `src/app/log/_layout.tsx`, `src/app/log/step-review.tsx`, `src/app/artist/new.tsx`, `src/app/notifications.tsx`, `src/app/stats/wrapped.tsx`, `src/components/profile/ProfileScreen.tsx`, `src/components/wrapped/WrappedStoryScreen.tsx`, `src/app/legal/*.tsx`, `src/app/(tabs)/settings.tsx` | X/back actions use `useSafeBack`; wizard draft exits retain a cross-platform discard confirmation. |
-| `src/app/_layout.tsx` | Hydration-aware auth guard; replaces to Welcome/Onboarding/Home and restores a validated return target. |
-| `src/app/(auth)/onboarding.tsx`, `src/app/(tabs)/settings.tsx`, `src/app/artist/new.tsx`, `src/app/log/done.tsx`, `src/app/log/step-keepsakes.tsx`, `src/app/log/step-review.tsx`, `src/app/+not-found.tsx` | Flow, entity, and session redirects use centralized helpers and `replace`. |
-| `src/app/(auth)/welcome.tsx` | Terms and Privacy `Link` destinations use typed route helpers. |
-| `src/app/archive.tsx`, `timeline.tsx`, `friends.tsx`, `user/friends.tsx`, `user/[username].tsx`, `user/[username]/diary.tsx`, `user/[username]/friends.tsx`, `user/[username]/wishlist.tsx` | Legacy aliases and own-profile redirects use typed `Redirect` helpers. |
-| `src/features/auth/oauth.ts`, `src/features/auth/useAuthListener.ts` | Native callback URI, web callback query/fragment parsing, OTP, magic-link, and OAuth return-to handling. |
-| `src/navigation/returnTo.ts` | Internal path validation, persistence, one-time consumption, and typed Href conversion. |
-| `src/navigation/pageTitles.ts` | Route-specific browser titles. |
+| Source file(s)                                                                                                                                                                                                                                                                                  | Behavior                                                                                                     |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `src/navigation/useSafeBack.ts`                                                                                                                                                                                                                                                                 | The single `router.back()`/`router.replace()` policy and Android hardware-back listener.                     |
+| `src/features/artists/ArtistCardContent.tsx`, `src/features/genres/GenrePageScreen.tsx`, `src/features/genres/GenreBrowseScreen.tsx`                                                                                                                                                            | Back/close to history or route fallback.                                                                     |
+| `src/app/log/[id].tsx`                                                                                                                                                                                                                                                                          | Back to validated `returnTo`, otherwise the log owner's diary when known, then the signed-in diary fallback. |
+| `src/app/log/_layout.tsx`, `src/app/log/step-review.tsx`, `src/app/artist/new.tsx`, `src/app/notifications.tsx`, `src/app/stats/wrapped.tsx`, `src/components/profile/ProfileScreen.tsx`, `src/components/wrapped/WrappedStoryScreen.tsx`, `src/app/legal/*.tsx`, `src/app/(tabs)/settings.tsx` | X/back actions use `useSafeBack`; wizard draft exits retain a cross-platform discard confirmation.           |
+| `src/app/_layout.tsx`                                                                                                                                                                                                                                                                           | Hydration-aware auth guard; replaces to Welcome/Onboarding/Home and restores a validated return target.      |
+| `src/app/(auth)/onboarding.tsx`, `src/app/(tabs)/settings.tsx`, `src/app/artist/new.tsx`, `src/app/log/done.tsx`, `src/app/log/step-keepsakes.tsx`, `src/app/log/step-review.tsx`, `src/app/+not-found.tsx`                                                                                     | Flow, entity, and session redirects use centralized helpers and `replace`.                                   |
+| `src/app/(auth)/welcome.tsx`                                                                                                                                                                                                                                                                    | Terms and Privacy `Link` destinations use typed route helpers.                                               |
+| `src/app/archive.tsx`, `timeline.tsx`, `friends.tsx`, `user/friends.tsx`, `user/[username].tsx`, `user/[username]/diary.tsx`, `user/[username]/friends.tsx`, `user/[username]/wishlist.tsx`                                                                                                     | Legacy aliases and own-profile redirects use typed `Redirect` helpers.                                       |
+| `src/features/auth/oauth.ts`, `src/features/auth/useAuthListener.ts`                                                                                                                                                                                                                            | Native callback URI, web callback query/fragment parsing, OTP, magic-link, and OAuth return-to handling.     |
+| `src/navigation/returnTo.ts`                                                                                                                                                                                                                                                                    | Internal path validation, persistence, one-time consumption, and typed Href conversion.                      |
+| `src/navigation/pageTitles.ts`                                                                                                                                                                                                                                                                  | Route-specific browser titles.                                                                               |
 
 ### Deep links and URL validation
 
@@ -138,19 +138,19 @@ helpers, and route aliases use typed `Redirect` destinations. No direct
 
 ## Back and close destinations
 
-| Screen | Fallback when history/validated return target is unavailable |
-|---|---|
-| Artist | Home |
-| Genre detail | Genre browse |
-| Genre browse | Home |
-| Log detail | Log owner's diary; signed-in diary if owner metadata is unavailable |
-| User profile | Home |
-| Log wizard | Home, after discard confirmation when draft content exists |
-| Settings | Profile |
-| Notifications | Profile |
-| Legal/privacy | Welcome |
-| Wrapped | Home or its parent stats route |
-| Not found | Home |
+| Screen        | Fallback when history/validated return target is unavailable        |
+| ------------- | ------------------------------------------------------------------- |
+| Artist        | Home                                                                |
+| Genre detail  | Genre browse                                                        |
+| Genre browse  | Home                                                                |
+| Log detail    | Log owner's diary; signed-in diary if owner metadata is unavailable |
+| User profile  | Home                                                                |
+| Log wizard    | Home, after discard confirmation when draft content exists          |
+| Settings      | Profile                                                             |
+| Notifications | Profile                                                             |
+| Legal/privacy | Welcome                                                             |
+| Wrapped       | Home or its parent stats route                                      |
+| Not found     | Home                                                                |
 
 The four tabs have independent navigation state; inactive tabs are not remounted
 by tab selection. Active-tab presses emit the tab event so registered scroll
@@ -158,16 +158,16 @@ surfaces return to the top, and pop any nested stack to its first route.
 
 ## Auth guard matrix
 
-| State | Result |
-|---|---|
-| Session hydration pending | Keep the splash/loading view; do not redirect yet. |
-| Signed out | Save only the validated current internal destination, then replace to Welcome. |
-| Signed in, profile loading | Keep the loading view until the profile query resolves. |
-| Signed in without username | Replace to Onboarding; after profile setup consume the saved return target. |
-| Signed in without the required invite | Replace to the invite/onboarding gate; continue the saved route after invite and profile setup. |
-| Fully onboarded | Keep protected destinations; replace auth pages with the saved destination or Home. |
-| Deleted account | Successful deletion signs out locally, clears session data, and replaces to Welcome. If the profile is unavailable before deletion, show retry/sign-out controls rather than redirecting in a loop. |
-| Expired session | Supabase clears the session; the signed-out guard saves the current internal route and replaces to Welcome. |
+| State                                 | Result                                                                                                                                                                                              |
+| ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Session hydration pending             | Keep the splash/loading view; do not redirect yet.                                                                                                                                                  |
+| Signed out                            | Save only the validated current internal destination, then replace to Welcome.                                                                                                                      |
+| Signed in, profile loading            | Keep the loading view until the profile query resolves.                                                                                                                                             |
+| Signed in without username            | Replace to Onboarding; after profile setup consume the saved return target.                                                                                                                         |
+| Signed in without the required invite | Replace to the invite/onboarding gate; continue the saved route after invite and profile setup.                                                                                                     |
+| Fully onboarded                       | Keep protected destinations; replace auth pages with the saved destination or Home.                                                                                                                 |
+| Deleted account                       | Successful deletion signs out locally, clears session data, and replaces to Welcome. If the profile is unavailable before deletion, show retry/sign-out controls rather than redirecting in a loop. |
+| Expired session                       | Supabase clears the session; the signed-out guard saves the current internal route and replaces to Welcome.                                                                                         |
 
 Return-to restoration is covered with fixtures for OTP code, native magic link,
 native OAuth callback, and web OAuth callback. External providers are not
@@ -297,15 +297,15 @@ or secret values are needed for the fixture-based Playwright suite.
 
 ### Layout audit status
 
-| Screen / surface | Change in this continuation | Remaining QA |
-|---|---|---|
-| Diary / TimelineCard | Compact labels wrap to two lines; venue and media wrap below. | Test 320/360/390/430 px with platform font scaling and real browser rendering. |
-| Log detail | Read-only owner/content state and responsive shared components are implemented. | Verify long review, keepsakes and setlist on small phones and large text. |
-| Artist Card / friends sheet | Scrollable grouped friend logs with wrapping venue/review content. | Verify many friends, private/inaccessible log and 320 px viewport in browser/native. |
-| Cloud HUD / territory info | Compact icon controls, bottom sheet, and tappable artist chips. | Check safe-area overlap with minimap/tab bar on iOS Safari and Android Chrome. |
-| Home | Reordered sections and compact genre strip. | Verify long friends feed and stubs at 320–430 px. |
-| Genres | Wrapping tile grid, 44 px About control and animated expanded list. | Verify text scaling, keyboard search and reduced-motion behavior on devices. |
-| Stats / Profile / tab bar / other sheets | No new UX-1-specific layout changes in this continuation. | Still require the requested mobile clipping audit. |
+| Screen / surface                         | Change in this continuation                                                     | Remaining QA                                                                         |
+| ---------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| Diary / TimelineCard                     | Compact labels wrap to two lines; venue and media wrap below.                   | Test 320/360/390/430 px with platform font scaling and real browser rendering.       |
+| Log detail                               | Read-only owner/content state and responsive shared components are implemented. | Verify long review, keepsakes and setlist on small phones and large text.            |
+| Artist Card / friends sheet              | Scrollable grouped friend logs with wrapping venue/review content.              | Verify many friends, private/inaccessible log and 320 px viewport in browser/native. |
+| Cloud HUD / territory info               | Compact icon controls, bottom sheet, and tappable artist chips.                 | Check safe-area overlap with minimap/tab bar on iOS Safari and Android Chrome.       |
+| Home                                     | Reordered sections and compact genre strip.                                     | Verify long friends feed and stubs at 320–430 px.                                    |
+| Genres                                   | Wrapping tile grid, 44 px About control and animated expanded list.             | Verify text scaling, keyboard search and reduced-motion behavior on devices.         |
+| Stats / Profile / tab bar / other sheets | No new UX-1-specific layout changes in this continuation.                       | Still require the requested mobile clipping audit.                                   |
 
 ### UX-1 tests and manual QA
 
@@ -328,15 +328,15 @@ or secret values are needed for the fixture-based Playwright suite.
 Manual QA checklist:
 
 - [ ] Open the Artist Card, inspect "Friends who've seen them", and open an
-  individual friend's log; X/back should return to the Artist Card.
+      individual friend's log; X/back should return to the Artist Card.
 - [ ] Check the explicit private/unavailable state and verify own logs still
-  expose edit/delete actions.
+      expose edit/delete actions.
 - [ ] Open About directly from each macro tile, expand a tile, and verify its
-  Open row appears before sub-genres, including when a macro row is absent from
-  the catalog.
+      Open row appears before sub-genres, including when a macro row is absent from
+      the catalog.
 - [ ] Tap a Cloud territory artist and confirm the same Artist Card opens.
 - [ ] Check 320, 360, 390, and 430 px portrait layouts with large text on iOS
-  Safari and Chrome Android, especially Diary, log detail, Artist Card, Stats,
-  Profile, Home, sheets, Cloud controls, and tab bar.
+      Safari and Chrome Android, especially Diary, log detail, Artist Card, Stats,
+      Profile, Home, sheets, Cloud controls, and tab bar.
 - [ ] Review the Playwright screenshots for all configured mobile widths and
-  attach them as test artifacts after a successful run.
+      attach them as test artifacts after a successful run.

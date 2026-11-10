@@ -24,7 +24,6 @@ import {
   useTimelineStore,
   type TimelineFilterState,
 } from '../../features/concerts/timelineStore';
-import { useLogDraft } from '../../features/log/store';
 import { useArtistCard } from '../../features/artists/ArtistCardProvider';
 import { useTheme } from '../../theme/ThemeProvider';
 import { radius, spacing } from '../../theme/tokens';
@@ -37,7 +36,6 @@ import { GenreLabel, VenueLabel } from '../../components/paper/GenreLabel';
 import { Toast } from '../../components/ui/Toast';
 import {
   buildTimelineItems,
-  LogDetailSheet,
   SwipeableTimelineRow,
   TimelineAxisItem,
   TimelineCard,
@@ -95,13 +93,8 @@ export function TimelineScreen({
   );
   const activeCount = useTimelineStore((state) => state.activeFilterCount());
 
-  // Log Draft store for editing
-  const startEdit = useLogDraft((state) => state.startEdit);
-
   // Sheets state
   const [filterSheetVisible, setFilterSheetVisible] = useState(false);
-  const [selectedConcert, setSelectedConcert] =
-    useState<ConcertWithRelations | null>(null);
   const listRef = useRef<FlashListRef<TimelineItem>>(null);
   useScrollToTop(listRef);
 
@@ -226,17 +219,6 @@ export function TimelineScreen({
   }, [searchParams.highlight, timelineItems]);
 
   // Handlers
-  function handleEditConcert(concert: ConcertWithRelations) {
-    setSelectedConcert(null);
-    startEdit(concert);
-    router.navigate(routes.logWizard());
-  }
-
-  function handleDeleteConcert(id: string) {
-    setSelectedConcert(null);
-    deleteMutation.mutate(id);
-  }
-
   const handleSwipeDelete = useCallback(
     (concert: ConcertWithRelations) => {
       // Clear any previous timer and commit earlier deletion
@@ -317,7 +299,7 @@ export function TimelineScreen({
               <TimelineCard
                 concert={item.concert}
                 primaryGenreColor={item.currentColor}
-                onPress={() => setSelectedConcert(item.concert)}
+                onPress={() => router.navigate(routes.log(item.concert.id))}
                 onOpenArtist={() => {
                   if (!item.concert.artist_id) return;
                   void openArtistCard({
@@ -337,7 +319,7 @@ export function TimelineScreen({
             <TimelineCard
               concert={item.concert}
               primaryGenreColor={item.currentColor}
-              onPress={() => setSelectedConcert(item.concert)}
+              onPress={() => router.navigate(routes.log(item.concert.id))}
               onOpenArtist={() => {
                 if (!item.concert.artist_id) return;
                 void openArtistCard({
@@ -677,16 +659,6 @@ export function TimelineScreen({
           }
         />
       )}
-
-      {/* Detail Bottom Sheet */}
-      <LogDetailSheet
-        concert={selectedConcert}
-        visible={!!selectedConcert}
-        onDismiss={() => setSelectedConcert(null)}
-        onEdit={handleEditConcert}
-        onDelete={handleDeleteConcert}
-        editable={canEdit}
-      />
 
       {/* Filter Bottom Sheet */}
       <TimelineFilterSheet

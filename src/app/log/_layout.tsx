@@ -1,11 +1,5 @@
 import React, { useCallback, useEffect, useRef } from 'react';
-import {
-  BackHandler,
-  Modal,
-  Pressable,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { BackHandler, Modal, Pressable, StyleSheet, View } from 'react-native';
 import {
   Slot,
   useLocalSearchParams,
@@ -97,7 +91,8 @@ export default function LogWizardLayout() {
   }>();
   const segments = useSegments();
   const activeSegment = segments[segments.length - 1];
-  const isSavedKeepsakesRoute = activeSegment === 'step-keepsakes' && Boolean(id);
+  const isSavedKeepsakesRoute =
+    activeSegment === 'step-keepsakes' && Boolean(id);
   const safeBack = useSafeBack(
     isSavedKeepsakesRoute && id
       ? routes.logDone(id, true, setlistSaveFailed === 'true')
@@ -106,7 +101,10 @@ export default function LogWizardLayout() {
   );
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
-  const isStandaloneScreen = activeSegment === 'done' || activeSegment === '[id]';
+  const isStandaloneScreen =
+    activeSegment === 'done' ||
+    activeSegment === '[id]' ||
+    activeSegment === 'comments';
 
   const step = useLogDraft((s) => s.step);
   const isEditing = useLogDraft((s) => s.isEditing);
@@ -240,7 +238,14 @@ export default function LogWizardLayout() {
       return;
     }
     confirmDiscard();
-  }, [confirmDiscard, exitEdit, isEditing, isSavedKeepsakesRoute, isStandaloneScreen, safeBack]);
+  }, [
+    confirmDiscard,
+    exitEdit,
+    isEditing,
+    isSavedKeepsakesRoute,
+    isStandaloneScreen,
+    safeBack,
+  ]);
 
   useEffect(() => {
     const subscription = BackHandler.addEventListener(
@@ -280,13 +285,21 @@ export default function LogWizardLayout() {
               onPress={handleBack}
               style={({ pressed }) => [
                 styles.iconBtn,
-                { backgroundColor: colors.surfaceRaised, opacity: pressed ? 0.7 : 1 },
+                {
+                  backgroundColor: colors.surfaceRaised,
+                  opacity: pressed ? 0.7 : 1,
+                },
               ]}
             >
               <ArrowLeft size={20} color={colors.ink} />
             </Pressable>
 
-            <Text variant="caption" weight="semibold" color="secondary" style={styles.stepLabel}>
+            <Text
+              variant="caption"
+              weight="semibold"
+              color="secondary"
+              style={styles.stepLabel}
+            >
               {STEP_TITLES[displayedStep] ?? ''}
             </Text>
 
@@ -301,7 +314,10 @@ export default function LogWizardLayout() {
               onPress={handleClose}
               style={({ pressed }) => [
                 styles.iconBtn,
-                { backgroundColor: colors.surfaceRaised, opacity: pressed ? 0.7 : 1 },
+                {
+                  backgroundColor: colors.surfaceRaised,
+                  opacity: pressed ? 0.7 : 1,
+                },
               ]}
             >
               <X size={20} color={colors.ink} />

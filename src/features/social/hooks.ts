@@ -1,4 +1,5 @@
 import {
+  type InfiniteData,
   useInfiniteQuery,
   useMutation,
   useQuery,
@@ -32,6 +33,7 @@ import type { FeedItem, FollowStatus } from './types';
 
 let notificationSubscriptionSequence = 0;
 let feedSubscriptionSequence = 0;
+let commentsSubscriptionSequence = 0;
 
 // ─── Query keys ─────────────────────────────────────────────────────────────
 export const socialKeys = {
@@ -45,6 +47,32 @@ export const socialKeys = {
   comments: (logId: string) => ['social', 'comments', logId] as const,
   feedForUser: (userId: string) => ['social', 'feed', userId] as const,
 };
+
+function adjustFeedCommentCount(
+  queryClient: ReturnType<typeof useQueryClient>,
+  logId: string,
+  change: 1 | -1,
+) {
+  queryClient.setQueriesData<InfiniteData<FeedItem[], string | null>>(
+    { queryKey: socialKeys.feed },
+    (feed) => {
+      if (!feed) return feed;
+      return {
+        ...feed,
+        pages: feed.pages.map((page) =>
+          page.map((item) =>
+            item.id === logId
+              ? {
+                  ...item,
+                  comment_count: Math.max(0, item.comment_count + change),
+                }
+              : item,
+          ),
+        ),
+      };
+    },
+  );
+}
 
 export function useFollowing(userId: string, enabled = true) {
   return useQuery({
@@ -324,21 +352,22 @@ export function useToggleLike() {
 }
 
 // ─── Comments ────────────────────────────────────────────────────────────────
-export function useComments(logId: string) {
+export function useComments(logId: string, enabled = true) {
   const queryClient = useQueryClient();
 
   const query = useQuery({
     queryKey: socialKeys.comments(logId),
     queryFn: () => fetchComments(logId),
-    enabled: !!logId,
+    enabled: !!logId && enabled,
     staleTime: 30_000,
   });
 
   // Realtime comments subscription
   useEffect(() => {
-    if (!logId) return;
+    if (!logId || !enabled) return;
+    const topic = `comments-realtime:${logId}:${++commentsSubscriptionSequence}`;
     const channel = supabase
-      .channel(`comments-${logId}`)
+      .channel(topic)
       .on(
         'postgres_changes' as any,
         {
@@ -357,7 +386,7 @@ export function useComments(logId: string) {
     return () => {
       void supabase.removeChannel(channel);
     };
-  }, [logId, queryClient]);
+  }, [logId, queryClient, enabled]);
 
   return query;
 }
@@ -372,6 +401,7 @@ export function usePostComment(logId: string) {
     onMutate: async (body) => {
       await queryClient.cancelQueries({ queryKey: socialKeys.comments(logId) });
       const previous = queryClient.getQueryData(socialKeys.comments(logId));
+      adjustFeedCommentCount(queryClient, logId, 1);
       const optimistic = {
         id: `optimistic-${Date.now()}`,
         log_id: logId,
@@ -393,6 +423,7 @@ export function usePostComment(logId: string) {
     },
     onError: (_err, _body, ctx: any) => {
       queryClient.setQueryData(socialKeys.comments(logId), ctx?.previous);
+      void queryClient.invalidateQueries({ queryKey: socialKeys.feed });
     },
     onSettled: () => {
       void queryClient.invalidateQueries({
@@ -401,6 +432,7 @@ export function usePostComment(logId: string) {
       void queryClient.invalidateQueries({
         queryKey: ['social', 'logs-social-stats'],
       });
+      void queryClient.invalidateQueries({ queryKey: socialKeys.feed });
       void queryClient.invalidateQueries({ queryKey: ['diary'] });
     },
   });
@@ -413,6 +445,7 @@ export function useDeleteComment(logId: string) {
     onMutate: async (commentId) => {
       await queryClient.cancelQueries({ queryKey: socialKeys.comments(logId) });
       const previous = queryClient.getQueryData(socialKeys.comments(logId));
+      adjustFeedCommentCount(queryClient, logId, -1);
       queryClient.setQueryData(socialKeys.comments(logId), (old: any[]) =>
         old?.filter((c) => c.id !== commentId),
       );
@@ -420,11 +453,13 @@ export function useDeleteComment(logId: string) {
     },
     onError: (_err, _id, ctx: any) => {
       queryClient.setQueryData(socialKeys.comments(logId), ctx?.previous);
+      void queryClient.invalidateQueries({ queryKey: socialKeys.feed });
     },
     onSettled: () => {
       void queryClient.invalidateQueries({
         queryKey: ['social', 'logs-social-stats'],
       });
+      void queryClient.invalidateQueries({ queryKey: socialKeys.feed });
       void queryClient.invalidateQueries({ queryKey: ['diary'] });
     },
   });

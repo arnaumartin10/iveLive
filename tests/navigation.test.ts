@@ -23,12 +23,10 @@ const entryPoints = [
 ] as const;
 
 const routeEntryMatrix = routeFallbacks.flatMap(([screen, fallback]) =>
-  entryPoints.map(([entryPoint, canGoBack]) => [
-    screen,
-    entryPoint,
-    canGoBack,
-    fallback,
-  ] as const),
+  entryPoints.map(
+    ([entryPoint, canGoBack]) =>
+      [screen, entryPoint, canGoBack, fallback] as const,
+  ),
 );
 
 describe('navigation fallback matrix', () => {
@@ -70,6 +68,10 @@ describe('navigation fallback matrix', () => {
     });
     expect(routes.log('log-1')).toEqual({
       pathname: '/log/[id]',
+      params: { id: 'log-1' },
+    });
+    expect(routes.logComments('log-1')).toEqual({
+      pathname: '/log/[id]/comments',
       params: { id: 'log-1' },
     });
     expect(routes.logDeepLink('log-1', 'ivelive-preview')).toBe(
@@ -127,7 +129,10 @@ describe('return-to path validation', () => {
 
   it('rejects cross-origin results even when a caller supplies an origin', () => {
     expect(
-      validateReturnTo('https://attacker.example/path', 'https://ivelive.example'),
+      validateReturnTo(
+        'https://attacker.example/path',
+        'https://ivelive.example',
+      ),
     ).toBeNull();
   });
 });

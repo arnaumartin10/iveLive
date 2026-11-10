@@ -922,7 +922,9 @@ export function HomeHub() {
                     log.event_date === featuredFriendPost.event_date,
                 )}
                 onPressLog={(logId) => router.navigate(routes.log(logId))}
-                onOpenComments={() => router.navigate(routes.legacy.friends())}
+                onOpenComments={(item) =>
+                  router.navigate(routes.logComments(item.id))
+                }
                 onPressArtist={(artistId) => {
                   void openArtistCard({
                     artistId,

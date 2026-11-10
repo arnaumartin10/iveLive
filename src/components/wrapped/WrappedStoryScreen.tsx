@@ -3,7 +3,6 @@ import {
   AccessibilityInfo,
   ActivityIndicator,
   Pressable,
-  Platform,
   StyleSheet,
   View,
   useWindowDimensions,
@@ -24,7 +23,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { MessageCircle, Share2, Sparkles, Star, X } from 'lucide-react-native';
+import { Share2, Sparkles, Star, X } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import {
   BarChart,
@@ -874,7 +873,7 @@ export function WrappedStoryScreen() {
     .onFinalize(resumePlayback);
   const storyGesture = Gesture.Simultaneous(closeGesture, holdGesture);
 
-  async function handleShare(target: 'default' | 'whatsapp' = 'default') {
+  async function handleShare() {
     if (!data || isSharing) return;
     setShareError(null);
     setShareStatus(null);
@@ -888,12 +887,10 @@ export function WrappedStoryScreen() {
           .map((log) => log.artist?.image_url_large ?? '')
           .filter(Boolean),
         summary: slide === 'outro',
-      }, target);
+      });
       if (result === 'downloaded') {
         setShareStatus(
-          target === 'whatsapp'
-            ? 'Story image downloaded. WhatsApp opened with the link; attach the image in the chat.'
-            : 'Story image downloaded and link copied. Paste it into WhatsApp, or attach the image in Instagram.',
+          'Story image downloaded and link copied. Paste it into your preferred app, or attach the image in Instagram.',
         );
       }
     } catch (error) {
@@ -1071,46 +1068,6 @@ export function WrappedStoryScreen() {
               {paused ? 'Resume' : 'Pause'}
             </Text>
           </Pressable>
-          <Pressable
-            onPress={() => {
-              void handleShare();
-            }}
-            disabled={isSharing}
-            accessibilityRole="button"
-            style={[
-              styles.shareButton,
-              { backgroundColor: colors.bgSunken, borderColor: colors.ink },
-            ]}
-          >
-            <Share2 size={17} color={colors.accentInk} />
-            <Text
-              variant="label"
-              weight="bold"
-              style={{ color: colors.accentInk }}
-            >
-              {isSharing
-                ? 'Preparing…'
-                : slide === 'outro'
-                  ? 'Share your Wrapped'
-                  : 'Share slide'}
-            </Text>
-          </Pressable>
-          {Platform.OS === 'web' ? (
-            <Pressable
-              onPress={() => {
-                void handleShare('whatsapp');
-              }}
-              disabled={isSharing}
-              accessibilityRole="button"
-              accessibilityLabel="Share story on WhatsApp"
-              style={[
-                styles.whatsappButton,
-                { backgroundColor: colors.bgSunken, borderColor: colors.ink },
-              ]}
-            >
-              <MessageCircle size={17} color={colors.accentInk} />
-            </Pressable>
-          ) : null}
         </View>
         {shareError ? (
           <Text
@@ -1292,29 +1249,12 @@ const styles = StyleSheet.create({
     zIndex: 12,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
   },
   pauseControl: {
     minHeight: 42,
     justifyContent: 'center',
     paddingHorizontal: 6,
-  },
-  shareButton: {
-    minHeight: 44,
-    paddingHorizontal: 16,
-    borderRadius: 0,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    borderWidth: 1,
-  },
-  whatsappButton: {
-    alignItems: 'center',
-    borderWidth: 1,
-    height: 44,
-    justifyContent: 'center',
-    width: 44,
   },
   closeButton: {
     position: 'absolute',

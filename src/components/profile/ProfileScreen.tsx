@@ -26,9 +26,7 @@ import { ProfileHeader } from './ProfileHeader';
 import { ProfileBannerSheet } from './ProfileBannerSheet';
 import { isMacroGenre } from '../brand/mascotColors';
 import { PickRow } from './PickRow';
-import { PicksEditorSheet } from './PicksEditorSheet';
 import { WishlistCard } from './WishlistCard';
-import { WishlistEditorSheet } from './WishlistEditorSheet';
 import { FriendsPreview } from './FriendsPreview';
 import { ProfileFriendsSection } from './ProfileFriendsSection';
 import { TimelineScreen } from '../timeline/TimelineScreen';
@@ -47,10 +45,8 @@ import { useLogDraft } from '../../features/log/store';
 import { MACRO_GENRES } from '../../features/genres/macroGenres';
 import {
   useProfileOverview,
-  useAddWishlistItem,
   useDeleteWishlistItem,
   useFullWishlist,
-  useSetPicks,
   useUpdateWishlistItem,
 } from '../../features/profile/hooks';
 import { arePicksStale } from '../../features/profile/logic';
@@ -63,11 +59,7 @@ import {
 } from '../../features/social/hooks';
 import { useTheme } from '../../theme/ThemeProvider';
 import { radius, spacing } from '../../theme/tokens';
-import type {
-  ProfilePick,
-  WishlistDraft,
-  WishlistItem,
-} from '../../features/profile/types';
+import type { ProfilePick, WishlistItem } from '../../features/profile/types';
 
 function relativeUpdated(updatedAt: string | null) {
   if (!updatedAt) return 'Not set yet';
@@ -195,8 +187,6 @@ export function ProfileScreen({
   );
   const follow = useFollow();
   const unfollow = useUnfollow();
-  const setPicks = useSetPicks(resolvedUsername);
-  const addWishlist = useAddWishlistItem(resolvedUsername);
   const updateWishlist = useUpdateWishlistItem(resolvedUsername);
   const deleteWishlist = useDeleteWishlistItem(resolvedUsername);
   const resetLogDraft = useLogDraft((state) => state.reset);
@@ -205,13 +195,6 @@ export function ProfileScreen({
   const setVenueType = useLogDraft((state) => state.setVenueType);
   const setVenueName = useLogDraft((state) => state.setVenueName);
   const setStep = useLogDraft((state) => state.setStep);
-  const [editingList, setEditingList] = useState<'recent' | 'favourite' | null>(
-    null,
-  );
-  const [wishlistEditor, setWishlistEditor] = useState<{
-    open: boolean;
-    item?: WishlistItem;
-  } | null>(null);
   const [bannerSheetVisible, setBannerSheetVisible] = useState(false);
   const updateProfile = useUpdateProfile(signedInUserId ?? '');
   const data = overviewQuery.data;
@@ -265,16 +248,14 @@ export function ProfileScreen({
     );
   }
 
-  async function saveWishlist(draft: WishlistDraft) {
-    if (!profile) throw new Error('Profile is unavailable.');
-    if (wishlistEditor?.item) {
-      await updateWishlist.mutateAsync({
-        itemId: wishlistEditor.item.id,
-        updates: draft,
-      });
-    } else {
-      await addWishlist.mutateAsync({ userId: profile.id, draft });
-    }
+  function openPicksEditor(list: 'recent' | 'favourite') {
+    if (!isOwner || !profile) return;
+    router.navigate(routes.profilePicksEdit(profile.username, list));
+  }
+
+  function openWishlistEditor(item?: WishlistItem) {
+    if (!isOwner || !profile) return;
+    router.navigate(routes.profileWishlistEdit(profile.username, item?.id));
   }
 
   async function startLogFromWishlist(item: WishlistItem) {
@@ -335,11 +316,7 @@ export function ProfileScreen({
             label="Try again"
             onPress={() => void overviewQuery.refetch()}
           />
-          <Button
-            label="Go back"
-            variant="secondary"
-            onPress={safeBack}
-          />
+          <Button label="Go back" variant="secondary" onPress={safeBack} />
         </View>
       </SafeAreaView>
     );
@@ -528,7 +505,7 @@ export function ProfileScreen({
                     size="sm"
                     variant="secondary"
                     leftIcon={<Plus size={16} color={colors.ink} />}
-                    onPress={() => setWishlistEditor({ open: true })}
+                    onPress={() => openWishlistEditor()}
                   />
                 ) : null}
                 {(allWishlistQuery.data ?? wishlistItems).length ? (
@@ -553,7 +530,7 @@ export function ProfileScreen({
                           )
                       }
                       onWent={() => void startLogFromWishlist(item)}
-                      onEdit={() => setWishlistEditor({ open: true, item })}
+                      onEdit={() => openWishlistEditor(item)}
                       onDelete={() => deleteWishlist.mutate(item.id)}
                     />
                   ))
@@ -597,7 +574,7 @@ export function ProfileScreen({
                 list="recent"
                 picks={recentPicks}
                 isOwner={isOwner}
-                onEdit={() => setEditingList('recent')}
+                onEdit={() => openPicksEditor('recent')}
                 onOpen={(pick) => void openArtistCard(pick.id)}
                 updatedLabel={relativeUpdated(recentUpdatedAt)}
                 stale={picksAreStale}
@@ -608,7 +585,7 @@ export function ProfileScreen({
                 list="favourite"
                 picks={favouritePicks}
                 isOwner={isOwner}
-                onEdit={() => setEditingList('favourite')}
+                onEdit={() => openPicksEditor('favourite')}
                 onOpen={(pick) => void openArtistCard(pick.id)}
               />
 
@@ -632,7 +609,7 @@ export function ProfileScreen({
                       size="sm"
                       variant="secondary"
                       leftIcon={<Plus size={16} color={colors.ink} />}
-                      onPress={() => setWishlistEditor({ open: true })}
+                      onPress={() => openWishlistEditor()}
                     />
                   ) : null}
                   {wishlistItems.length ? (
@@ -657,7 +634,7 @@ export function ProfileScreen({
                             )
                         }
                         onWent={() => void startLogFromWishlist(item)}
-                        onEdit={() => setWishlistEditor({ open: true, item })}
+                        onEdit={() => openWishlistEditor(item)}
                         onDelete={() =>
                           Alert.alert(
                             'Remove wishlist item?',
@@ -681,7 +658,7 @@ export function ProfileScreen({
                       action={
                         <Button
                           label="Add a wish"
-                          onPress={() => setWishlistEditor({ open: true })}
+                          onPress={() => openWishlistEditor()}
                         />
                       }
                     />
@@ -728,10 +705,7 @@ export function ProfileScreen({
                           ) : (
                             <Avatar name={log.artist_name} size="md" />
                           )}
-                          <Text
-                            variant="caption"
-                            weight="bold"
-                          >
+                          <Text variant="caption" weight="bold">
                             {log.artist_name}
                           </Text>
                           <Text variant="caption" color="secondary">
@@ -821,9 +795,7 @@ export function ProfileScreen({
                           label="Wall of Fame"
                           size="sm"
                           variant="secondary"
-                          onPress={() =>
-                            router.navigate(routes.wallOfFame())
-                          }
+                          onPress={() => router.navigate(routes.wallOfFame())}
                         />
                       ) : null}
                     </View>
@@ -847,27 +819,6 @@ export function ProfileScreen({
         </ScrollView>
       )}
 
-      {isOwner && editingList ? (
-        <PicksEditorSheet
-          key={editingList}
-          visible
-          list={editingList}
-          initialPicks={editingList === 'recent' ? recentPicks : favouritePicks}
-          onDismiss={() => setEditingList(null)}
-          onSave={async (picks) => {
-            await setPicks.mutateAsync({ list: editingList, picks });
-          }}
-        />
-      ) : null}
-      {isOwner && wishlistEditor?.open ? (
-        <WishlistEditorSheet
-          key={wishlistEditor.item?.id ?? 'new'}
-          visible
-          initialItem={wishlistEditor.item}
-          onDismiss={() => setWishlistEditor(null)}
-          onSave={saveWishlist}
-        />
-      ) : null}
       {isOwner && bannerSheetVisible ? (
         <ProfileBannerSheet
           visible

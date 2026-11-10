@@ -2,13 +2,13 @@ import { useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   Pressable,
+  ScrollView,
   StyleSheet,
   View,
 } from 'react-native';
-import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
 import { Check, Search } from 'lucide-react-native';
-import { Sheet } from '../ui/Sheet';
 import { Text } from '../ui/Text';
 import { Button } from '../ui/Button';
 import { Toast } from '../ui/Toast';
@@ -26,6 +26,7 @@ import type {
 } from '../../features/artists/types';
 import type { ProfilePick } from '../../features/profile/types';
 import { PickRow } from './PickRow';
+import { StaticPageHeader } from '../navigation/StaticPageHeader';
 
 function toSearchResult(artist: {
   artist_id: string;
@@ -70,14 +71,12 @@ function asPick(
   };
 }
 
-export function PicksEditorSheet({
-  visible,
+export function PicksEditorScreen({
   list,
   initialPicks,
   onDismiss,
   onSave,
 }: {
-  visible: boolean;
   list: 'recent' | 'favourite';
   initialPicks: ProfilePick[];
   onDismiss: () => void;
@@ -165,16 +164,12 @@ export function PicksEditorSheet({
   const title =
     list === 'recent' ? 'What I’m into recently' : 'My all-time favourites';
   return (
-    <Sheet
-      visible={visible}
-      title={`Edit ${title}`}
-      snapPoints={['72%', '92%']}
-      useScrollableContent
-      onDismiss={onDismiss}
-    >
-      <BottomSheetScrollView
+    <SafeAreaView style={[styles.page, { backgroundColor: colors.bg }]}>
+      <StaticPageHeader title={`Edit ${title}`} onBack={onDismiss} />
+      <ScrollView
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
       >
         <Text variant="caption" color="secondary">
           Drag a pick up or down to change its order. Choose up to five artists.
@@ -261,8 +256,8 @@ export function PicksEditorSheet({
           leftIcon={<Check size={17} color={colors.accentInk} />}
           onPress={() => void save()}
         />
-      </BottomSheetScrollView>
-    </Sheet>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
@@ -315,6 +310,7 @@ function SuggestionGroup({
 }
 
 const styles = StyleSheet.create({
+  page: { flex: 1 },
   content: {
     alignSelf: 'center',
     gap: spacing.md,
@@ -329,7 +325,7 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
     justifyContent: 'space-around',
   },
-  searchPanel: { height: 350 },
+  searchPanel: { minHeight: 350 },
   suggestionGroup: { gap: spacing.xs },
   suggestion: {
     alignItems: 'center',

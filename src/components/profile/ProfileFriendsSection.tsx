@@ -6,6 +6,8 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { routes } from '../../navigation/routes';
 import { useTheme } from '../../theme/ThemeProvider';
@@ -23,6 +25,7 @@ import {
 } from '../../features/social/hooks';
 import type {
   FeedItem,
+  FollowRequest,
   FollowListUser,
   ProfileSearchResult,
 } from '../../features/social/types';
@@ -30,7 +33,7 @@ import { Avatar } from '../ui/Avatar';
 import { Button } from '../ui/Button';
 import { EmptyState } from '../ui/EmptyState';
 import { Text } from '../ui/Text';
-import { CommentsSheet, FeedCard } from '../social';
+import { FeedCard } from '../social';
 
 type Props = {
   userId: string;
@@ -42,6 +45,8 @@ type Props = {
 
 type FriendsSection =
   'following' | 'followers' | 'requests' | 'search' | 'activity' | 'mutuals';
+type FriendsListItem =
+  FollowRequest | FeedItem | FollowListUser | ProfileSearchResult;
 
 const OWN_TABS: { label: string; value: FriendsSection }[] = [
   { label: 'Following', value: 'following' },
@@ -59,10 +64,10 @@ export function ProfileFriendsSection({
   headerAddon,
 }: Props) {
   const { colors } = useTheme();
+  const insets = useSafeAreaInsets();
   const [section, setSection] = useState<FriendsSection>(initialSection);
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
-  const [commentsLogId, setCommentsLogId] = useState<string | null>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(search.trim()), 250);
@@ -198,7 +203,7 @@ export function ProfileFriendsSection({
         : followersQuery.error;
   const userRows: (FollowListUser | ProfileSearchResult)[] =
     section === 'search' ? (searchQuery.data ?? []) : visibleUsers;
-  const rows =
+  const rows: FriendsListItem[] =
     section === 'requests'
       ? (requestsQuery.data ?? [])
       : section === 'activity'
@@ -302,164 +307,164 @@ export function ProfileFriendsSection({
     );
   })();
 
+  function renderListItem(item: FriendsListItem) {
+    if (section === 'requests') {
+      const request = item as FollowRequest;
+      return (
+        <View style={[styles.personRow, { borderBottomColor: colors.line }]}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={`Open @${request.username}`}
+            onPress={() => openProfile(request.username)}
+            style={styles.personInfo}
+          >
+            <Avatar
+              imageUrl={request.avatar_url}
+              name={request.display_name ?? request.username}
+              size="md"
+            />
+            <View style={styles.personCopy}>
+              <Text variant="label" weight="bold">
+                {request.display_name ?? request.username}
+              </Text>
+              <Text variant="caption" color="secondary">
+                @{request.username}
+              </Text>
+            </View>
+          </Pressable>
+          <View style={styles.requestActions}>
+            <Button
+              label="Accept"
+              size="sm"
+              onPress={() => acceptRequest.mutate(request.id)}
+            />
+            <Button
+              label="Decline"
+              size="sm"
+              variant="secondary"
+              onPress={() => declineRequest.mutate(request.id)}
+            />
+          </View>
+        </View>
+      );
+    }
+
+    if (section === 'activity') {
+      const feedItem = item as FeedItem;
+      return (
+        <FeedCard
+          item={feedItem}
+          onPressLog={(logId) => router.navigate(routes.log(logId))}
+          onOpenComments={(commentItem) =>
+            router.navigate(routes.logComments(commentItem.id))
+          }
+          onPressUser={openProfile}
+          onPressArtist={(artistId) => router.navigate(routes.artist(artistId))}
+        />
+      );
+    }
+
+    return (
+      <View>
+        {renderUser({ item: item as FollowListUser | ProfileSearchResult })}
+      </View>
+    );
+  }
+
   return (
     <>
-      <ScrollView
+      <FlashList
+        key={section}
+        data={rows}
+        keyExtractor={(item) => item.id}
+        getItemType={() => section}
+        renderItem={({ item }) => renderListItem(item)}
         style={styles.results}
         contentContainerStyle={styles.resultsContent}
         keyboardShouldPersistTaps="handled"
-        onMomentumScrollEnd={(event) => {
-          const { contentOffset, contentSize, layoutMeasurement } =
-            event.nativeEvent;
-          const isNearBottom =
-            contentOffset.y + layoutMeasurement.height >=
-            contentSize.height - 300;
+        nestedScrollEnabled
+        keyboardDismissMode="on-drag"
+        onEndReached={() => {
           if (
             section === 'activity' &&
-            isNearBottom &&
             feedQuery.hasNextPage &&
             !feedQuery.isFetchingNextPage
           ) {
             void feedQuery.fetchNextPage();
           }
         }}
-      >
-        {headerAddon}
-        <View style={styles.listHeader}>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.tabStrip}
-          >
-            {tabs.map((tab) => (
-              <Pressable
-                key={tab.value}
-                accessibilityRole="tab"
-                accessibilityState={{ selected: section === tab.value }}
-                onPress={() => setSection(tab.value)}
-                style={[
-                  styles.tab,
-                  {
-                    backgroundColor:
-                      section === tab.value ? colors.accent : colors.surface,
-                    borderColor:
-                      section === tab.value ? colors.ink : colors.line,
-                  },
-                ]}
+        onEndReachedThreshold={0.4}
+        ListHeaderComponent={
+          <View style={styles.listHeaderGroup}>
+            {headerAddon}
+            <View style={styles.listHeader}>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.tabStrip}
               >
-                <Text
-                  variant="caption"
-                  weight="bold"
-                  style={{
-                    color:
-                      section === tab.value ? colors.accentInk : colors.ink,
-                  }}
-                >
-                  {tab.label}
-                </Text>
-              </Pressable>
-            ))}
-          </ScrollView>
-          {section === 'search' ? (
-            <TextInput
-              accessibilityLabel="Find people"
-              placeholder="Search by name or @username"
-              placeholderTextColor={colors.inkMuted}
-              value={search}
-              onChangeText={setSearch}
-              autoCapitalize="none"
-              style={[
-                styles.search,
-                {
-                  color: colors.ink,
-                  backgroundColor: colors.surface,
-                  borderColor: colors.line,
-                },
-              ]}
-            />
-          ) : null}
-        </View>
-        {rows.length === 0 ? (
-          <View style={styles.emptyState}>{emptyState}</View>
-        ) : (
-          <View style={styles.rowList}>
-            {section === 'requests'
-              ? (requestsQuery.data ?? []).map((request) => (
-                  <View
-                    key={request.id}
+                {tabs.map((tab) => (
+                  <Pressable
+                    key={tab.value}
+                    accessibilityRole="tab"
+                    accessibilityState={{ selected: section === tab.value }}
+                    onPress={() => setSection(tab.value)}
                     style={[
-                      styles.personRow,
-                      { borderBottomColor: colors.line },
+                      styles.tab,
+                      {
+                        backgroundColor:
+                          section === tab.value
+                            ? colors.accent
+                            : colors.surface,
+                        borderColor:
+                          section === tab.value ? colors.ink : colors.line,
+                      },
                     ]}
                   >
-                    <Pressable
-                      accessibilityRole="button"
-                      accessibilityLabel={`Open @${request.username}`}
-                      onPress={() => openProfile(request.username)}
-                      style={styles.personInfo}
+                    <Text
+                      variant="caption"
+                      weight="bold"
+                      style={{
+                        color:
+                          section === tab.value ? colors.accentInk : colors.ink,
+                      }}
                     >
-                      <Avatar
-                        imageUrl={request.avatar_url}
-                        name={request.display_name ?? request.username}
-                        size="md"
-                      />
-                      <View style={styles.personCopy}>
-                        <Text variant="label" weight="bold">
-                          {request.display_name ?? request.username}
-                        </Text>
-                        <Text variant="caption" color="secondary">
-                          @{request.username}
-                        </Text>
-                      </View>
-                    </Pressable>
-                    <View style={styles.requestActions}>
-                      <Button
-                        label="Accept"
-                        size="sm"
-                        onPress={() => acceptRequest.mutate(request.id)}
-                      />
-                      <Button
-                        label="Decline"
-                        size="sm"
-                        variant="secondary"
-                        onPress={() => declineRequest.mutate(request.id)}
-                      />
-                    </View>
-                  </View>
-                ))
-              : section === 'activity'
-                ? feedItems.map((item) => (
-                    <FeedCard
-                      key={item.id}
-                      item={item}
-                      onPressLog={(logId) =>
-                        router.navigate(routes.log(logId))
-                      }
-                      onOpenComments={(feedItem: FeedItem) =>
-                        setCommentsLogId(feedItem.id)
-                      }
-                      onPressUser={openProfile}
-                      onPressArtist={(artistId) =>
-                        router.navigate(routes.artist(artistId))
-                      }
-                    />
-                  ))
-                : userRows.map((item) => (
-                    <View key={item.id}>{renderUser({ item })}</View>
-                  ))}
+                      {tab.label}
+                    </Text>
+                  </Pressable>
+                ))}
+              </ScrollView>
+              {section === 'search' ? (
+                <TextInput
+                  accessibilityLabel="Find people"
+                  placeholder="Search by name or @username"
+                  placeholderTextColor={colors.inkMuted}
+                  value={search}
+                  onChangeText={setSearch}
+                  autoCapitalize="none"
+                  style={[
+                    styles.search,
+                    {
+                      color: colors.ink,
+                      backgroundColor: colors.surface,
+                      borderColor: colors.line,
+                    },
+                  ]}
+                />
+              ) : null}
+            </View>
+          </View>
+        }
+        ListEmptyComponent={<View style={styles.emptyState}>{emptyState}</View>}
+        ListFooterComponent={
+          <View style={{ height: 112 + insets.bottom }}>
             {section === 'activity' && feedQuery.isFetchingNextPage ? (
               <Text variant="caption" color="secondary">
                 Loading more activity…
               </Text>
             ) : null}
           </View>
-        )}
-      </ScrollView>
-
-      <CommentsSheet
-        logId={commentsLogId ?? ''}
-        visible={!!commentsLogId}
-        onDismiss={() => setCommentsLogId(null)}
+        }
       />
     </>
   );
@@ -467,9 +472,9 @@ export function ProfileFriendsSection({
 
 const styles = StyleSheet.create({
   results: { flex: 1, minHeight: 0 },
-  resultsContent: { gap: spacing.md, paddingBottom: spacing.xl },
+  resultsContent: { flexGrow: 1, gap: spacing.xs },
+  listHeaderGroup: { gap: spacing.md },
   listHeader: { gap: spacing.md, paddingHorizontal: spacing.md },
-  rowList: { gap: spacing.xs, paddingHorizontal: spacing.md },
   emptyState: { paddingHorizontal: spacing.md },
   tabStrip: { gap: spacing.xs, paddingBottom: spacing.xs },
   tab: {

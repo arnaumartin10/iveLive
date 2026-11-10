@@ -1,8 +1,14 @@
 import { useState } from 'react';
-import { Pressable, StyleSheet, Switch, TextInput, View } from 'react-native';
-import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import {
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Switch,
+  TextInput,
+  View,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { CalendarDays, X } from 'lucide-react-native';
-import { Sheet } from '../ui/Sheet';
 import { Button } from '../ui/Button';
 import { Text } from '../ui/Text';
 import { VenueLabel } from '../paper/GenreLabel';
@@ -19,6 +25,7 @@ import type {
   ArtistSearchResult,
 } from '../../features/artists/types';
 import type { WishlistDraft, WishlistItem } from '../../features/profile/types';
+import { StaticPageHeader } from '../navigation/StaticPageHeader';
 
 function draftFromItem(item?: WishlistItem | null): WishlistDraft {
   return {
@@ -36,13 +43,11 @@ function draftFromItem(item?: WishlistItem | null): WishlistDraft {
   };
 }
 
-export function WishlistEditorSheet({
-  visible,
+export function WishlistEditorScreen({
   initialItem,
   onDismiss,
   onSave,
 }: {
-  visible: boolean;
   initialItem?: WishlistItem | null;
   onDismiss: () => void;
   onSave: (draft: WishlistDraft) => Promise<void>;
@@ -117,17 +122,14 @@ export function WishlistEditorSheet({
     }
   }
 
+  const title = initialItem ? 'Edit wishlist item' : 'Add to wishlist';
   return (
-    <Sheet
-      visible={visible}
-      title={initialItem ? 'Edit wishlist item' : 'Add to wishlist'}
-      snapPoints={['72%', '92%']}
-      useScrollableContent
-      onDismiss={onDismiss}
-    >
-      <BottomSheetScrollView
+    <SafeAreaView style={[styles.page, { backgroundColor: colors.bg }]}>
+      <StaticPageHeader title={title} onBack={onDismiss} />
+      <ScrollView
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
       >
         {manualArtistQuery != null ? (
           <View style={styles.manualPanel}>
@@ -337,8 +339,8 @@ export function WishlistEditorSheet({
           disabled={saving || !draft.artist_id}
           onPress={() => void save()}
         />
-      </BottomSheetScrollView>
-    </Sheet>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
@@ -393,6 +395,7 @@ function Field({
 }
 
 const styles = StyleSheet.create({
+  page: { flex: 1 },
   content: {
     alignSelf: 'center',
     gap: spacing.md,
